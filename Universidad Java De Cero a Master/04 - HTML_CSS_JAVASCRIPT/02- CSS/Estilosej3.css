@@ -1,0 +1,35 @@
+/*
+Se definen las propiedades de los estilos.
+Priodidad 3: Los estilos definidos en un archivo aplican despues de los estilos definidos en el documento HTML
+y tambien despues de los elementos definidos en un elemento HTML.
+*/
+
+body{
+	background:#256F5B;
+	color:white;
+	font-family:"Arial Narrow";
+}
+
+h1{
+	font-size:xx-large;
+	font-style:italic;
+}
+
+p{
+	font-weight:bolder;
+	background:#468B78;
+}
+
+/*
+Agregamos una nueva clase
+*/
+.resaltado{
+	background:#9E354A;
+	font-weight:bold;
+}
+
+.nuevaClaseCss{
+	font-family:"Century Gothic";
+	font-weight:bold;
+	background:#4F0010;
+}

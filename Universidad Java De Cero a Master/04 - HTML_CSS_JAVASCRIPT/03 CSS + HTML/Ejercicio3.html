@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="css3.css">
+		<title>CSS + HTML Ejercicio3</title>
+	</head>
+	<body>
+		<form name="form1" action="/recursoEnServidor" method="post">
+			<input type="hidden" name="oculto" value="valorOculto">
+			<table width="200" id="one-column-emphasis">
+				<caption>
+					Formulario Registro de datos
+				</caption>
+				<tr>
+					<td class="oce-first">
+						Usuario:
+					</td>
+					<td>
+						<input class="default" type="text" name="usuario" value="Escribir usuario" />
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Pssword:
+					</td>
+					<td>
+						<input class="default" type="password" name="password" />
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Tecnologias de internet
+					</td>
+					<td>
+						Java <input type="checkbox" name="tecnologia" value="java">
+						&nbsp;&nbsp;&nbsp;
+						.Net<input type="checkbox" name="tecnologia" value="net">
+						&nbsp;&nbsp;&nbsp;
+						PHP<input type="checkbox" name="tecnologia" value="php">
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Genero
+					</td>
+					<td>
+						Hombre <input type="radio" name="genero" value="H">
+						&nbsp;&nbsp;&nbsp;
+						Mujer <input type="radio" name="genero" value="M">
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Ocupacion
+					</td>
+					<td>
+						<select name="ocupacion" class="default">
+							<option value="1">Professor</option>
+							<option value="2">Ingeniero</option>
+							<option value="1">Jubilado</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Musica
+					</td>
+					<td>
+						<select name="musica" multiple class="default">
+							<option value="rock">Rock</option>
+							<option value="pop">Pop</option>
+							<option value="salsa">Salsa</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="oce-first">
+						Comentarios
+					</td>
+					<td>
+						<textarea name="comentarios" cols="30" rows="2" class="default">
+							Escribir texto
+						</textarea>
+					</td>
+				</tr>
+				<tr style="text-align:center;">
+					<td>
+						<input type="reset" value="limpiar" class="default">
+					</td>
+					<td>
+						<input type="Submit" value="Enviar" class="default">
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

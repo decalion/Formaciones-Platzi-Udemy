@@ -1,0 +1,49 @@
+/*
+Se definen las propiedades de los estilos.
+Priodidad 3: Los estilos definidos en un archivo aplican despues de los estilos definidos en el documento HTML
+y tambien despues de los elementos definidos en un elemento HTML.
+*/
+body, .default{
+	
+	line-height: 1.6em;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	color:#669;
+}
+
+#one-column-emphasis{
+	margin: 45px;
+	width: 480px;
+	text-align:left;
+	border-collapse:collapse;
+}
+
+#one-column-emphasis caption{
+	font-size: 20px;
+}
+
+#one-column-emphasis th{
+	font-size: 14px;
+	font-weight:normal;
+	padding: 12px 15px;
+	color:#039;
+}
+#one-column-emphasis td{
+	padding: 10px 15px;
+	color:#669;
+	border-top: 1px solid #e8edff;
+
+}
+.oce-first{
+	background:#d0dafd;
+	border-right:10px solid transparent;
+	border-left:10px solid transparent;
+
+}
+
+#one-column-emphasis tr:hover td{
+	color:#339;
+	background:#eff2ff;
+}
+
+
