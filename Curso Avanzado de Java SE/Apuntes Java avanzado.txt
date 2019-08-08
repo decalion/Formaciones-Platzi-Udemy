@@ -1,0 +1,38 @@
+Excepciones:
+
+Throwable
+	.Error: Causados por la máquina virtual de java (JVM).
+	.Exception: Causados por el desarrollador.
+		-UNCHECKED: Errores que no conocemos inicialmente. Errores de lógica. Por ejemplo, los ariméticos o agregar a un índice de un arreglo que no existe.
+					RuntimeException: En el momento que la aplicación se está ejecutando.
+		-CHECKED: Errores más esperados.
+					SQLException: Error en sintaxis de consultas de bases de datos.
+					IOException: Error al leer un archivo o entrada/salida de datos.
+					FileNotFoundException: Un archivo no fue encontrado.
+					
+					
+					
+Clases:
+	DriverManager: Nos permite crear una instancia de la conexión
+	Connection: Genera la sesión, maneja todo el ciclo de vida de una sesión cuando nos conectamos a una base de datos.
+	Statement: Nos ayuda a traer datos de una tabla.
+	PreparedStatement: Hace lo mismo que Statement con la diferencia de que éste nos permite recibir parámetros para la clausula where.
+	ResultSet: Es una interfaz que nos ayudará a manejar los datos obtenidos convirtiendo los datos en objetos.
+	
+Para generar un CRUD también tenemos métodos a partir de Statement/PreparedStatement:
+Para ejecutar un SELECT el método a usar será el: executeQuery(sqlString)
+Para ejecutar INSERT,UPDATE,DELETE or a DDL usaremos el método: executeUpdate(sqlString)
+Para ejecutar otros comandos de SQL usaremos: execute(sqlString).	
+	
+Lambdas:
+
+	Estructura básica: (parámetros) -> {cuerpo-lambda}
+	Se utilizan únicamente en caso de:
+
+	Código con un tiempo de vida corto.
+	Encapsular código específico.
+	
+	Para definir una lambda podemos hacerlo al implementar:
+
+	Interfaces funcionales
+	Clases abstractas	

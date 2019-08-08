@@ -1,0 +1,220 @@
+https://spring.io/tools
+Este IDE:
+
+Esta basado en Eclipse
+Fue creado por la comunidad SpringSource
+Nos ayuda a crear plantillas de proyectos basados en Spring
+Maven ya viene integrado
+
+------------------------------------------------
+
+
+Asistentes intelijentes
+Nos ayudan a crear proyectos basados en plantillas
+Descargar librerías de terceros
+Crean todos los componentes y los archivos ejecutables .jar .war, etc.
+
+Maven
+Es un proyecto de apache
+Configuración y construcción basado en XML
+Project Object Model pom.xlm
+Describe el proyecto a construir
+Dependencias
+Compilación de código
+Empaquetado
+
+-------------------------------------------------------
+
+-Aplicaciones Orientadas a Presentación son todas esas aplicaciones e
+nfocadas a generar vistas que pueda leer un navegador, vistas HTML, 
+es decir Sitios Web Dinámicos.
+
+-Aplicaciones Orientadas a Servicios son aplicaciones que se 
+enfocan en el backend y la vista la presentan en formato JSON.
+
+-------------------------------------------------------------------------------------
+
+Buscar dependencia de maven:
+
+https://mvnrepository.com/
+
+-------------------------------------------------
+
+Hibernate es un ORM (Object Relational Mapping)
+Es una herramienta que nos permite mapear una base de datos
+Hibernate esta diseñado para trabajar con bases de datos relacionales.
+La idea de Hiberante es tener una clase equivalente a una tabla de base de datos incluyendo los campos.
+Podremos operar los datos operando no sobre tablas sino sobre objetos
+Busca solucionar el problema de la diferencia entre dos modelos de datos coexistentes en una aplicación
+Podemos definir tipos de datos
+Generar sentencias SQL
+Hibernate permite conectarnos a una base de datos a partir de un archivo de configuración llamado hibernate.cfg.xml.
+
+Mapearemos las tablas y campos de una base de datos a partir de Anotaciónes @ en las clases
+---------------------------------------------------------------------------------------------------------------
+
+Installar Hibernate pluguin con jboss
+
+Help -> Install New Software
+Click en Add y colocar un nombre que nos permita identificar el software del Plugin, puede ser Hibernate
+Iremos al sitio http://download.jboss.org/jbosstools/updates/stable/ para buscar la versión de eclipse en la que está basado nuestro Spring Tool Suite (revisa en la sección de Acerca De o About del IDE)
+Una vez que seleccionamos la versión de eclipse, entramos a ella y en la parte inferior copiaremos el enlace que se antepone la leyenda “Content has moved to” para nuestro caso es este: https://download.jboss.org/jbosstools/neon/stable/updates/
+Este enlace lo pegamos en el campo que dejamos pendiente cuando dimos Click en Add y damos click en OK
+Descargará los paquetes y dentro de JBoss Web and Java EE Development seleccionamos Hibernate Tools y damos click en Siguiente.
+Descargará el paquete seleccionado, aceptamos los términos y damos click en Finish.
+En algún punto de la descarga te pedirá permiso de instalar software de terceros e decimos que sí.
+Se reiniciará el IDE y quedará listo.
+
+
+
+
+------------------------------------------------
+
+
+Mapeo y Anotaciones con Hibernate JPA
+@Entity: Se aplica a la clase e indica que esta clase es una entidad a persistir.
+@Table: Se aplica a la clase indica el nombre de la tabla de la base de datos.
+@Column: Se aplica a una propiedad Java e indica el nombre de la columna de la tabla.
+@Id: Se aplica a una propiedad de la clase e indica que es la clave primaria.
+@GeneratedValue: Indica que Hibernate deberá generar el valor de la clave primaria
+
+One to One (Unidireccional): Un objeto tiene una referencia de otro objeto.
+One to One (Bidireccional): Los dos objetos tienen referencias uno de otro.
+One to Many: Un objeto tenga una lista de otros objetos
+Many to Many: Un objeto A tenga una lista de otros objetos B y también que el objeto B a su vez tenga la lista de objetos A
+Adicional conoceremos la anotación @JoinColumn que nos idicará el nombre de la columna que une las tablas
+
+
+
+Para poder utilizar todos los mapeos y configuraciones que hemos hecho al proyecto es necesario utilizar las siguientes clases:
+
+SessionFactory
+Configuration
+Session
+Ellos nos dan acceso a nuestra base de datos leyendo nuestro archivo de configuración que tiene los parámetros de conexión y las clases mapeadas que fungirán como entidades.
+
+Una vez obtenido nuestro objeto session si queremos ejecutar un query en Hibernate debemos iniciar una transacción, posteriormente declarar el query y finalmente ejecutar la transacción con commit.
+
+
+
+----------------------------------------------------------------------------------
+Librería: conjunto de clases, métodos etc. que son invocadas por el flujo del programa y que posteriormente devuelven el control a este.
+
+Framework: Un framework controla el flujo del código, él decide cuándo llamar nuestro código.
+
+Librería - Programación secuencial.
+Framework - Programación por eventos.
+
+
+
+-----------------------------------------------------------------------------
+Spring.
+
+Spring Bean Factory.
+
+Los objetos que son la columna vertebral de tu aplicación y que son administrados por el contenedor Spring se denominan beans.
+
+Un bean en Spring será un objeto que tenga consigo un CRUD de acciones
+
+Los DAO’s son Beans, pero usaremos su interfaz pues es el elemento más abstracto y reutilizable.
+
+También tendremos objetos de servicio y objetos que nos permitan conectarnos con otras partes del sistema como Bases de Datos.
+
+Cuando nuestra interfaz implementa solo a una clase usaremos la anotación @Autowired
+Cuando la interfaz implementa a varias clases usaremos la anotación @Configuration y @Bean
+
+
+
+Capas de nuestra aplicación
+Repositories: Se encarga de conectar y traer datos de la base de datos
+Services: Coordina las fuentes de datos
+Controllers: Coordina las entradas y salidas de información
+Json - FrontEnd: Es lo que el usuario visualiza, los datos en formato json
+Para trabajar estas capas necesitaremos las siguientes anotaciones
+
+@Repository > Se enfoca en los DAO’s
+@Service > Servicios, Llama a los DAO’s
+@Controller > Trabaja con la capa de presentación
+-------------------------------------------------------------------------------------
+API REST
+
+REST REpresentational State Transfer, lo que significa que cada vez que se envíe o reciban datos estos serán representados por un estado en particular.
+
+En el Blog de Platzi tenemos la siguiente nota: https://platzi.com/blog/como-crear-apis/
+
+Un API será un conjunto de métodos o acciones que se enfocan en un objeto en particular.
+
+Si unimos todo lo que acabamos de aprender, un API Rest significará un conjunto de métodos/acciones que se pueden aplicar a un objeto representadas por un estado en particular.
+
+Para definir las URI’s debemos usar sustantivos, objetos, en vez de verbos.
+
+
+Controller trabajará con la capa de presentación
+Recibirá las solicitudes, las procesarlás, llamar a los servicios ejecutar una acción y devolver una respuesta.
+Idealmente debe existir un controlador por cada entidad, para tener separados y ordenados los recursos.
+Tendremos la etiqueta @RequestMapping que recibirá la localización del recurso
+
+Para la respuesta podemos manejar:
+
+@ResponseBody quien devolverá la respuesta. A la par debe usarse @ResponseStatus que devuelve el codigo de status de la respuesta
+@ResponseEntity devolverá la respuesta y al mismo tiempo el código de status.
+
+
+
+@PathVariable (“Variable”)=Recibe el valor de la variable creada en el Path en el momento del request.
+
+@RequestParam() : Recibe informacion parametrizada trasmitida por GET o POST.
+
+@RequestBody : Recibe el body del request para almacenarlo en un objeto
+
+
+--------------------------------------------------------------
+
+inician spring boot con maven(mvn):
+
+clean install spring-boot:run
+
+
+Ejemplo de de buscar por nombre con GET
+
+http://localhost:8080/v1/socialMedias?name=Linkedin
+
+Ejemplo de insert con POST
+
+http://localhost:8080/v1/socialMedias
+
+En el boddy poner el json
+{
+
+    "name": "testtt",
+    "icon": "avatar2"
+}
+
+
+Ejemplo con arrays
+
+
+{
+	"idTeacher": 1,
+	"teacherSocialMedias":
+		[
+			{
+				"nickname": "pemaj",
+				"socialMedia": 
+				{
+					"idSocialMedia":1
+				}
+			}
+		
+		
+		]
+	
+	
+}
+
+
+---------------------------------------------------------
+https://devcenter.heroku.com/
+
+
+

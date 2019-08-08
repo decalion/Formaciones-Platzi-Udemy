@@ -1,0 +1,135 @@
+
+Capa de Modelo: Organización y estructura de todas las clases o componentes relacionados con la base de datos.
+Capa de Negocio: Reglas, análisis y requerimientos funcionales principales o secundarios de la aplicación.
+Capa de Vista: Formularios y componentes visuales con los que los usuarios deben interactuar.
+
+-------------------------------------------
+
+
+
+Servlets: Son componentes del lado del servidor, que viven en un servidor web, son clases Java que solo funcionan en un servidor.
+
+Funcionalidades: Los Servlets tienen dos funcionalidades especificas.
+
+Procesar peticiones Request/Response.
+Generar contenido dinámico en base a las peticiones.
+Dos tipos de servlets:
+Http: Se encuantran en el paquete javax.servlet.http, utiliza los métodos get y post.
+GenericServlet: Permite otros protocolos, las clases se encuentran en javax,servlet, utiliza el método service.
+
+--------------------------------------------------
+
+
+
+lombok : anotacion @Data
+---------------------------
+Spring Data JPA
+
+.Existen varios repositorios de acuerdo a la tecnología a utilizar, 
+como CrudRepository, JPARepository y MongoRepository 
+(ambos basados en PageAndSortingRepository).
+
+Spring Data cuenta con soporte para realizar consultas personalizadas 
+basado en los atributos de la clase base que se generan de forma automática en el tiempo de ejecución 
+(Query Generation Strategy). También soporta otro tipo de consultas basadas en JPQL 
+(Java Persistence Query Language) como @Query y @NamedQuery.
+
+
+
+Para definir que una clase se va a mapear como jpa
+@Entity da soporte para que la clase represente una tabla de la BBDD
+@Table define a que tabla se va a mapear
+
+
+
+
+----------------------------------------------------------------------------------------------
+
+.Características de Spring Boot
+
+Spring Boot es una tecnología que permite optimizar los tiempos de desarrollo en la creación y despliegue de proyectos permitiéndonos a los desarrolladores enfocarnos en el desarrollo de la aplicación.
+Entre las características que tiene Spring Boot se puede mencionar las siguientes:
+
+.Aplicaciones Standalone
+
+Una aplicación en Spring Boot es empaquetada en un JAR con todas las dependencias para poder ejecutarse sin necesidad de instalar un servidor web. Permitiendo funcionar como una aplicación standalone.
+
+.Servidores Embebidos
+
+Spring Boot soporta a Tomcat y Jetty como servidores embebidos.
+
+.Configuración Simple
+
+Spring Boot soporta cada una de las características de los mòdulos de Spring como son Spring MVC, Spring Data, Spring Rest, Spring Security y lo hace de una manera simple, 
+a través de dependencias simples una sola por cada tecnologìa. Adicionalmente la forma de construirla y configurarla es simple y óptima de manera online a través de la herramienta Spring Initializr.
+
+.Características de Producción Listas
+
+Spring Boot viene con características de configuración predefinidas para ambientes de producción. Adicionalmente se puede configurar características de acuerdo a la ambiente a través de Spring Profiles.
+----------------------------------------------------------------------------------------------------------------
+
+
+https://start.spring.io/
+
+---------------------------------------------------------------------------------------------------------------------
+Comandos de docker:
+
+uso docker
+#version
+docker -v
+
+#bajarse postgres
+docker pull postgres:9.6.6-alpine
+
+#listar imagenes
+docker images
+
+#borrar imagenes
+docker rm 4f1b17bd2638
+
+**#crea contenedor **
+docker run -d --name postgres -p 5432:5432 -e POSTGRES_PASSWORD=icaballero23 postgres:9.6.6-alpine
+
+#listar contenedores
+docker ps -a
+
+#borrar contenedores
+docker rmi 587aa1d0e586
+
+#detener contenedor
+docker stop postgres
+
+#iniciar/reiniciar contenedor
+docker restart postgres
+
+------------------------------------------------------------------------------------------------------
+
+
+Configurar swagger con maven:
+
+
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.5.22</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.9.2</version>
+		    <scope>compile</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger-ui</artifactId>
+		    <version>2.9.2</version>
+		    <scope>compile</scope>
+		</dependency>
+		
+----------------------------------------------------------------------------------------------
+	
+url para consultar los servicios web publicados
+http://localhost:8080/swagger-ui.html	
+
+----------------------------------------------------------------------------	
+		
