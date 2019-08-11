@@ -1,0 +1,6 @@
+com\icaballero\jsf\bean\configuration\ConfigurationJSF.class
+com\icaballero\jsf\bean\Candidato.class
+com\icaballero\jsf\bean\lifecycle\DebuggerListener.class
+com\icaballero\jsf\bean\backing\VacanteForm.class
+com\icaballero\jsf\bean\Colonia.class
+com\icaballero\jsf\bean\helper\ColoniaHelper.class

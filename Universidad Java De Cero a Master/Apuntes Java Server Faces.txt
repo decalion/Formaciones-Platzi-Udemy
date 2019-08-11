@@ -1,0 +1,255 @@
+Apuntes de Java Server Faces
+
+Instalar JSF con dependencias
+https://javaee.github.io/javaserverfaces-spec/
+
+Manual de tags
+http://corejsf.com/jsf-tags.html
+
+Manual de apache log4j
+https://logging.apache.org/log4j/2.x/manual/configuration.html
+
+
+--------------------------------------------------------------------------------------
+Ejemplo de configuracion de web.xml para Java server Faces
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+  metadata-complete="true">
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>faces/index.xhtml</welcome-file>
+    </welcome-file-list>
+</web-app>
+
+
+-------------------------------------------------------------------------------------------------
+Ejemplo de configuracion de log4j
+
+Hay que crear una carpeta resources dentro de main y crear el fichero log4j2.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} -%msg%n"></PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" /> 
+        </Root>
+    </Loggers>
+</Configuration>
+
+----------------------------------------------------------------------------
+Dependencvias de log4j
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+
+		
+		  <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.11.1</version>
+        </dependency>
+
+--------------------------------------------------------------------------
+Dependencias JEE 8
+
+  <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>8.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+	
+------------------------------------------------------------------------------------------------------------------------
+Ejemplo de pom.xml de maven
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>comicaballero</groupId>
+    <artifactId>holamundoJSF</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>holamundoJSF</name>
+
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>8.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.12.0</version>
+        </dependency>
+            
+        
+        
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.3</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>
+
+
+
+----------------------------------------------------------------------------------------------------
+Para configurar Java server faces jay que crear una clase de configuracion.
+
+package com.icaballero.jsf.bean;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.faces.annotation.FacesConfig;
+import static javax.faces.annotation.FacesConfig.Version.JSF_2_3;
+
+@FacesConfig(
+
+        //Activa el CDI para los beans que se van a agregar
+        version = JSF_2_3
+)
+@ApplicationScoped
+public class ConfigurationJSF {
+    
+    
+    
+}
+-------------------------------------------------------------------------------------------------------------------------------
+Anotaciones
+
+@Named : para reconocer una clase como un Managed Beans de JSF
+@RequestScoped: definir el bean a nivel de request
+@Inject: para injectar una dependencia ("Igual que autowired en spring")
+
+
+
+
+---------------------------------------------------------------------------------
+Los beans se tienen que definir en un fichero bean.xml dentro de web-info
+
+Con el attributo bean-discovery-mode="all"  encuentra todos los beans de la aplicacion
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                            http://xmlns.jcp.org/xml/ns/javaee/beans_2_0.xsd"
+
+        bean-discovery-mode="all"                    
+        version="2.0">
+
+
+</beans>
+        
+------------------------------------------------------------------------------------------------------		
+	Ejemplo de configuracion de face_config.html dentro de web-inf para añadir el debug del ciclo de vida
+
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                        http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
+    version="2.3">
+    
+    <lifecycle>
+        <phase-listener>
+            com.icaballero.jsf.bean.lifecycle.DebuggerListener
+        </phase-listener>
+    </lifecycle>
+    <application>
+        <locale-config>
+            <default-locale>es</default-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>mensajes</base-name>
+            <var>msgs</var>
+        </resource-bundle>
+        <message-bundle>jsf</message-bundle>
+    </application>
+</faces-config>
+
+-----------------------------------------------------------------------------------------------------------------------------	
+
+Para utilizar las etiquetas de JSF hay que definir lo siguientes xmlns
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+	  
+----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

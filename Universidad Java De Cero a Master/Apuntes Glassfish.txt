@@ -1,0 +1,27 @@
+Apuntes glassfish
+
+-pagina principal : http://localhost:4848;
+
+glassfish\glassfish4\glassfish\bin/ asadmin.bat -> abrir como ventana de comandos.
+
+-comandos:
+
+asadmin start-domain
+
+asadmin stop-domain
+
+
+-Cambiar los puertos:
+
+\glassfish-4.1\glassfish4\glassfish\domains\domain1\config\domain.xml
+Abrir el archivo y buscar la entrada: <network-listeners>
+
+Cambiar de 8080 y 8181 a otro puerto, por ejemplo: 9090 y 9191
+
+
+
+-las aplicaciones java se ehecutaran en :
+http://localhost:8080;
+
+Despues del cambio
+http://localhost:9090;
