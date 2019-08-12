@@ -1,0 +1,759 @@
+Apuntes Spring
+
+En el controlador hay que definir en la clase la anotacion @Controller
+
+Por cada metodo podemos definir las siguientes anotaciones
+
+Con esta anotacion seleccionamos el tipo de peticion y el tipo de llamada (GET , POST ... ETC)
+@RequestMapping( value = "/index" , method = RequestMethod.GET)
+
+Tmbien hay anotaciones espesificas para el tipo de llamada
+@GetMapping( value = "/index")
+@PostMapping
+@PutMapping
+@DeleteMapping
+@PathMapping
+
+... etc
+
+Tambien puedes hacer que una llamada se mapee por multiples sitios 
+En este caso estamos diciendo que por el metodo get cuando ponga /index , / o /home va adevolver la vista del metodo
+@GetMapping({"/index", "/", "home"})
+
+------------------------------------------
+
+para pasar datos a la vista podemos definir en el metodo la clase ModelMap,  la interfaz model o llamar tambien a la interfe z map.
+
+	@GetMapping({"/index", "/", "home"})
+	public String index(ModelMap model) {
+		
+		model.addAttribute("titulo", "Hola Spring Framwork!");
+		
+		return "index";
+	}
+	
+	
+Ejemplo con map:
+
+	@GetMapping({"/index", "/", "home"})
+	public String index(Map<String, Object> map) {
+		
+		map.put("titulo", "Hola Spring Framwork!");
+		
+		return "index";
+	}	
+
+------------------------------------------------------------
+Con la clase ModelAndView podemos definir el nombre de la vista a devolver y definir attributos a enviar.
+
+
+	@GetMapping({"/index", "/", "home"})
+	public ModelAndView index(ModelAndView mv) {
+		
+		mv.addObject("titulo", "Hola Spring con Model And View!");
+		
+		mv.setViewName("index");
+		
+		return mv;
+	}
+	
+	
+	
+	
+	
+	
+-------------------------------------------------------------
+	
+para definir el tymeleaf en la vista hay que definir el xml name space
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+para llamar al los attributos definidos podemos utilizar el codi de temeleaf en las etiquetas
+
+<title th:text="${titulo}"></title>
+<h1 th:text="${titulo}"></h1>
+
+
+
+------------------------------------------------------------------------
+
+INJECCION DE DEPENDENCIAS.
+	
+La anotacion autowired permite injectar clases por injeccion de dependencia siemple que esas clases tengo alguna anotacion como @Component , @Services , @Controller o @Repository.
+
+Se puede injectar tanto por constructor como por metodos setter
+
+Es recomendable injectar siempre mediante una interfaz.
+
+En el caso que haya 2 clases que implementen esta interfaz spring no sabra que clase tiene que injectar asi que lo suyo es a la  hora de poner la anoacion componen.. etc asignar un nombre @Component("servicio").
+
+y a la hora de injectar utilizar la anotacion @Qualifier("servicio") con el nombre que se le ha dado a la clase.
+
+Tambien se puede utilizar la anotacion @Primary a la hora de definir el componenten para indicar que esa clase es la prioritaria a injectar
+
+
+
+@PostConstruct se llama despues de crear la clase
+
+
+por defecto todos los objetos inyectados con spring son de tipo singleton y permanecen activos mientras el servidor este arrancado.
+Si queremos que los objetos se creen y se destruyen al tipo de peticion httpp hay que añadir la anotacion @RequestScope
+
+@SessionScope para el nivel de session (Importante los objetos bean tienen que importar la interfaz serializable)
+
+@applicationScope es a nivel de aplicacion
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+JPA -  HIBERNATE
+
+Todas las clases pojo tienen que tener la anotacion de @Entity del paquete javax
+
+La anotacion @Table(name ="clientes") es opcional espara definir el nombre de la tabla si no se pone se llamara como la clase.
+
+Es importante importar la interfaz serializable ya que cuando se trabaja con json o otro tipo de datos se hace mas factible.
+
+para definir un id hay que utilizar la anotacion @Id
+con la anotacion @GenerateValue definimos que el id sera autoincrementar.
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+La anotacion @Column(name ="create_at") es opcional ya que pordefecto pillara el nombre de la variable.
+
+Con la anotacion @Temporal(TemporalType.DATE) definimos que tipo de fecha queremos que se guarde.
+
+	@Column(name ="create_at")
+	@Temporal(TemporalType.DATE)
+	private Date createAt;
+	
+
+Para crear los DAO hay que crear una interfaz donde se defina el comportamiento.
+
+En la clase que implementa la interfaz hay que definir la anotacion @Repository para indicar que es un componente de spring.
+
+El objeto EntityManager es el que se encarga de rea.lizar la acciones crud
+
+Con la anotacion  @PersistenceContext indicamos que spring lo autogenere (Igual que autowired)
+
+	@PersistenceContext
+	private EntityManager em;
+	
+	
+La annotacion @Transactional(readOnly = true) del paquete de spring es  para indicar que un metodo es solo de lectura.
+
+---------------------------------------------------------
+
+Configurar la consola de H2 en spring.
+
+en el fichero de properties
+
+spring.h2.console.enable=true
+
+La url para acceder
+
+http://localhost:8080/h2-console
+
+En la connexion de la BBDD tiene que estar 
+
+jdbc:h2:mem:testdb
+
+
+Tambien se pueden configurar los datos en el properties
+
+spring.datasource.url=jdbc:h2:mem:clientesdb
+spring.datasource.username=ismael
+spring.datasourcer.password=sa
+spring.datasource.driver-class=org.h2.Driver
+spring.h2.console.enable=true
+
+-----------------------------------------------------------------
+
+Configurar MYSQL en el fichero properties
+
+spring.datasource.url=jdbc:mysql://localhost/db_springboot?serverTimezone=Europe/Madrid&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=ismael23
+spring.datasource.driver-class=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect
+
+
+En la propiedad "spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect" donde pone 57 es la version de mysql en mi caso es la 5.7
+	
+Añadir tambien las 2 siguientes lineas para debugar y para que se reeseten los datos
+
+spring.jpa.hibernate.ddl-auto=create-drop
+logging.level.org.hibernate.SQL=debug
+	
+	
+---------------------------------------------------------
+
+Para exportar a PDF Utilizamos la libreria openPDF
+
+https://github.com/LibrePDF/OpenPDF
+
+  <dependency>
+        <groupId>com.github.librepdf</groupId>
+        <artifactId>openpdf</artifactId>
+        <version>1.3.0</version>
+    </dependency>
+	
+	
+
+Hay que configurar el application.properties	
+
+	
+spring.mvc.contentnegotiation.favor-parameter=true
+spring.mvc.contentnegotiation.media-types.pdf = application/pdf
+	
+	
+
+Pagina de documentacion de Itext para trabajar con las tablas:
+
+https://itextpdf.com/en/resources/examples
+
+----------------------------------------------------------------------------------
+
+para exportar a Excel hay que usar el api de poi apache
+
+Hay que importar las dependencias de maven tanto xml o como la standar
+
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.17</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.17</version>
+		</dependency>
+
+
+
+
+En el properties hay que importar el media type
+spring.mvc.contentnegotiation.media-types.xlsx = application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+
+
+En el siguiente links hay ejemplos de excel
+
+https://poi.apache.org/components/spreadsheet/examples.html
+
+	
+-------------------------------------------------------------------------------
+
+para exportar a CSV
+
+Utilizamos la libreria super csv
+http://super-csv.github.io/super-csv/downloading.html
+
+
+Maven:
+
+		<dependency>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+
+-----------------------------------------------------------------------------------------
+
+Para exportar a XML
+
+utilizamos la siguiente libreria "Spring oxm"
+https://mvnrepository.com/artifact/org.springframework/spring-oxm
+
+
+Si estamos utilizando un JDK 9 o superior hay que exportar otra libreria ya que el API-JAXB no esta.
+
+Buscamos por JAXB en maven repossitori y tenemos que agregar 2 dependencias.
+JAXB API y JAXB Runtime
+
+https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+
+https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime
+
+------------------------------------------------------------------------------------------------------
+JSON WEB TOKEN
+
+https://jwt.io/
+
+El api que se utiliza en java es : maven: io.jsonwebtoken / jjwt / 0.9.0
+
+https://github.com/jwtk/jjwt
+
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.10.7</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.10.7</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.10.7</version>
+    <scope>runtime</scope>
+</dependency>
+<!-- Uncomment this next dependency if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
+<dependency>
+    <groupId>org.bouncycastle</groupId>
+    <artifactId>bcprov-jdk15on</artifactId>
+    <version>1.60</version>
+    <scope>runtime</scope>
+</dependency>
+-->
+
+
+
+---------------------------------------------------------------------
+Deploys con tomcat embebido .JAR / .WAR
+
+Tiene que estar configurado el JDK en eclipse hay que hacer un maven install para que genere el jar
+
+Despues desde la consola de comandos. vamos a la carpeta del proyecto y ejecutamos con
+
+java -jar .\target\springbootdatajpa-0.0.1-SNAPSHOT.jar
+
+para ejecutar un WAR seria lo mismo.
+
+java -jar .\target\springbootdatajpa-0.0.1-SNAPSHOT.war
+
+--------------------------------------------------------------------------------
+Deploy servidor externo Tomcat
+
+
+
+Para desplegar en un servidor externo hay que cambiar la dependencia de tomcat para que no este embebido.
+
+Se tiene que añadir esta dependencia.
+
+	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		
+En el packing hay que marcarlo como war.
+
+<packaging>war</packaging>
+
+Tambien hay que quitar la dependencia de devtools si la tenemos.
+
+Si el proyecto esta hecho con JSP  hay que euitar la dependencia tomcat.embed.jasper
+
+
+Con maven clean limpiamos el directorio target.
+
+
+
+Para poder desplegar hay que generar una clase que llamaremos  ServletInitializer y tiene que hederar de  ServletInitializer
+
+Hay que sobrescribir el metodo configure para indicar cuasl es la clase inicial de nuestra aplicacion.
+
+
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
+/**
+ * Clase para desplegar en un tomcat externo
+ * @author ismael
+ *
+ */
+
+public class ServletInitializer extends SpringBootServletInitializer {
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		
+		//Hay que pasar la clase principal de spring
+		return builder.sources(SpringbootdatajpaApplication.class);
+	}
+	
+	
+	
+	
+
+}
+
+
+
+Hay que ir a la carperta donde este istalado el tomcat
+F:\Formaciones plataforma Udemy\Spring Framework 5 Creando webapp de cero a experto (2019)\Servers\apache-tomcat-9.0.22
+
+una vez dentro hay que ir al directorio bin.
+
+dentro de bin estan todo los comandos.
+
+para levantar apache hacemos :  startup
+
+
+
+Hay que copiar el fichero .war dentro del directorio webapps de apache tomcat, actuamoticamente se realizara el despliegue
+
+
+Para acceder a la web solo hay que poner localhost:8080 y el nombre que tenia el fichero war
+
+por ejemlo http://localhost:8080/springboottomcat-0.0.1-SNAPSHOT/
+
+
+
+con shutdown se apaga e servidor.
+
+---------------------------------------------------------------------------------------------------------------------
+Desplegar servidor externo wildfly (JBOSS)
+
+
+Los wars se tienen que copiar en la carpeta wildfly-17.0.1.Final\standalone\deployments
+
+
+Dentro de la carpeta  bin :  wildfly-17.0.1.Final\bin
+
+Estan todos los ficheros para arrancar el servidor, parara el servidor, hacer el despligue y eliminar un despliegue
+
+Con el comando stanalone levantamos el servidor.
+
+Abrimos un nuevo terminal y abrimos la consola de JBOSS
+
+ Con el comando :  jboss-cli.bat -c
+ 
+ Ahora dentro de la consola ejecutamos el comando deploy y la ruta donde esta el war para desplegar
+ 
+ deploy F:\Formaciones plataforma Udemy\Spring Framework 5 Creando webapp de cero a experto (2019)\Workspace\springbootdatajpa_jboss\target\springbootjboss-0.0.1-SNAPSHOT.war
+
+
+
+para acceder hay que poner el nombre del war.
+
+http://localhost:8080/springbootjboss-0.0.1-SNAPSHOT/
+
+ 
+ con el comando undeploy eliminamos el despliehue
+ 
+ undeploy springbootjboss-0.0.1-SNAPSHOT.war
+ 
+ 
+ para apagar el servidor hacemos un shutdown desde lña consola de comandos de jboss-cli
+ 
+ exit para salir.
+ 
+tambien podemos hacer    jboss-cli.bat --connect command=:shutdown
+para parar el servidor
+ 
+---------------------------------------------------------------------------------------------
+Desplegar servidor externo Glassfish
+
+
+Dentro de la carpeta bin estan los archivos para arrancar el server. glassfish5\bin
+
+con  asadmin.bat start-domain  arrancamos el server
+
+para hacer el deploy utilizamos el siguiente comando
+
+asadmin.bat deploy rutadelarchivo
+
+
+asadmin.bat list-applications : muestra todas las aplicaciones que tenemos desplegadas
+
+
+asadmin.bat stop-domain ; parar el servidor.
+
+
+---------------------------------------------------------------------------------------------------------
+Desplegando en Heroku
+
+https://dashboard.heroku.com/apps
+
+Creamo una nueva app.
+
+
+Hay que descargarse el heroku-cli
+
+
+se tiene que inicializar el repositorio y subir igual que como si fuera un git.
+
+heroku open : arrancamos el proyecto
+heroku logs --tail : visualizar los logs
+
+
+-----------------------------------------------------------------------
+Angular Frontend
+
+----
+Hay que instalar node.js
+
+https://nodejs.org/es/
+
+Se recomienda instalar siempre la ultima version LTS
+
+Desde el terminal
+
+node -v : ver la version de node instalada
+
+npm -v : ver la version del sistema de paquetes de node
+
+
+-------
+hay que instalar typescript
+
+https://www.typescriptlang.org/
+
+con node instalado usamos el siguiente comando para instalar typescript
+
+npm install -g typescript
+
+tsc -v : ver version de tyscript instalada
+
+
+-----------------------------
+
+hay que instalar Angular cli
+
+https://cli.angular.io/
+
+npm install -g @angular/cl : instalar agunlar cli
+
+ng version : ver version de angular
+
+
+para crear un proyecto angular
+
+ng new nombreproyecto : crear un nuevo proyecto
+
+ng serve : arrancar servidor (Hay que estar en la ruta del proyecto)
+
+
+------------------------------------------------
+
+uno de los editores para angular es atom
+
+https://atom.io/
+
+
+Lista de Pluguins a instalar en Atom:
+
+- angular2-typescrypt-snippets
+- atom-typescript
+- atom-boostrap3
+- atom-boostrap4
+- v-boostrap4
+- platformio-ide-terminal
+- file-icons
+- emmet
+- minimap
+
+
+
+
+
+------------------------------
+Directorios y ficheros de angular
+
+e2e: es donde esta todo lo necesario para testear.
+
+node2_module : estan todas las dependencias de angulas
+
+src : contiene todo el codigo fuente de la aplicacion
+
+.editorconfig : contiene toda la configuracion del editor , charset, tipo de tabulacion ..etc
+
+.gitignore : es un archivo de github que nos permite omitir archivos que no queremos que se suban a git
+
+angular.json : es el archivo de configuracion del proyecto
+
+package.json : contiene el nombre de la aplicacion , la version, las dependencias
+
+
+app.module.ts : es un repositorio donde se registran todos los componentes
+
+
+
+--------------------------------------------------------------------------------
+Crear componentees
+
+todos los component se tiene que importar en el app.modul
+
+los componen se definin con la anotacion @component que se importa del code de angular.
+La anotacion se tiene que definir en la clase
+
+Ejemplo :
+
+import { Component} from '@angular/core';
+
+@Component({
+  selector: 'app-directiva',
+  templateUrl: './directiva.component.html',
+  styleUrls: ['./directiva.component.css']
+})
+export class DirectivaComponent {}
+
+--------------------------------
+
+Crear component de manera automatica por consola
+
+Podemos crear un componente con el comando
+
+ng generate component "nombre de componente" 
+
+hay que estar dentro de la raiz del proyecto
+
+por ejemplo : "<clientes-app> ng generate component directiva"
+
+Tambien podemos usar el comando con alias
+
+ng g c directiva : la g es de generate y la c de component
+
+----------------------------------------------------------------------------------------
+Uso de directivas de Angular
+
+con la directiva *ngFor podemos iterar bucles
+
+Ejemplo de iterar una lista
+
+<div class="card">
+  <div class="card-header">
+      Listado de Cursos:
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item" *ngFor="let curso of listaCurso">
+      {{curso}}
+    </li>
+  </ul>
+</div>
+
+
+con la directiva *ngIf evaluamos una expresion
+
+Ejemplo de ngIf para ocultar o mostrar la lista
+
+<button type="button" (click)="habilitar = (habilitar == true)? false : true" class="btn btn-primary my-3">{{habilitar==true ? 'Ocultar' : 'Mostrar'}}</button>
+<div class="card">
+  <div class="card-header">
+      Listado de Cursos:
+  </div>
+
+  <ul class="list-group" *ngIf="habilitar == true">
+    <li class="list-group-item" *ngFor="let curso of listaCurso">
+      {{curso}}
+    </li>
+  </ul>
+
+</div>
+
+
+Ejemplo 2 definiend una funciuon en la clase.
+
+  setHabilitar() : void {
+    this.habilitar = (this.habilitar == true) ? false : true
+
+  }
+  
+  <button type="button" (click)="setHabilitar()" class="btn btn-primary my-3">{{habilitar==true ? 'Ocultar' : 'Mostrar'}}</button>
+<div class="card">
+  <div class="card-header">
+      Listado de Cursos:
+  </div>
+
+  <ul class="list-group" *ngIf="habilitar == true">
+    <li class="list-group-item" *ngFor="let curso of listaCurso">
+      {{curso}}
+    </li>
+  </ul>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------
+
+
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleafe.org">
+<head th:replace="layaout/layaout :: head">
+<meta charset="UTF-8" />
+
+</head>
+<body>
+	<header th:replace="layaout/layaout :: header"></header>
+
+	<div class="container py-4">
+	
+	</div>
+	
+	<footer th:replace="layaout/layaout :: footer"> </footer>
+
+</body>
+</html>
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO users (username, password, enable) VALUES ('ismael','$2a$10$7UhDfYUS7OWkXPfVfsMRM.TXQowdIahrum8.EeoQ/FfCvhywFaVMu',1);
+INSERT INTO users (username, password, enable) VALUES ('admin','$2a$10$HXohJTAjTRSBtrycshkAueLCdUrr3j2TaqGfJRPL8HIYKz/v0WxhK',1);
+
+INSERT INTO authorities(user_id,authority) VALUES(1,'ROLE_USER');
+INSERT INTO authorities(user_id,authority) VALUES(2,'ROLE_USER');
+INSERT INTO authorities(user_id,authority) VALUES(2,'ROLE_ADMIN');
+
+
+
+---------------------------------------------------------------------------
+
+data-target="#my-target"
+id="my-target"
+
+
+
+	
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+	
+
+
+	
+$2a$10$7UhDfYUS7OWkXPfVfsMRM.TXQowdIahrum8.EeoQ/FfCvhywFaVMu
+
+$2a$10$HXohJTAjTRSBtrycshkAueLCdUrr3j2TaqGfJRPL8HIYKz/v0WxhK
+	
+	
+	
+{
+	"username" : "ismael",
+	"password" : 12345
+}	
+	
+	
+Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6Ilt7XCJhdXRob3JpdHlcIjpcIlJPTEVfVVNFUlwifV0iLCJzdWIiOiJpc21hZWwiLCJpYXQiOjE1NjUyNjMxMTYsImV4cCI6MTU2NTI3NzUxNn0.u6w6y2X-X3hJ3SNJIAOJQnRR7qL3xtVmrruo-4wTcMq5I2zgoTnSvyP6v4LEA1V2BmA6AUbgogQeErjRrwSQqw
+Bearer 
