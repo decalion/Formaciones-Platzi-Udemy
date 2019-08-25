@@ -576,6 +576,18 @@ app.module.ts : es un repositorio donde se registran todos los componentes
 
 
 
+comandos
+---------------
+
+ng new nombreproyecto: crear u nnuevo proyecto
+ng serve : arrancar servidor
+ng generate component : crear un componente
+ng generate class : crear una clase
+ng generate service : crear una clase de servicio
+
+
+
+
 --------------------------------------------------------------------------------
 Crear componentees
 
@@ -610,6 +622,13 @@ por ejemplo : "<clientes-app> ng generate component directiva"
 Tambien podemos usar el comando con alias
 
 ng g c directiva : la g es de generate y la c de component
+
+
+
+ng g c clientes/form --flat : con esto indicamos que se cre el componente form dentro de clientes y con el --flat indicamos que no se cree el directorio form
+
+
+
 
 ----------------------------------------------------------------------------------------
 Uso de directivas de Angular
@@ -649,7 +668,7 @@ Ejemplo de ngIf para ocultar o mostrar la lista
 </div>
 
 
-Ejemplo 2 definiend una funciuon en la clase.
+Ejemplo 2 definiendo una funciuon en la clase.
 
   setHabilitar() : void {
     this.habilitar = (this.habilitar == true) ? false : true
@@ -671,10 +690,296 @@ Ejemplo 2 definiend una funciuon en la clase.
 </div>
 
 
+-------------------------------------
+Anotaciones
+
+@Injectable : es que es una clase de servicio se puede injectar por dependencias
 
 
 
 
+------------------------------------------------------------------------
+app-moduls
+
+declaration : se definen los componentes
+providers: se definen las clases de servicio
+
+Para definir rutas hay que importar las clases RouterModule y Routes.
+Creamos un array con las rutas
+
+import {RouterModule, Routes} from '@angular/router';
+
+const routes :Routes = [
+  {path:'',redirectTo:'/clientes',pathMatch:'full'},
+  {path:'directivas',component:DirectivaComponent},
+  {path:'clientes',component:ClientesComponent}
+]
+
+
+Una vez definidas las rutas hay que cargarlas en el import del app-modules
+  imports: [
+    ....
+    RouterModule.forRoot(routes)
+  ]
+  
+
+ para definir las rutas hay que utilizar la siguiente etiqueta en el app.component.html
+  <router-outlet></router-outlet>
+ 
+ Luego en el html donde este el menu
+ 
+podemos utilizar estas 2 direcctivas para definir las rutas
+
+routerLink="/directivas" : para definir la url que esta mapeando
+routerLinkActive="active" : para que cuando cambie se marque activa
+
+Por ejemplo:
+
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/directivas">Directivas <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/clientes">Clientes <span class="sr-only">(current)</span></a>
+      </li>
+
+	  
+	  
+	  
+------------------------------------
+Añadir boostrap al proyecto.
+
+Dentro de la carpeta assets creamos las carpetas css y js
+
+dentro de css añadimos el fichero boostrap.min.css
+
+dentro de js añadimos los javascripts
+
+Luego hay que ir al fichero angular.json y configurar las rutas
+
+por ejrmplo
+
+            "styles": [
+              "src/styles.css",
+              "src/assets/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "src/assets/js/jquery-3.3.1.slim.min.js",
+              "src/assets/js/popper.min.js",
+              "src/assets/js/bootstrap.min.js"
+            ]
+			
+importante cada ve<z que se modifica el angular.json hay que hacer un reinicio
+
+Tambien podemos instalar boostrap utilizando el node package manager npm
+
+npm install boostrap@4.0.0-beta.2 jquery popper.js --save
+
+
+Se instala dento de node_modules, hay que remplazar las rutas del angular.json por las rutas donde estan los ficheros
+
+por ejemplo "../node_modules/jquery/dist/jquery.slim.min.js"
+ 
+  
+
+---------------------------------------------
+Conectarse a un api rest desde el frontend para obtener los datos
+
+Hay que importar el modulo HttpClientModule en el app.module
+
+import { HttpClientModule } from '@angular/common/http';
+
+una vez importado lo registramos en el array de imports
+
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(routes)
+  ],
+  
+  
+ Ahora en la clase clienre service tenemos que importar el objeto HttpClientModule
+ 
+ import {HttpClient} from '@angular/common/http';
+ 
+ y tenemos que injectarlo en el constructor
+ 
+ constructor(private http : HttpClient) { }
+ 
+ 
+ para utilizar el objeto htttp tenemos que llamar el objeto y el verbo, post,get,put, deleted
+ 
+ por ejemplo
+ 
+ definimos la url en una variable 
+ 
+ private urlEndpoint : string = 'http://localhost:8080/api/clientes';
+ 
+ y llamamos al objeto http , Hay que indicar que devulve un array de clientes
+ 
+this.http.get<Cliente[]>(this.urlEndpoint);
+
+
+----------------------------------------------
+Modulo para formularios
+
+Hay que importar el FormModule
+
+import  {FormsModule } from '@angular/forms';  
+
+y añadirlo a imports
+
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    RouterModule.forRoot(routes),
+    FormsModule
+  ],
+  
+  
+
+La directiva [(ngModel)]="" lo que haces es un binding, sirve para guardar / enlazar los datos de un formalurio en un objeto o variable definidas
+
+El binding es en ambas direcciones sirve tanto para guardar como mostrar
+
+por ejemplo en la clase foorm.componente.ts creamos el objeto cliente
+
+private cliente : Cliente = new Cliente();
+ 
+y en el formulario con la directiva hacemos que se guarden los datos.
+ 
+<input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido">
+
+  
+Con la directiva (ngSubmit) = "create()" hacemos que cuando se envie el formulario llame al metodo create.
+
+ <form (ngSubmit) = "create()">
+ 
+ 
+  
+ Hay que añadir la url de mapeo del form en el array de Routes del app-modules
+
+ {path: 'clientes/form', component: FormComponent} 
+ 
+ 
+ 
+ Con la directiva routerLink podemos crear rutas internas a componentes.
+ 
+ [routerLink] = "['/clientes/form']"
+ 
+ Por ejemplo un botton que lleve al formulario
+ 
+ <button class="btn btn-rounded btn-primary" [routerLink] = "['/clientes/form']">Crear Cliente</button>
+ 
+ 
+ -----------------------------------------------------------
+ 
+ Instarlar swar alert
+ 
+ Si instalan la última versión del SweetAlert2, la v8.10.0 o superior van a obtener un error:
+
+"Cannot invoke an expression whose type lacks a call signature. "
+
+Con la nueva versión, solo hay que llamar al método fire, según la documentación sería:
+
+        // ES6 Modules or TypeScript
+        import swal from 'sweetalert2';
+        .... 
+        swal.fire(  'The Internet?',  'That thing is still around?',  'success');
+        ...
+Links: https://sweetalert2.github.io/#examples
+
+Además, en la nueva versión NO agrega automáticamente los estilos CSS, hay que hacerlo a mano en el archivo angular.json, por ejemplo agregando los estilos en la propiedad "styles":
+
+                "styles": [
+                  "src/styles.css",
+                  ...
+                  "node_modules/sweetalert2/dist/sweetalert2.min.css",
+                ],
+
+
+Otra alternativa, pueden instalar la versión 7.26.9 que usamos en el curso, anterior a la 8:
+
+npm install --save sweetalert2@7.26.9
+
+
+ 
+---------------------------------------------------------
+Control de errores
+
+Hay que importar la clase catchError se encuentra en el mismo paquete que map
+
+import { map, catchError } from 'rxjs/operators';
+
+catchError es para capturar el error enviado del backend
+
+Tambienm hay que importar la clase throwError del mismo paquete que observable y of
+
+import {Observable , of, throwError} from  'rxjs';
+
+throwError sirve para devolver el mensaje de error como un observable
+
+
+Ejemplo de capturar un error
+
+  getCliente(id) : Observable<Cliente>{
+    return this.http.get<Cliente>(`${this.urlEndpoint}/${id}`).pipe(
+      catchError(e => {
+        this.router.navigate(['/clientes']);
+        console.error(e.error.mensaje);
+        swal('Error al Editar', e.error.mensaje, 'error');
+        return  throwError(e);
+      })
+    )
+  }
+  
+Ejemplo de crear, update y delete
+
+
+  create(cliente :Cliente) : Observable<Cliente>{
+
+
+    return this.http.post(this.urlEndpoint,cliente,{headers :this.httpHeaders}).pipe(
+      map( (response : any) => response.cliente as Cliente),
+        catchError( e => {
+          console.error(e.error.mensaje)
+          swal(e.error.mensaje, e.error.error, 'error');
+          return  throwError(e);
+        })
+    );
+
+  }
+
+  update(cliente : Cliente) : Observable<Cliente>{
+
+    return this.http.put<Cliente>(`${this.urlEndpoint}/${cliente.id}`,cliente,{headers: this.httpHeaders}).pipe(
+      catchError( e => {
+        console.error(e.error.mensaje)
+          swal(e.error.mensaje, e.error.error, 'error');
+        return  throwError(e);
+      })
+    );
+  }
+
+
+
+    delete(id : number) : Observable<Cliente>{
+
+      return this.http.delete<Cliente>(`${this.urlEndpoint}/${id}`, {headers: this.httpHeaders}).pipe(
+        catchError( e => {
+          console.error(e.error.mensaje)
+            swal(e.error.mensaje, e.error.error, 'error');
+          return  throwError(e);
+        })
+      );
+   }  
+  
+ 
+  
+
+
+
+  
+  
 
 
 
@@ -683,6 +988,519 @@ Ejemplo 2 definiend una funciuon en la clase.
 
 
 ---------------------------------------------------------------------------------------------
+API REST CON Spring Framwork
+
+
+Configurando el JDBC de mysql en el application properties.
+
+spring.datasource.url=jdbc:mysql://localhost/db_springboot_backend?serverTimezone=Europe/Madrid&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=ismael23
+spring.datasource.driver-class=com.mysql.cj.jdbc.Driver
+spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect
+
+
+en la propiedad "spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect" donde pone 57 es la version de mysql en mi caso es la 5.7
+
+Añadir tambien las 2 siguientes lineas para debugar y para que se reeseten los datos
+
+spring.jpa.hibernate.ddl-auto=create-drop
+logging.level.org.hibernate.SQL=debug
+
+
+---------------------------------
+Creando la Clase clientes
+
+una buena practica es implementar la interfaz Serializable
+
+@Entity : es para indicar que esta clase es una entidad de JPA se importa del paque Javax.persistence.Entity
+
+Si la clase se llama igual que la tabla de base de datos no hace falta poner la anotacion table
+
+@Table : para indicar el nombre de la tabla de la BBDD
+@Table(name="clientes")
+
+En los atributos tambien podemos añadir anotaciones para indicar que son ampos de la BBDD
+
+@Id : para indicar que es la clave primaria
+@GeneratedValue = para indicar que se genere automaticamente el id
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+
+@Column = para indicar que un atributto es una columna de la tabla solo se usa si el atributo se llama diferente a la columna
+
+	@Column(name= "nombre_usuario")
+	private String nombre;
+
+
+@Temporal = se utiliza para las fechas para indicar con que tipo de datos queremos trabajar,fechas,tiempo o fechas y tiempo
+
+	@Column(name = "create_at")
+	@Temporal(TemporalType.DATE)
+	private Date createAt;
+	
+	
+	
+@PrePresist : para inicializar algun dato antes de que se guarde en la Base de datos
+	@PostMapping("/clientes")
+	public Cliente create(@RequestBody Cliente cliente) {
+		
+		
+		
+		return clienteService.save(cliente);
+		
+	}
+	
+	
+	
+@ResponseStatus: para que devuelve un codigo al hacerse la peticion
+por ejemplo cuando se crear un objeto
+
+	@PostMapping("/clientes")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Cliente create(@RequestBody Cliente cliente) {
+		
+		
+		
+		return clienteService.save(cliente);
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+--------------------------------------
+Creando las clases de acceso a datos ( DAO o Repository) y la clase Services
+
+La APP JPA ya incluye todo lo necesario para hacer un CRUD
+
+Solo hay que crear una interface y extender de la interface CrudRepository
+
+La interfaz CrudRepository es un tipo generico hay que indicar el dato y el identificar
+
+Por ejemplo Clientes y Long , Long es el id de clientes
+
+IClienteDao extends CrudRepository<Cliente, Long> 
+
+
+En la documentacion podemos encontrar mas informacion
+
+https://docs.spring.io/spring-data/jpa/docs/2.1.10.RELEASE/reference/html/#repositories.core-concepts
+
+
+Si generamos metodos propopios en la clase dao hay que utilizar la anotacion Transactional
+
+Se tiene que importar de 
+import org.springframework.transaction.annotation.Transactional;
+
+Para consultas
+@Transactional(readOnly = true)
+
+
+
+
+
+
+------------------------------------------------------------------
+Controlador
+
+Como es un api rest hay que anotar la clase con @RestController
+
+Tambien hay que definir la url de mapeo de la clase
+
+@RequestMapping("/api")
+
+
+@PathVariable : para indicar que vamos a recibir algo en el path
+
+Ejemplo de busqueda de1 cliente por id
+	@GetMapping("/clientes/{id}")
+	public Cliente show(@PathVariable Long id) {
+		
+		return clienteService.findById(id);
+		
+	}
+	
+	
+
+@RequestBody : para indicar que vamos a recibir un objeto json
+
+	@PostMapping("/clientes")
+	public Cliente create(@RequestBody Cliente cliente) {
+		
+		return clienteService.save(cliente);
+		
+	}	
+
+
+
+
+
+
+--------------------------------------------
+Auto Cargar datos de Prueba
+
+En la ruta de resources creamos un archivo con el nombre import.sql
+
+El nombre es importante ya que Spring boot a travez de JPA lo reconoce automaticamente
+
+
+
+----------------------------------------------------
+CORS
+
+Cors significa intercambio de Recursos de origin Cruzado perimite a los navegadores
+modernos enviar y recibir datos restringidos entre diferentes dominios
+
+Primero Hay que configurar cors en el backend
+
+hay que anotar la clase controller con @CrossOrigin
+
+y añadir la url que queremos permitir por ejempñlo en angular http://localhost:4200
+
+Con esta anotacion tambien podemos definir que tipo de peticiones permitimos , GET,POST,PUT..ETC y tambien el tipo de Headers
+
+@CrossOrigin(origins = {"http://localhost:4200"})
+
+
+--------------------------------------------------------------------
+
+Controlar errores al hacer peticiones.
+
+Con la clase ResponseEntity podemos enviar el objeto ya sea un mensaje y un estado de Http con la clase HttpStatus.
+
+Ejemplo del metodo motrar todo.
+
+
+	@GetMapping("/clientes/{id}")
+	public ResponseEntity<?> show(@PathVariable Long id) {
+
+		
+		Cliente cliente = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			cliente =  clienteService.findById(id);
+			
+		} catch(DataAccessException e) {
+			
+			response.put("mensaje", "Error Al Realizar la consulta en la base de datos");
+			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
+
+		if(cliente == null) {
+			response.put("mensaje", "El cliente ID:".concat(id.toString()).concat("No existe en la Base de Datos"));
+			
+			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.NOT_FOUND);
+		
+		}
+
+		return new ResponseEntity<Cliente>(cliente,HttpStatus.OK);
+				
+	}
+
+
+Ejemplo de crear cliente
+
+
+	@PostMapping("/clientes")
+	public ResponseEntity<?> create(@RequestBody Cliente cliente) {
+
+		Cliente clienteNew = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		try {
+			clienteNew = clienteService.save(cliente);
+			
+		}catch(DataAccessException e){
+			
+			response.put("mensaje", "Error Al Realizar el Insert en la base de datos");
+			response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String,Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		response.put("mensaje","El Cliente ha sido creado con exito!");
+		response.put("cliente",clienteNew);
+		
+		
+		return new ResponseEntity<Map<String,Object>>(response ,HttpStatus.CREATED);
+
+	}
+
+	
+Ejemplo del metodo update
+
+	@PutMapping("/clientes/{id}")
+	public ResponseEntity<?> update(@RequestBody Cliente cliente, @PathVariable Long id) {
+
+		Cliente clienteActual = clienteService.findById(id);
+		Cliente clienteUpdate = null;
+
+		Map<String, Object> response = new HashMap<>();
+
+		if (clienteActual == null) {
+			response.put("mensaje", "Error: no se pudo editar. El cliente ID : ".concat(id.toString())
+					.concat(" No existe en la Base de Datos"));
+
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+
+		}
+
+		try {
+
+			clienteActual.setApellido(cliente.getApellido());
+			clienteActual.setNombre(cliente.getNombre());
+			clienteActual.setEmail(cliente.getEmail());
+
+			clienteUpdate = clienteService.save(clienteActual);
+
+		} catch (DataAccessException e) {
+
+			response.put("mensaje", "Error Al Realizar al Actualizar en la base de datos");
+			response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("mensaje", "El Cliente ha sido creado con exito!");
+		response.put("cliente", clienteUpdate);
+
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+	}
+	
+	
+Ejemplo de eliminar
+
+	@DeleteMapping("/clientes/{id}")
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			clienteService.delete(id);
+
+		} catch (DataAccessException e) {
+
+			response.put("mensaje", "Error  al eliminar el cliente en la base de datos");
+			response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("mensaje", "El cliente eliminado con exito!");
+
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
+
+	}
+	
+--------------------------------------------------------
+Api validation de Spring framwork
+
+anotaciones para añadir reglas de validacion en la clase entity
+
+las anotaciones se importan de javax.validation.constraints para spring boot 2
+
+@NotEmpty
+@Size(min = 4, max= 12)
+@NotEmpty
+@Email
+
+ejemplos :
+
+	@NotEmpty
+	@Size(min = 4, max= 12)
+	@Column(nullable = false)
+	private String nombre;
+	
+	@NotEmpty
+	private String apellido;
+	
+	@NotEmpty
+	@Email
+	@Column(nullable = false,unique = true)
+	private String email;
+
+
+
+El controlador hace estas validaciones a travez de un interceptor
+
+para eso hay que utilizar la anotacion @Valid y luego injectar el objeto que tiene todos los mensajes de error
+
+El objeto es BindingResult del paquete org.springframework.validation.BindingResult;
+
+
+
+Ejemplo de creat y update
+
+
+	@PostMapping("/clientes")
+	public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result) {
+
+		Cliente clienteNew = null;
+		Map<String, Object> response = new HashMap<>();
+		
+		//Verificamos si hay errores en las validaciones
+		if(result.hasErrors()) {
+			
+			/*
+			  Esta forma es anterior al jdk8
+			//Creamos una lista para guardar los campos con errores
+			List<String> errors = new ArrayList<>();
+			
+			//Recorremos la lista de errrores para añadirla en la nueva lista
+			for(FieldError err : result.getFieldErrors()) {
+				
+				errors.add("El campo '" + err.getField() +"' " +err.getDefaultMessage());
+				
+			}
+			*/
+			
+			//Hace lo mismo que lo anterior pero con programacion funcional
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map( err -> "El campo '" + err.getField() +"' " +err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			
+			response.put("errors", errors);
+			
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+
+		try {
+			clienteNew = clienteService.save(cliente);
+
+		} catch (DataAccessException e) {
+
+			response.put("mensaje", "Error Al Realizar el Insert en la base de datos");
+			response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("mensaje", "El Cliente ha sido creado con exito!");
+		response.put("cliente", clienteNew);
+
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+	}
+
+	
+	
+	@PutMapping("/clientes/{id}")
+	public ResponseEntity<?> update(@Valid @RequestBody Cliente cliente, @PathVariable Long id,  BindingResult result) {
+
+		Cliente clienteActual = clienteService.findById(id);
+		Cliente clienteUpdate = null;
+
+		Map<String, Object> response = new HashMap<>();
+		
+		
+		if(result.hasErrors()) {
+			
+			List<String> errors = result.getFieldErrors()
+					.stream()
+					.map( err -> "El campo '" + err.getField() +"' " +err.getDefaultMessage())
+					.collect(Collectors.toList());
+			
+			
+			response.put("errors", errors);
+			
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+		}
+
+
+
+		if (clienteActual == null) {
+			response.put("mensaje", "Error: no se pudo editar. El cliente ID : ".concat(id.toString())
+					.concat(" No existe en la Base de Datos"));
+
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+
+		}
+
+		try {
+
+			clienteActual.setApellido(cliente.getApellido());
+			clienteActual.setNombre(cliente.getNombre());
+			clienteActual.setEmail(cliente.getEmail());
+			clienteActual.setCreateAt(cliente.getCreateAt());
+
+			clienteUpdate = clienteService.save(clienteActual);
+
+		} catch (DataAccessException e) {
+
+			response.put("mensaje", "Error Al Realizar al Actualizar en la base de datos");
+			response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		response.put("mensaje", "El Cliente ha sido actualizado con exito!");
+		response.put("cliente", clienteUpdate);
+
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+	}
+
+
+
+	
+	
+	
+
+	
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
