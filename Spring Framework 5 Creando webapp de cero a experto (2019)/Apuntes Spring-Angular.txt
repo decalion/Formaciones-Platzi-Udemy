@@ -1453,55 +1453,146 @@ Ejemplo de creat y update
 
 
 
+-------------------------------------------
+Spring web-flux , programacion Reactiva
+
+Tenemos 2 apis :
+https://projectreactor.io/	
+http://reactivex.io/
+
+Vamos a utilizar la reactor Api
+
+https://projectreactor.io/docs/core/release/reference/#getting
+
+    <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-core</artifactId> 
+    </dependency>
+    <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-test</artifactId> 
+        <scope>test</scope>
+    </dependency>
 	
 	
-	
-
-	
+Para que una aplicacion de Springboot sea de consola hay qye implementar la interfaz CommandLineRunner en la clase inicial de la app
 
 
 
 
 
+-------------------------------
+Instalacion de MongoDB
+
+https://www.mongodb.com/
+
+docomuentacion de mongo
+https://docs.mongodb.com/manual/tutorial/getting-started/
+
+Hay que descargar la version comunity que es gratuita
+
+Hay quer agregar la ruta donde estan los ejecutables al path
+
+C:\Program Files\MongoDB\Server\4.2\bin
+
+para comprobrar que esta bien intalado abrimos un cmd y utilizamos el comando.
+
+mongo -version
+
+mongo  : conectarse a la base de datos
+
+db : muestra las base de datos
+
+use nombrebasedatos : para seleccionar una base de datos
+
+
+
+ejemplo de insert :
+
+db.inventory.insertMany([
+   // MongoDB adds the _id field with an ObjectId if _id is not present
+   { item: "journal", qty: 25, status: "A",
+       size: { h: 14, w: 21, uom: "cm" }, tags: [ "blank", "red" ] },
+   { item: "notebook", qty: 50, status: "A",
+       size: { h: 8.5, w: 11, uom: "in" }, tags: [ "red", "blank" ] },
+   { item: "paper", qty: 100, status: "D",
+       size: { h: 8.5, w: 11, uom: "in" }, tags: [ "red", "blank", "plain" ] },
+   { item: "planner", qty: 75, status: "D",
+       size: { h: 22.85, w: 30, uom: "cm" }, tags: [ "blank", "red" ] },
+   { item: "postcard", qty: 45, status: "A",
+       size: { h: 10, w: 15.25, uom: "cm" }, tags: [ "blue" ] }
+]);
+
+
+
+Ejemplo de busquedas
+
+db.inventory.find()
+
+db.inventory.find( { status: "D" } )
+
+db.inventory.find( { size: { h: 14, w: 21, uom: "cm" } } )
+
+
+--------------------------
+Herramienta grafica para trabajar con mongo ROBO 3T
+
+https://robomongo.org/
 
 
 ----------------------------------------------------------------------
+A diferencia de JPA que utilizamos la anotacion @Entity
+
+cuando trabajamos con base de datos no Relacionales tenemos que utilizar
+
+@Document
+
+del paquete org.springframework.data.mongodb.core.mapping.Document
+
+
+Igual que en jpa podemos indicar el nombre de la tabla aqui se puede indicar el nombre de la coleccion
+
+@Document(collection = "productos")
+
+
+@Id para indicar que es un id org.springframework.data.annotation.Id; tiene que ser de tipo String
+
+
+
+Los objetos se transforman en BSON (Binary Json) que es como trabaja mongodb
 
 
 
 
+En la cacapa dao la interfaz tiene que implementar ReactiveMongoRepository del paquete org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
+public interface IProductoDao extends ReactiveMongoRepository<Producto, String> {}
+
+--------------------------------------------------------------------
+Configurar la BBDD en el application.properties
+
+En caso de no existir la bbdd la crea , mongodb utiliza el puert 27017 por defecto.
+
+spring.data.mongodb.uri= mongodb://localhost:27017/spring_boot_flux
 
 
 
+--------------
+Configurar el chunk(cache) en el application.properties
+
+Se aplica a todas las vistas.
+
+spring.thymeleaf.reactive.max-chunk-size=1024
 
 
 
+Si solo queremos que esta configuracion se aplique algunas vistas usamos la siguiente propiedad
 
-
-
-
-
-
+spring.thymeleaf.reactive.chunked-mode-view-names=listar-chunked
 
 
 
 -----------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
