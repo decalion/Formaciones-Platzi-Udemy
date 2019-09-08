@@ -1,0 +1,99 @@
+ ESTRUCTURA de Directorios de tombcat
+ 
+ /bin : contiene los ejercutables para iniciar y detener el servidor
+ /conf : archivos de configuracion , web.xml,server.xml,context.xml,tomcat-user,xml ..etc
+ /lib: contiene los archivos JAR disponibles para todas las aplicaciones web
+ /logs: Archivos de los. El mas importante catalina.out
+ /temp: Archivos temporales usados por la JVM
+ /webapps: En esye directorio se guardan las aplicaciones web.
+ /work: Aqui se guard el codigo fuente .class para los servlets que genera tomcat apartir de los JSP
+ 
+ ---------------------------------------------------------------
+Estructura de una aplicacion web
+ 
+ (root) : Este directorio es el conteneDOR principal de la aplicacion. Contiene archivos HTML,CSS, javascript y JSP
+			Se conoce como directorio raiz de la aplicacion
+
+/WEB-INF : Este directorio normalmente tiene un archivo web.xml conocido como Deployment Descriprtor(DD) Es el archivo de configuracion de los servlets y Otros Componentes
+			Este directorio no es accesible via web.
+			
+/WEB-INF/classes : Este directorio y sus subdirectorio contienen los servlets y otras clases java de la aplicacion.
+
+/WEB-INF/lib : Este directorio contiene cualquier archivo JAR que contiene clases y que son accesibles solo esta aplicacion web.
+				Este directorio puede ser opcional.
+				
+/META-INF : Este directorio contiene el archivo context.xml que puede ser usado para configurar el contexto de la aplicacion.
+				Este directorio puede ser opcional.
+				
+
+				
+-------------------------------------------------------------------------------------------------------------------				
+ 
+ Configurar el administrador de aplicaciones de tomcat
+ 
+ http://localhost:8080/manager/
+ 
+ Hay que ir al archivo tomcat-users.xml y añadir el rol manager-gui al usuario que queremos que pueda acceder.
+ 
+   <user password="ismael23" roles="manager-script,admin,manager-gui" username="admin"/>
+   
+------------------------------------------------------------------------------------------------------------
+ Ejemplos de tipo MIME
+ 
+ text/html  -> documento html
+ 
+ text/xml	-> documento xml
+ 
+ text/css	-> estilos css
+ 
+ video/mpeg	-> archivo video MPEG
+ 
+ application/zip	-> comprimido zip
+ 
+ application/pdf	-> PDF
+ 
+ application/vnd.ms-excel	-> Excel
+ 
+ image/png	-> imagen PNG
+ 
+ image/gif	-> imagen GIF(Animacion)
+ 
+ 
+ ---------------------------------------------------------------------------------------------------
+   
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
