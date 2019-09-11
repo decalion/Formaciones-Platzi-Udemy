@@ -60,14 +60,44 @@ Estructura de una aplicacion web
  
  
  ---------------------------------------------------------------------------------------------------
+ JSP (Scriptlets)
+
+Hay 4 maneras de usar los scriptles 
    
+<%  %> -> Ejemplo: <% Double precio = 1.4 ; Factura fa = new Factura(); %>
+ 
+<%=expresion  %> -> ejemplo <h1><%=precio%></h1> "Esto equivale a hacer out.println(expresion)"
+
+ <%! field or method declaration %> -> ejemplo <%! int data=50; %> <%="El valor es " + data%>
+ 
+ <%-- Comentario --%> -> con este comentamos un scriptlets
+ 
+ 
+ ------------------------------------------------------------------------------------------
+ Añadir import a las JSP.
+ 
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+
+
+---------------------------------------------------------------
+ Expression Leanguage (EL)
+ 
+ ${user.name}
  
  
  
+ -----------------------------------------------------------------
+ JSTL
  
- 
- 
- 
+<c:forEach>
+<c:if>
+<c:choose>
+<c:when> 
+<c:otherwise>
+
+
+-----------------------------------------------------
  
  
  
