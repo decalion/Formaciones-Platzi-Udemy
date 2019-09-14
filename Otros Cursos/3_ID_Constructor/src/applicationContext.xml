@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="suma" class="es.ejemplos.beans.Suma"/>
+	
+	<bean id="resta" class="es.ejemplos.beans.Resta"/>
+	
+	<bean id="servicio" class="es.ejemplos.beans.Servicio">
+		<!-- <constructor-arg ref="resta"/> -->
+		 <constructor-arg ref="suma"/> 
+	</bean>
+	
+		<bean id="servicioRest" class="es.ejemplos.beans.Servicio">
+		<constructor-arg ref="resta"/>
+
+	</bean>
+	
+	<!-- Vemos que solo cambiando una linea aquí, el funcionamiento de la aplicación varía, realiza la operación de suma o resta
+	en función del parámetro pasado al bean servicio -->
+
+	<!-- 
+		En la etiqueta constructor-arg en vez del atributo "ref" que sirve para referenciar a otro bean, 
+		podemos usar el atributo "value" que sirva para pasar valores. 
+			
+		Ejemplo: 
+			
+			<constructor-arg value="texto a pasar"/>
+	 -->
+
+
+
+</beans>

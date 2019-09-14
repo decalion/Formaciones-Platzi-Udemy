@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="coche1" class="es.ejemplos.beans.Coche">
+        <property name="marca" value="Seat" />
+        <property name="modelo" value="Leon" />
+        <property name="age" value="10" />
+        <property name="km" value="111000" />
+    </bean>
+
+    <bean id="coche2" class="es.ejemplos.beans.Coche">
+        <property name="marca" value="Chevrolet" />
+        <property name="modelo" value="Captiva" />
+        <property name="age" value="1" />
+        <property name="km" value="8000" />
+    </bean>
+
+    <bean id="colecciones" class="es.ejemplos.beans.ManejadorColecciones">
+
+		<!-- Si queremos pasar a la lista, referencias de otros beans usaremos el elemento "<ref>", donde dentro
+			indicaremos con el atributo "bean" la referencia al bean que usaremos.
+					
+					<ref bean="referenciaBean"/>
+			
+			Si lo que queremos es pasar un primitivo (incluye a los String, a pesar de no ser primitivo), usaremos
+			el elemento "<value>", y si este es un tipo de dato diferente a String, usaremos el atributo "type"
+			para indicarle que tipo de dato es: 
+			
+					<value>Paso un string</value>
+					<value type="java.lang.Integer">10</value> 
+		 -->
+        <property name="lista">
+            <list>
+                <ref bean="coche1" />
+                <ref bean="coche2" />
+            </list>
+        </property>
+
+        <property name="arrayElementos">
+            <array>
+                <ref bean="coche1" />
+                <ref bean="coche2" />
+			    <bean id="coche3" class="es.ejemplos.beans.Coche">
+			        	<property name="marca" value="Ssangyong" />
+			        <property name="modelo" value="Korando" />
+			        <property name="age" value="1" />
+			        <property name="km" value="20000" />
+			    </bean>
+            </array>
+        </property>
+
+
+		<!-- En este observaremos que se pasan la referencia de 3 beans, pero al final solo admitira dos, ya
+		que uno de ellos está duplicado, y la interfaz SET no admite duplicados -->
+
+        <property name="conjunto">
+            <set>
+                <ref bean="coche1"/>
+                <ref bean="coche2"/>
+                <ref bean="coche2"/>
+            </set>
+        </property>
+
+	<!-- Mapas, en el elemento entry encontramos 4 atributos: 
+	
+			"key"    	Especifica la llave de la entrada del mapa como un String.
+			"key-ref"	Especifica la llave de la entrada del mapa como una referencia a un bean.
+			"Value" 	Especifica el valor de la entrada del mapa como un String.
+			"value-ref"	Especifica el valor de la entrada del mapa como una referencia a un bean    
+	-->
+
+        <property name="mapa">
+            <map>
+                <entry key="primercoche" value-ref="coche1"/>
+                <entry key="segundocoche" value-ref="coche2" />
+                <entry key="tercercoche" value-ref="coche1" />
+            </map>
+        </property>
+
+        <property name="propiedades">
+            <props>
+                <prop key="nombre">Joel</prop>
+                <prop key="edad">25</prop>
+            </props>
+        </property>
+<!--        <property name="propiedades">
+            <value>
+                nombre=Joel
+                edad=25
+            </value>
+        </property>-->
+
+    </bean>
+
+</beans>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+   http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+   http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- Busca todos los controllers (como servlets) con anotaciones como @Controller, 
+		@Request, etc -->
+	<context:annotation-config />
+
+	<context:component-scan base-package="es.coritel.controler" />
+
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/festivaldb" />
+		<property name="username" value="root" />
+		<property name="password" value="abcd1234" />
+	</bean>
+
+	<bean id="eventdao" class="es.coritel.codington.festival.daos.EventDAOImpl1">
+		<property name="data" ref="dataSource" />
+	</bean>
+
+	<bean id="visitordao" class="es.coritel.codington.festival.daos.VisitorDAO">
+		<property name="data" ref="dataSource" />
+	</bean>
+
+	<bean id="eventSingUp" class="es.coritel.codington.festival.daos.EventSignUpDAO">
+		<property name="data" ref="dataSource" />
+	</bean>
+
+
+	<bean id="eventService" class="es.coritel.codington.festival.services.EventServiceImpl">
+		<property name="eventDAO" ref="eventdao" />
+	</bean>
+
+	<bean id="visitorService" class="es.coritel.codington.festival.services.VisitorServiceImpl">
+		<property name="visitorDAO" ref="visitordao" />
+		<property name="iEventSingUp" ref="eventSingUp" />
+	</bean>
+
+
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- <property name="prefix" value="WEB-INF/"></property> -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+
+</beans>

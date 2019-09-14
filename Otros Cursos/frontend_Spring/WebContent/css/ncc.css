@@ -1,0 +1,181 @@
+/* TODO Create the necessary CSS for displaying the HTML Pages */
+
+/*
+Margin y padding para todos los elementos a 0.
+*/
+*{
+	margin: 0px;
+	padding : 0px;
+}
+
+/**
+Tamaño de la web en px
+**/
+body{
+
+	height:733px;
+	width:1301px;
+	
+}
+
+/**
+Imagen de fondo
+**/
+.fondo{
+	margin : 0px;
+	width: 100%;
+	height: 100%;
+	background-image: url("../images/codington.png");
+}
+
+/**
+fondo para las paginas North,South y Register
+*/
+.fondocity{
+	margin : 0px;
+	width: 100%;
+	height: 100%;
+	
+}
+
+
+/**
+Titulo
+**/
+.title{
+	padding-top:15px;
+	width:100%;
+	height:10%;
+	text-align: center;
+}
+
+/**
+Menu con los hipervinculos
+*/
+.menu{
+	width:100%;
+	height:5%;
+	background-color: green;
+	text-align: center;
+	border-radius: 33px 33px 33px 33px;
+	-moz-border-radius: 33px 33px 33px 33px;
+	-webkit-border-radius: 33px 33px 33px 33px;
+	border: 0px solid #000000
+}
+
+/**
+Textos del menu
+**/
+.menutext{
+  background-color: green;
+  padding: 8px;
+  margin-left: 15px;
+  /* IMPORTANTE */
+  display: inline-block;
+}
+
+
+/**
+Div central con las noticias
+**/
+.center{
+	width:100%;
+	height:17%;
+	text-align: center;
+}
+
+/**
+Div central con las imagenes
+*/
+.centerimagenes{
+	width:100%;
+	height:40%;
+	text-align: center;
+	
+}
+
+.centerregistration{
+	width:80%;
+	height:40%;
+	text-align: center;
+	
+}
+
+/**
+Div con las imagenes
+*/
+.images{
+	width:5%;
+	height:10%;
+    margin-left: 6px;
+    margin-right: 92px;
+	display: inline-block;
+	
+}
+
+/**
+Texto de las imagenes
+*/
+.imagestext{
+	width:100%;
+	text-align: center;
+	display: inline-block;
+	margin-left:20px;
+}
+.images img{
+	width:100px;
+	height:100px;
+}
+
+/**
+Panel de noticias Naranja
+*/
+.newsleft{
+	float:left;
+	background-color:orange;
+	width:12%;
+	height:79%;
+	display: inline-block;
+	padding-left:1px;
+	margin-left: 4px;
+	margin-top:6px;
+	border-radius: 3px 10px 6px 9px;
+	-moz-border-radius: 3px 10px 6px 9px;
+	-webkit-border-radius: 3px 10px 6px 9px;
+	border: 0px solid #000000;
+}
+
+/**
+Panel de noticias del centro
+*/
+.newscenter{
+	margin-top:20px;
+	margin-right:15%;
+	width:45%;
+	height:30%;
+	text-align: center;
+	display: inline-block;
+}
+
+/**
+Div con el copyright
+*/
+.copyright{
+	width:100%;
+	height:100%;
+	text-align: center;	
+}
+
+/**
+Texto copyright
+*/
+.copytext{
+	margin-top : 23%;
+	width:50%;
+	height:4%;
+	text-align: center;	
+	display: inline-block;
+	background-color:red;
+	
+	
+}
