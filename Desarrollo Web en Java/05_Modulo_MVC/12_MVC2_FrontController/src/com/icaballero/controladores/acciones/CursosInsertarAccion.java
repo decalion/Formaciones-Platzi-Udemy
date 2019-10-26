@@ -1,0 +1,27 @@
+package com.icaballero.controladores.acciones;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.icaballero.negocio.Curso;
+import com.icaballero.servicios.ServiciosCurso;
+
+public class CursosInsertarAccion implements Accion {
+
+	@Override
+	public void ejecutar(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		ServiciosCurso sc = new ServiciosCurso();
+		Curso c = new Curso(request.getParameter("nombre"), Integer.parseInt(request.getParameter("nivel")));
+		sc.add(c);
+		RequestDispatcher despachador = request.getRequestDispatcher("lista");
+		despachador.forward(request, response);
+		
+	}
+
+}
