@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/servlets/ParametrosGET.java=UTF-8
+encoding//src/servlets/ParametrosPOST.java=UTF-8
+encoding//src/servlets/getDynamicHTML.java=UTF-8
+encoding//src/servlets/getHTML.java=UTF-8
