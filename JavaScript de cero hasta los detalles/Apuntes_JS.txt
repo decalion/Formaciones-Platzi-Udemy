@@ -1,0 +1,31 @@
+-Cualquier objeto de JavaScript se almacena en el objeto global window.
+-JavaScript es case sensitive.
+-Es un lenguaje interpretado.
+-JavaScripr no es Asincrono(MultiHAilo) , tiene una pila de ejecucion donde estan todas las funciones esperando a ejecutarse.
+-En java las Variables son de 2 tipos : Tipos Primitivos y Objetos
+-Hay 5 tipos primitivos : numeros,String,boolean ,undefined y null
+-Un objeto puede ser una coleccion de tipos de datos primitivos o otros objetos
+-Las variables primitivas siempre se pasan por valor. Tienen un espacio de memoria diferente.
+-Los Objetos se pasan por referencia. Ocupan la misma posicion de memoria
+-La notacion de punto es lo que nos permite obtener los valores de un objeto.
+-En JS todas las funciones devuelven algo
+
+
+
+
+
+
+----------------------
+undefined y null son objetos diferentes a un que los 2 son objetos vacios.
+Si comparamos con el triple = da false ya que son objetos diferentes.
+En cambio con el doble = devuelve true ya que los 2 estan vacios.
+undefined  === null
+false
+
+undefined  == null
+true
+
+---------------------------------------
+Errores.
+-Al buscar las propiedas de un objeto si no existe devuelve undefined
+-Si intentas llamar a una variable que no existe devuelve ReferenError
