@@ -1,7 +1,7 @@
 -Cualquier objeto de JavaScript se almacena en el objeto global window.
 -JavaScript es case sensitive.
 -Es un lenguaje interpretado.
--JavaScripr no es Asincrono(MultiHAilo) , tiene una pila de ejecucion donde estan todas las funciones esperando a ejecutarse.
+-JavaScripr no es Asincrono(MultiHilo) , tiene una pila de ejecucion donde estan todas las funciones esperando a ejecutarse.
 -En java las Variables son de 2 tipos : Tipos Primitivos y Objetos
 -Hay 5 tipos primitivos : numeros,String,boolean ,undefined y null
 -Un objeto puede ser una coleccion de tipos de datos primitivos o otros objetos
@@ -9,8 +9,10 @@
 -Los Objetos se pasan por referencia. Ocupan la misma posicion de memoria
 -La notacion de punto es lo que nos permite obtener los valores de un objeto.
 -En JS todas las funciones devuelven algo
-
-
+-Una funcion puede Retornar, Primitivos, Objetos, Undefined o otra funcion
+-Para hacer referencia a una propieda del objeto estando dentro del objeto hay que utilizar this.
+-Si no utilizamos this estamos llamando al objeto global
+-En js no existe el concepto de clase como en Java
 
 
 
