@@ -13,7 +13,19 @@
 -Para hacer referencia a una propieda del objeto estando dentro del objeto hay que utilizar this.
 -Si no utilizamos this estamos llamando al objeto global
 -En js no existe el concepto de clase como en Java
+-En JS no se pueden sobrecargar los metodos. Siempre se queda con el ultimo metodo.
 
+Prototype:
+-Con los prototipos podemos añadir mas atributos o metodos a nuestros objetos.
+-El objetivo de los prototipos es hacer mas eficiente el uso de los objetos.
+-Al crear una funcion con un prototipo hacemos que este solo 1 vez en memoria. 
+-En cambio si definimos la funcion en el objeto se guarda en memoria por cada objeto que creamos.
+
+Funciones Anonimas:
+-Cualquier variable de tipo var que declaremos se define en el objeto global
+-Al estar definida en el objeto global podemos moficar el valor desde cualquier lugar.
+-Con las funciones anonimas evitamos moficar los objetos globales
+-Una funcion anonima es una funcion que no tiene nombre
 
 
 

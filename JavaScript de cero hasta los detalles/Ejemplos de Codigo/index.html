@@ -3,12 +3,56 @@
 <head>
 	<title>JavaScript</title>
 </head>
-<body>
+<body oncontextmenu="return false">
 	<script type="text/javascript">
 	</script>
 
+	<style type="text/css">
+		
+		div{
+			width: 100px;
+			height: 100px;
+			background-color: red;
+		}
+
+
+
+	</style>
+
+
+	<input type="text" onfocus="evento()">
+	<input type="text" onblur="evento()">
+
+	<input type="text" id="objDemo">
+
+
+	<button onclick="evento()">Soy un boton</button>
+
+
+	<div onclick="evento()">
+
+	</div>
 
 	<button onclick="presionoClick()">Click boton</button>
-<script src="10_New.js"></script>
+
+
+<br><br>
+
+
+<form action="" onsubmit=" return validar()">
+
+	<input type="text" id="txtNombre">
+	<input type="text" id="txtApellido">
+	
+
+<button type="submite">Enviar</button>
+
+</form>
+
+
+
+
+
+<script src="34_Stricj.js"></script>
 </body>
 </html>
