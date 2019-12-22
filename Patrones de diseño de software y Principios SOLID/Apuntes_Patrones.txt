@@ -1,0 +1,103 @@
+Principios Solid:
+
+Cohesion : Grado en el que un modulo esta relacionado entre si.
+
+-Single Responsability Principle (SRP) Una clase solo tiene que tener 1 razon para cambiar
+-Open/Closed Principle (OCP) Las clases,funciones..etc Tiene que ser Abiertas para la extension pero cerradas para la modificaciones
+-Liskov Subtitucion Principe (LSP) Para que la Herencia este bien hecha, todas las propiedades de los Objetos de T tambien se cumplan en los objetos de S
+-Interface Segregation Principe (ISP) Los clientes no deben ser forzados a depender de metodos que ellos no usan.
+-Dependency Inversion Principle (DIP) 
+Los modulos de Alto nivel no deben depender de los modulos de bajo nivel Ambos deben depender de Abstraciones.
+Las Abstraciones no deben depender de los detalles los detalles deben depender de las abstraciones.
+
+---------------------------------------
+Patrones de diseños
+
+Se dibiden en 3 tipos
+-Creational Patterns (Creacion) Hay 5
+-Structural Patterns (Structura) hay 7
+-Behavioral Patterns (Comportamiento) hay 11
+
+23 Patrones en total
+
+----------------------------------------------
+--Creatonal Patterns
+
+- Abstract Factory Pattern : Permite Generar Colleciones de clases sin espesificar el tipo Concreto
+Proporcionar una Interfaz para Crear Familias de Objetos Relacionadas o dependientes sin especificar su clase Concreta.
+
+-Builder Patterns : 
+Para la Construccion de Objetos complejos separemos el proceso de construccion de su representacion.
+
+-Factory Method:
+Definir una interface para crear un Objeto pero dejar a las subclases de este tipo decidir que clase concreta instanciar.
+
+-Prototype
+Especifica el tipo de Objetos a crear usando una instancia como prototipo.Crear nuevos objetos usando este prototipo.
+
+-Singleton
+Tener una unica instancia de un Objeto
+
+-------------------------------------------------------------------------------
+-Structural Pattern
+
+Adapter : 
+Componente que convierte o adapta una interface existente a otra que el cliente espera. De esta forma clases que no son compatibles pueden trabajar juntas.
+
+Bridge:
+Separar la abstracion de la implementacion cuando necesitamos que estas 2 cambien independientemente
+
+Composite:
+Crear la Composicion mediante una estructura jerarquica permitir que los clientes puedan ver y trata un objeto individual
+
+Decorator:
+Añadir funcionalidad a un objeto existente. No mediante la creacion de una jerarquia de subclases si no utilizando la composicion.
+
+Facade:
+Proporciona una interfaz unificada para trabajar con un conjunto de interfaces del subsistema. El Facade define una interfaz a alto nivel y esto hace que el sistema sea mas facil de usar.
+
+Flyweight:
+Usar la comparticion de datos para poder usar un numero elevado de objetos de forma eficiente.
+
+Proxy:
+
+
+---------------------------------------------------------
+-Behavioral Patterns
+
+Chain of Respomsability:
+Recomienda construir una cadena de objetos donde cada uno de ellos tenga la posibilidad de atender un tipo de peticion.
+
+Command:
+Encapsular la peticion del proceso como un objeto para permitir que el cliente pueda customizar todos los tipos de peticiones que requiere.
+
+
+Interpreter:
+
+Iterator:
+
+Visitor:
+Representar con un objeto cual es la operacion que queremos realizar.Sobre cada objeto de la estructura.
+
+Mediator:
+Definir un objeto que encapsule de que forma deben interaccionar el resto de objetos.
+
+Memento:
+Guardar y externalizar el estado interno del objeto
+
+Observer:
+
+State:
+Permitir a un objeto cambiar su compartamiento segun el estado interno
+
+Strategy:
+Encapsular el algorismo en un tipo propio
+
+Template:
+
+
+
+
+
+
+
