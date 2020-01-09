@@ -1,0 +1,44 @@
+	/**
+	###### MODELO CAJA Y POSICIONAMIENTO ######
+	*/
+
+
+*{
+	margin: 0px;
+	padding: 0px;
+}
+
+
+body{
+	padding: 40px;
+}
+
+
+#cajas{
+	max-width: 1035px;
+	border:1px solid black;
+}
+
+.caja{
+	display:block;
+	width: 250px;
+	height: 250px;
+	background-color: lightblue;
+	border: 10px solid red;
+	margin: 15px;
+	padding: 20px;
+	float:left;
+
+}
+.caja p{
+	font-weight: bold;
+	text-align: center;
+	font-size: 20px;
+	font-family: Arial;
+	line-height: 235px;
+}
+
+.clearfix{
+	float: none;
+	clear: both;
+}

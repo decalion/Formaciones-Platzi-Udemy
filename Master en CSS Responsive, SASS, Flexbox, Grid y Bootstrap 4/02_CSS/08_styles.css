@@ -1,0 +1,131 @@
+	/**
+	###### PSEUDOCLASES, TRANSACIONES Y ANIMACIONES ######
+	*/
+
+
+/** PSUDOCLASES*/
+*{
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+ul li{
+	font-size: 20px;
+}
+
+ul li:first-child{
+	color: purple;
+	font-weight: bold;
+
+}
+
+ul li:nth-child(2){
+	color: orange;
+	font-weight: bold;
+
+}
+
+ul li:last-child{
+	color: gray;
+	font-weight: bold;
+
+}
+
+
+#mi-enlace{
+	font-size: 30px;
+	color: lightsalmon; 
+}
+
+#mi-enlace:link{
+	color:red;
+}
+
+
+#mi-enlace:visited{
+	color:orangered;
+}
+
+#mi-enlace:hover{
+	color:blue;
+}
+
+#mi-enlace:active{
+	color:green;
+	font-family: Impact;
+}
+
+
+input[type="text"]{
+	margin-top:20px;
+	padding:10px;
+
+}
+
+input[type="text"]:focus{
+	border:4px dashed red;
+}
+
+
+/** TRANSICIONES */
+
+#boton{
+display: block;
+padding: 20px;
+background-color:green;
+color:white;
+width: 200px;
+text-align: center;
+font-family: Verdana;
+font-weight: bold;
+text-decoration: none;
+border: 5px solid rgb(6,83,6);
+transition: border 500ms, background 3s, border-radius 1s;
+}
+
+#boton:hover{
+	border-radius: 15px;
+	background: orangered;
+	border: 5px solid red;
+}
+
+/** ANIMACIONES */
+
+#caja{
+	margin-top: 25px;
+	width: 250px;
+	height: 250px;
+	background: lightseagreen;
+	color:white;
+	border: 5px solid black;
+	font-size: 20px;
+	text-align: center;
+	line-height: 200px;
+	animation-name: desplazamiento;
+	animation-duration: 15s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes desplazamiento{
+	0%{
+		margin-left:0px;
+		transform: rotate(0deg);
+	}
+	50%{
+		margin-left:1200px;
+		transform: rotate(360deg);
+		border-radius: 999px;
+	}
+
+	75%{
+		background:red;
+	}
+
+	77%{
+		border:10px dashed blue;
+	}
+	100%{
+		margin-left:0px;
+		transform: rotate(0deg);
+	}
+}
