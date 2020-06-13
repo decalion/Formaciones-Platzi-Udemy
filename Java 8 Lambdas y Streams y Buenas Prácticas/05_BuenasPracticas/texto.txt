@@ -1,0 +1,4 @@
+pedro,100
+ana,200
+miguel,300
+gema,250
