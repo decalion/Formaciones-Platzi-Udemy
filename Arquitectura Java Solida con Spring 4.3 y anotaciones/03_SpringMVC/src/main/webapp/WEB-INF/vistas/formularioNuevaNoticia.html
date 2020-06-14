@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{helpers/layout}">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<div layout:fragment="contenido">
+<form th:object="${noticia}" action="insertarNoticia" method="POST">
+<p>Titulo:<input type="text" th:field="*{titulo}"></p>
+<p th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></p>
+<p>Autor:<input type="text" th:field="*{autor}"></p>
+<p>Fecha:<input type="text" th:field="*{fecha}"></p>
+<input type="submit" value="insertar"/>
+</form>
+</div>
+</body>
+</html>
