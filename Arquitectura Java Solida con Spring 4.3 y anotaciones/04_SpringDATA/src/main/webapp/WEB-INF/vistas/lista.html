@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{helpers/layout}">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="contenido">
+
+		<div>
+
+			<form action="filtroNoticiasTitulo">
+				<input type="text" name="titulo" /> <input type="submit"
+					value="filtroTitulo" />
+			</form>
+		</div>
+		<table>
+			<tr>
+				<th><a th:href="listaOrdenadaTitulo">Titulo</a></th>
+				<th><a th:href="listaOrdenadaAutor">Autor</a></th>
+				<th>Fecha</th>
+				<th>Borrar</th>
+			</tr>
+			<tr th:each="noticia : ${noticias}">
+
+				<td th:text="${noticia.titulo}"></td>
+				<td th:text="${noticia.autor}"></td>
+				<td th:text="${#dates.format(noticia.fecha,'dd-MMM-yyyy')}"></td>
+				<td><a th:href="@{borrarNoticia(titulo=${noticia.titulo})}" />Borrar</a></td>
+
+			</tr>
+
+		</table>
+
+		<form action="formularioNuevaNoticia">
+			<input type="submit" value="nueva" />
+		</form>
+
+	</div>
+</body>
+</html>
