@@ -1,0 +1,30 @@
+@RequestMapping : para definir la url de mapeo
+
+@ResponseBody : obliga a que la respuesta este en formato JSON
+
+@PathVariable: sirve para indiicar que vamos a recibir un parametro por la url
+
+@RequestBody: para pasar un objeto completo (cuerpo)
+
+@ResponseStatus:Definir el status que emitimos
+
+
+@RestController: combina controller y responsebody
+
+ResponseEntity = nos permite contruir una respuesta
+
+UriComponentsBuilder = sirve para construir url
+
+Codigos de resopuesta
+200 = OK
+201 = Se ha creado un nuevo recurso
+204 = Se ha eliminado el recurso
+
+
+{
+
+	"nombre": "gema",
+	"apellidos": "blanco",
+	"edad": "25"
+
+}
