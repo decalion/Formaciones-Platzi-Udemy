@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/icaballero/app/beans/CatalogoPeliculasActuales.java=UTF-8
+encoding//src/main/java/com/icaballero/app/beans/CatalogoPeliculasClasicas.java=UTF-8
+encoding//src/main/java/com/icaballero/app/beans/Pelicula.java=UTF-8
+encoding//src/main/java/com/icaballero/app/beans/PeliculaDao.java=UTF-8

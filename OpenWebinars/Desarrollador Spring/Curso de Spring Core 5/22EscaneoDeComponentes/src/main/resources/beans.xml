@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					    http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- Esta anotación ya no es necesaria. La anotación de escaneo de componentes 
+		incluye su funcionamiento -->
+	<!--<context:annotation-config /> -->
+
+	<context:component-scan
+		base-package="com.icaballero.app.beans" />
+ <!--  
+	<bean id="peliculaDaoMemory"
+		class="com.icaballero.app.beans.PeliculaDaoImplMemory" />
+
+	<bean id="peliculaService"
+		class="com.icaballero.app.beans.PeliculaService" />
+
+	<bean id="catalogoClasicas"
+		class="com.icaballero.app.beans.CatalogoPeliculasClasicas">
+	</bean>
+
+
+	<bean id="catalogoActuales"
+		class="com.icaballero.app.beans.CatalogoPeliculasActuales" primary="true" >
+	</bean>
+
+
+-->
+
+</beans>
