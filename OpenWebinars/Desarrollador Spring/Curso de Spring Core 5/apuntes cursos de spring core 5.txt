@@ -1,0 +1,468 @@
+Spring es un framework de codigo abierto para las creaciones de aplicaciones java.
+Estructura Modular y gran flexibilidad.
+Permite desarollar aplicacaciones en diferentes arquitectura
+Da soporte a groovy y .
+Spring se divide en diferente modulos.
+Uno de ellos el es el contenedor de INVERSION DE CONTROL 
+para la inyeccion de dependencias. (ioc)
+
+---------------------------
+Modulos de Spring:
+Sprinf framwork - core -ioc -applicaciones web ... etc
+Spring boot - Facilita la configuracion y el uso de spring
+Spring data - acceso a datos, JPA,JDBC .. ETC
+Spring security - Segurida
+Spring cloud - Herramientas para sistemas distribuidos microservicios
+Spring HATEOAS - simplifica la contrucion de representaciones REST con el uso de hipertextos
+Spring bath - Optimiza el volumen de aplicaciones por lote
+Spring for android - simplica el desarollo de aplicaciones de android
+
+-----------------------------------
+Spring framwotk se divede en varias capas(Modulos)
+Test
+Core container : Beans , Core , Context , SpEL
+AOP
+Aspect
+Instrumentation
+Messaging
+WEB : WebSocket , servlet , web Portlet
+Data Acces/Integration : JDBC , ORM , OXM ,JMS , Transaction
+
+-------------------------------------------------------
+Uso de JDK 8 y Java EE 7.
+Compatibilidad con JDK 9 y Java EE 8.
+Versiones mínimas: Servlet 3.1, Bean
+Validation 1.1, JPA 2.1.
+Compatibilidad para Servlet 4.0, Bean
+Validation 2.0, JPA 2.2, JSON Binding API 1.0
+Compatibilidad para: Tomcat 8.5+, Jetty 9.4+, WildFly 10+
+Modulo para web reactiva: WebFlux
+Programación funcional con Kotlin
+---------------------------------------------------------------
+
+Dependencia para trabajar con el core de IOC
+
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>5.0.8.RELEASE</version>
+</dependency>
+
+
+-----------------------------------------------------------
+Estructura de una aplicacion empresarial y patrones de diseño
+
+APLICACION EMPRESARIAL:
+Gran aplicación comercial
+Compleja, escalable, distribuida, crítica
+Despliegue en redes corporativas o internet
+Centrada en los datos.
+Intuitiva, de uso fácil.
+Requisitos de seguridad y mantenibilidad.
+
+BLOQUES
+Personas : Usuarios , Desarolladores .. ets
+Datos : Toma de decisiones , datos
+Processos : Todas las actividades que se llevan acabo dentro de la empresa ( Proceso de datos e  informacion)
+Redes : Canales que vamos a utilizar para desplegar la aplicacion
+Tecnologias : Hace referencia al Hardware y al Software
+
+
+CAPAS:
+Interfaz de usuaios : Frontend
+Aplicacion : Backend
+Datos : Relacional o no relacional
+Infraestrucrura de la plataforma
+Infraestructura del Hardware : Servidores, tipo de conectivida , plataforma, SO , version de Java
+
+
+ESTRUCRURA :
+Capa de datos : Repositorios
+Applicacion : Entidades, Servicios y Controllers
+Interfaz de Usuarios : Plantillas
+
+
+PATRONES :
+Inversión de control
+Inyección de dependencias
+View Helper
+Modelo-Vista-Controlador
+Data Access Object
+Front-Controller
+
+
+Ámbitos de
+un bean:
+Inyección de dependencias
+Singleton: restringe la creación de objetos de un tipo a uno solo
+Prototype: permite la creación de nuevos objetos duplicándolos.
+
+Spring AOP
+(Programación
+orientada a
+aspectos):
+Proxy: proporciona un sustituto o representante de un objeto, para controlar el acceso a este
+
+
+Spring Web MVC :
+Modelo-Vista-Controlador: separa la lógica y los datos de la interfaz y el control de peticiones.
+Front Controller: un solo controlador maneja todas las peticiones.
+
+Spring IoC Container:
+Factory: centralización de la construcción de objetos.
+
+
+----------------------------------------------
+Inversion de control e Inversion de dependencias.
+
+Inversion de Control (IoC) : El objetivo es desacoplar objeto
+Que 2 objetos puedan colaborar entre si pero que no interfieran entre ellos.
+"Deja que sea otro el que controle el flujo"
+
+
+Inversion de dependencias : Es una forma de inversion de control.
+
+
+-------------------------------------------------------
+IoC Container
+
+
+Spring nos permite configurar los metadatos a través de varias formas:
+XML
+Anotaciones
+Código Java (conocido como Java-Config).
+
+Paquetes
+org.springframework.beans
+org.springframework.context
+
+Los elementos más básicos
+BeanFactory: lo elemental para poder manejar cualquier bean objeto.
+ApplicationContext: superset del anterior. Añade AOP, manejo de recursos, internacionalización,
+contextos específicos, ...
+
+
+ClassPathXMLApplicationContext : Carga los contenedores desde un cml
+FileSystemXMLApplicationContext : Carga el contenedor desde un fichero
+
+
+
+Bean: Se trata de un objeto cualquiera gestionado por el IoC
+
+
+
+org.springframework.context.ApplicationContext
+
+
+Responsable de crear instancias, configurar y
+ensamblar ls beans.
+Se consigue a través de los metadatos
+XML
+Anotaciones
+Java
+
+
+Dependencia de Spring context :
+
+spring-context-5.0.8.RELEASE.jar
+spring-aop-5.0.8.RELEASE.jar
+spring-beans-5.0.8.RELEASE.jar
+spring-core-5.0.8.RELEASE.jar
+spring-jcl-5.0.8.RELEASE.jar
+spring-expression-5.0.8.RELEASE.jar
+
+--------------------------------------------------------------------------------
+Beans
+
+Objetos manejados por el contenedor ioc
+Se crean con los metadatos que nosotros
+proporcionamos (por ejemplo, xml).
+Debemos darle un id único dentro del
+contenedor.
+También debemos indicar la clase sobre la
+que definimos el bean.
+
+appContext.getBean(id)
+Nos obliga a hacer un casting
+
+appContext.getBean(id, class)
+Dos argumentos
+
+appContext.getBean(class)
+Excepción si repetido
+
+----------------------------------------------------------------------------------
+Inner beans (beans anidados)
+En ocasiones, podemos crear beans anidados (o internos) a otros beans, en lugar de referenciarlos. ¿Cuál sería la ventaja de un inner bean frente a otro referenciado ?. La respuesta no es difícil: el bean anidados no será accesible desde fuera el bean externo, mientras que el referenciado puede ser accedido por otros beans.
+
+<bean id="outer" class="...">
+    <!-- instead of using a reference to a target bean, simply define the target bean inline -->
+    <property name="target">
+        <bean class="com.example.Person"> <!-- this is the inner bean -->
+            <property name="name" value="Fiona Apple"/>
+            <property name="age" value="25"/>
+        </bean>
+    </property>
+</bean>
+En este ejemplo, el bean de tipo Person solo podría ser accedido por el bean outer.
+
+Colecciones
+Spring nos ofrece la posibilidad de inyectar valores dentro de una colección. Los tipos soportados son <list> (java.util.List), <set> (java.util.Set), <map> (java.util.Map), <props> (java.util.Properties).
+
+<bean id="moreComplexObject" class="example.ComplexObject">
+    <!-- results in a setAdminEmails(java.util.Properties) call -->
+    <property name="adminEmails">
+        <props>
+            <prop key="administrator">administrator@example.org</prop>
+            <prop key="support">support@example.org</prop>
+            <prop key="development">development@example.org</prop>
+        </props>
+    </property>
+    <!-- results in a setSomeList(java.util.List) call -->
+    <property name="someList">
+        <list>
+            <value>a list element followed by a reference</value>
+            <ref bean="myDataSource" />
+        </list>
+    </property>
+    <!-- results in a setSomeMap(java.util.Map) call -->
+    <property name="someMap">
+        <map>
+            <entry key="an entry" value="just some string"/>
+            <entry key ="a ref" value-ref="myDataSource"/>
+        </map>
+    </property>
+    <!-- results in a setSomeSet(java.util.Set) call -->
+    <property name="someSet">
+        <set>
+            <value>just some string</value>
+            <ref bean="myDataSource" />
+        </set>
+    </property>
+</bean>
+
+
+--------------------------------------------------------------------------------------------------
+ Inner beans (beans anidados)
+Definimos un bean dentro de otro.
+Similar a las referencias.
+Ámbito más restrictivo.
+
+ Colecciones
+Posibilidad de inyectar valores de una
+colección
+<list>, <set>, <map>, <props>
+----------------------------------------------------------------------------------
+
+Spring permite la inyección automática
+entre beans que se necesitan.
+ Busca candidatos dentro del contexto.
+ 
+Ventajas
+Reduce la configuración necesaria
+Útil durante el desarrollo. Permite
+requerir objetos sin configurarlo
+explícitamente.
+
+
+Autowired
+no: sin autocableado
+byName: en función del nombre de la propiedad requerida.
+
+byType: en función del tipo de la propiedad requerida. Si hay más de un bean de este
+tipo, se produce excepción.
+
+constructor: análogo a byType, pero para
+argumentos del constructor.
+
+
+
+Es útil si se usa siempre en un proyecto.
+En otro caso, puede ser confuso.
+No se pueden autoinyectar tipos primitivos o String.
+Menos exacto que la inyección explícita
+Posible ambigüedad en inyección byType.
+
+No usar el autocableado :(
+Manejar el autocableado a través de
+anotaciones (lo estudiaremos más
+adelante).
+
+Utilizar autowired-candidate=false en
+los beans más conflictivos.
+Utilizar primary=true en las opciones
+principales.
+
+
+
+AUTOWIRED-CANDIDATE
+Nos permite excluir a un bean de ser
+autoinyectado.
+Se sigue permitiendo que se pueda
+inyectar de forma explícita.
+
+
+PRIMARY
+Nos permite indicar que un bean de un
+tipo tendrá preferencia sobre los demás
+del mismo tipo.
+
+
+-----------------------------------------------------------------------
+ÁMBITOS DE UN BEAN: SINGLETON Y PROTOTYPE
+
+
+Cuando definimos un bean (por ejemplo,
+en XML) creamos una receta.
+Esta nos permite crear instancias reales de
+la clase sobre la que definimos el bean.
+ A partir de esa receta, es posible crear
+muchas instancias.
+Podemos configurar el ámbito de un bean
+a nivel de configuración (sin tener que
+hacerlo al viejo estilo).
+
+
+SINGLETON
+Solo crea una instancia y esta es inyectada para cada bean
+Solamente se crea una instancia
+compartida de esa clase.
+Toda las referencias que obtengamos a
+ese bean serán el mismo objeto en
+memoria.
+Es el ámbito por defecto.
+
+PROTOTYPE 
+Se crea una nueva instancia cada vez que el bean es referenciado.
+Se crea una instancia cada vez que se le
+requiere.
+Estas instancias se crean en tiempo de
+ejecución.
+
+
+----------------------------------------------------------------------------------
+AMBITO WEB
+
+Solo disponibles con un contexto web (por
+ejemplo, XmlWebApplicationContext).
+En caso de usar otros no web (por ejemplo
+ClassPathXmlApplicationContext)
+producirá excepción.
+Ámbitos
+Request, Session, Application,WebSocket.
+
+AMBITO REQUEST
+Se creará un objeto por cada petición
+HTTP.
+ Cuando la petición termina de procesarse,
+se descarta el objeto.
+
+<bean id="loginAction"
+ class="com.foo.LoginAction"
+ scope="request"/>
+
+ 
+AMBITO SESSION
+
+Se creará un objeto por cada sesión HTTP
+que se cree.
+Cuando la sesión se destruye, se descarta
+el objeto.
+
+<bean id="userPreferences"
+ class="com.foo.UserPreferences"
+scope="session"/>
+
+AMBITO APPLICATION
+
+Se creará un objeto por cada
+ServletContext.
+En la práctica, se trata de un objeto por
+cada instancia de la aplicación.
+
+<bean id="appPreferences"
+ class="com.foo.AppPreferences"
+scope="application"/>
+
+--------------------------------------------------------------------------
+CICLO DE VIDA DE UN BEAN
+
+Podemos interactuar mediante callbacks
+Después de que se instancie/Antes de que
+se destruya.
+Interfaces InitializingBean y
+DisposableBean.
+También a través de XML.
+
+
+INTERFACES InitializingBean Y DisposableBean.
+
+El bean debe implementar los interfaces.
+Desventaja: configuración e implementación van unidos.
+Ventaja: la interfaz es un contrato; nos da la firma del método a implementar
+
+
+public class PersonaDAOImplMemory implements
+PersonaDAO, InitializingBean, DisposableBean {
+@Override
+public void afterPropertiesSet() throws Exception {
+insert(new Persona("Luismi", 35));
+insert(new Persona("Ana", 32));
+insert(new Persona("Pepe", 34));
+insert(new Persona("Julia", 39));
+}
+@Override
+public void destroy() throws Exception {
+System.out
+ .println("Limpiando los datos de la lista");
+personas.clear();
+}
+}
+
+
+CONFIGURACIÓN VÍA XML
+Propiedades init-method y
+destroy-method
+El valor de la propiedad es un String.
+Debe ser el nombre de un método del bean.
+void
+Sin parámetros
+Throws Exception.
+Ventaja: bajo acoplamiento
+
+<beans xmlns="http://www.springframework.org/schema/beans"...>
+ <bean id="personaDao"
+ class="com.openwebinars.lifecycle.PersonaDAOImplMemory"
+ init-method="init" destroy-method="destroy" />
+</beans>
+
+public class PersonaDAOImplMemory implements PersonaDAO {
+ public void init() throws Exception { … }
+ public void destroy() throws Exception { … }
+}
+
+
+Propiedades default-init-method y
+default-destroy-method
+Propiedad de <beans>
+Permite definir un nombre de método de
+inicialización/destrucción para todos los
+beans de un contexto.
+
+<beans xmlns="http://www.springframework.org/schema/beans"...
+ default-init-method="init" default-destroy-method="destroy">
+ <bean id="personaDao"
+ class="com.openwebinars.lifecycle.PersonaDAOImplMemory"/>
+</beans>
+
+
+-------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
