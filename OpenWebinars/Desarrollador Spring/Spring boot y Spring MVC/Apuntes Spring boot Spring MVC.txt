@@ -1,0 +1,1956 @@
+SPRING BOOT
+
+Facilita la creación de aplicaciones basadas en  Spring independientes y
+listas para usar, con un mínimo esfuerzo. 
+
+Creación de aplicaciones Spring independientes Con servidor embebido (Tomcat, Jetty, …)
+Dependencias iniciales que facilitan la configuración de componentes.
+Configuración automática de librerías de 3ºs allá donde sea posible.
+Sin generar código o configuración XML 
+
+REQUISITOS DE SPRING BOOT 2.1.0.RELEASE
+
+Java 8 o 9
+Spring Framework 5.1.2.RELEASE o superior
+Maven 3.3 o superior
+Tomcat 9.0 (Servlet 3.1+, soporte para 4.0)
+
+---------------------------------------------------------------------------------------
+DIFICULTADES AL CONFIGURAR UN PROYECTO SPRING 
+
+- Librerías y versiones
+- Configuración de
+componentes.
+- ….
+
+La convención sobre configuración es
+un patrón de diseño de software usado
+por muchos frameworks que trata de
+minimizar el número de decisiones que
+un programador tiene que tomar al
+usar dicho framework, pero sin perder
+la flexibilidad. 
+
+
+CoC 
+Si la convención sobre configuración es
+suficiente para lograr un determinado
+comportamiento, el programador no tiene
+que configurar nada explícitamente.
+
+Si la convención no es suficiente para
+obtener el comportamiento deseado,
+configuramos los aspectos necesarios. 
+
+EJEMPLO 
+
+Una clase llamada Ventas se almacenará
+en una tabla en base de datos llamada
+Ventas.
+? Si quiero que la tabla se llame
+VentaProductos, entonces lo puedo
+configurar explícitamente. 
+
+MÁS EJEMPLOS 
+Si Spring Boot detecta en el classpath la
+dependencia de H2 (base de datos) y no
+detecta la configuración de conexión
+(datasource) ejecuta automáticamente una
+conexión en memoria.
+
+Si Spring Boot detecta en el classpath a
+Thymeleaf (motor de plantillas), por
+defecto espera que estás estén en la
+carpeta templates, con extensión .html 
+
+
+-----------------------------------------------------
+Ejecutar nuestro proyecto Spring Boot desde la consola
+
+
+Para ejecutar nuestros proyectos de Spring Boot, tenemos varias alternativas. Durante el desarrollo, problablemente lo hagas desde STS (Spring Tool Suite). Sin embargo, también podemos hacerlo desde la consola.
+
+Supongamos que estamos dentro de la ruta del proyecto. Para ejecutar el proyecto, debemos usar mvn (el alias de maven).
+
+$ mvn spring-boot:run
+
+Ya podemos acceder a nuestra aplicación desde nuestro navegador favorito (lo normal es que sea a través de la URL http://localhost:8080).
+
+Si lo que queremos es crear un jar ejecutable, que además estará completamente autocontenido, el comando debe ser:
+
+$ mvn package
+
+Para ejecutar el fichero, debemos situarnos en el directorio adecuado y ejecutar este comando:
+
+$ java -jar myproject-0.0.1-SNAPSHOT.jar
+
+------------------------------------------------------------------------------
+POM.XML
+
+Datos de nuestro proyecto
+Pom parent
+Propiedades
+Dependencias
+Plugins 
+
+Estructura
+
+Caperta Resources : 
+Recursos: imágenes, plantillas,
+ficheros de propiedades, sql, ...
+
+
+EJECUCIÓN DEL PROYECTO 
+
+Varias posibilidades
+ Desde el IDE: Run As > Spring Boot App
+ Desde el terminal
+ Ejecutar: mvn spring-boot:run
+ Generar jar:
+ mvn package
+ cd target
+ java -jar project-name.jar 
+
+
+
+---------------------------------------------------------------------------------------
+STARTER
+Descriptores de dependencia fáciles de usar.
+Ventanilla única para agregar a un proyecto las tecnologías de Spring y otras relacionadas.
+Nos libera de añadir dependencias concreta una a una.
+
+
+EJEMPLO DE STARTER
+Si nuestro proyecto va a ser una aplicación web que accede a una base de datos relacional,
+tan solo tenemos que añadir.
+ spring-boot-starter-data-jpa
+ spring-boot-starter-web
+Esto añade múltiples ficheros .jar así como diferentes elementos de configuración
+
+STARTERs MÁS USUALES
+ Nombre      Descrcipción
+ web :        Aplicaciones web, API RESTful, MVC
+ data-jpa:    Spring Data Jpa con Hibernate
+ thymeleaf:   Thymeleaf como motor de plantillas
+ test:         Test con JUnit, Hamcrest y Mockito
+ actuator:    Funciones de monitorización y administración para producción
+
+ Todos los paquetes comienzan con spring-boot-starter
+
+---------------------------------------------------------------------------------
+ESTRUCTURA DEL CÓDIGO CON SPRING BOOT
+
+Spring Boot no nos obliga estructurar el código de una forma específica
+Sí podemos seguir una serie de buenas prácticas. 
+
+USO DEL PAQUETE default 
+
+En Java, una clase sin paquete se considera que está en el paquete por
+defecto (default)
+Si usamos la anotación @SpringBootApplication (o similar), podemos encontrarnos con problemas.
+Es muy recomendable siempre usar una estructura de paquetes como un dominio a
+la inversa: com.openwebinars.proyecto.
+
+UBICACIÓN DE LA CLASE MAIN 
+
+Será habitual que tengamos una clase principal, anotada con
+@SpringBootApplication.
+Esta clase debería estar en el paquete raíz, ya que delimita el paquete (y subpaquetes)
+donde se escaneará automáticamente para buscar componentes.
+
+UBICACIÓN DE LA CLASE MAIN 
+
+Si la clase Application
+está anotada con
+@SpringBootApplication,
+y creamos una
+componente que esté en
+un paquete fuera de esta
+jerarquía, no será
+detectado por el escaneo
+automático. ¡CUIDADO!
+Es un error muy
+frecuente.
+
+
+---------------------------------------------------------------------------------------
+CONFIGURACIÓN DE UNA APLICACIÓN SPRING
+
+Múltiples elementos de configuración.
+Clases anotadas con @Configuration.
+Uso de properties.
+
+AUTOCONFIGURACIÓN CON SPRING BOOT
+
+Se obtiene gracias a
+ @SpringBootApplication (o
+ @EnableAutoconfiguration).
+Configura nuestra aplicación en función de las dependencias jar que encuentre en
+el classpath.
+Si añadimos la dependencia de H2 sin configuración, autoconfigura una base
+de datos en memoria. 
+
+
+CÓMO VER LA CONFIGURACIÓN POR DEFECTO DE UN PROYECTO
+
+mvn --debug spring-boot:run 
+
+
+CÓMO DESHABILITAR UN ELEMENTO ESPECÍFICO DE LA AUTOCONFIGURACIÓN 
+
+Si nos interesa que no se aplique un elemento específico de autoconfiguración,
+lo podemos deshabilitar con
+@EnableAutoConfiguration(exclude=...) 
+
+
+También lo podemos hacer mediante la propiedad spring.autoconfigure.exclude, que
+acepta una lista de clases
+(preferiblemente, nombres cualificados:
+paquete.nombre).
+
+
+
+---------------------------------------------------------------------
+Spring MVC
+
+¿QUÉ ES UNA APLICACIÓN WEB? 
+
+Herramienta accesible a través de una red (intranet o internet) mediante un
+navegador web. 
+
+VENTAJAS
+
+No requiere de instalación ni actualización por el usuario.
+Es multiplataforma y multidispositivo.
+Fácil acceso: internet democrático.
+Ahorro de tiempo (cliente y programador)
+Ahorro de espacio (al cliente)
+Colaboración (compartir entre usuarios) 
+
+DESVENTAJAS
+
+Menor velocidad y capacidad de procesamiento.
+Menos funcionalidades que aplicaciones nativas.
+Disponibilidad: posible falta de conectividad, caída de servidores, ...
+
+BASADAS EN EL PROTOCOLO HTTP
+
+Transferencia de hipertexto (WWW)
+Versión actual: 1.1 - 2.0
+Sin estados 
+
+PROTOCOLO HTTP
+
+Esquema de petición - respuesta
+
+GET http://www.dom.com HTTP/1.1
+Host: www.dom.com
+Accept: application/xhtml
+User-Agent: ....
+
+
+HTTP/1.1 200 OK
+Content-Length: 12345
+Content
+
+ACCESO A UNA APLICACIÓN WEB: URLs 
+
+Podemos acceder a una aplicación web a través de su URL
+URL: localizador unificado de recursos 
+protocolo://maquina:puerto/camino/al/recurso 
+
+
+
+MÉTODOS DE PETICIÓN HTTP 
+También conocidos como verbos
+Indica qué operación queremos realizar con el recurso.
+
+GET: solicita al servidor que envíe el recurso identificado por la URL
+
+HEAD: pide al servidor que envíe una respuesta idéntica a la que enviaría con GET, pero
+sin el cuerpo de la respuesta.
+
+POST: envía datos al servidor para que sean procesados por el recurso identificado por la
+URL. Los datos se deben incluir en el cuerpo de la petición.
+
+PUT: envía un recurso determinado (un archivo) al servidor.
+
+DELETE: solicita la eliminación de un recurso.
+
+TRACE:solicita al servidor que le envíe un mensaje de respuesta. Se usa para
+diagnosticar problemas de conexión. 
+
+OPTIONS: pide al servidor que le indique los métodos HTTP que soporta para una determinada URL.
+
+PATCH: se emplea para modificar parcialmente un recurso ya existente en el servidor. 
+
+
+
+CÓDIGOS DE RESPUESTA HTTP 
+
+
+1XX: Respuestas informativas. Indica que la petición ha Sido recibida y se está
+procesando.
+
+2XX: Respuesta correctas. Indica que la petición se ha procesado correctamente
+(200 OK, 201 Created, …)
+
+3XX: Respuestas de redirección. Indica que el cliente necesita realizar más 
+acciones para finalizar la petición.
+
+4XX: Errores causados por el cliente. Indica que ha habido un error en el procesado de
+la petición a causa de que el cliente ha hecho algo mal.
+(400 Bad Request, 404 Not Found, …)
+
+5XX: Errores causados por elservidor. Indica que ha habido un error en el 
+procesado de la petición a causa de un fallo en el servidor. 
+
+
+Códigos de estado HTTP
+El listado completo de los códigos de respuesta vienen definidos en una serie de 
+RFCs (request for comments, publicaciones del IETF), 
+si bien lo podemos consultas 
+completamente en castellano en la wikipedia en https://es.wikipedia.org/wiki/Anexo:C%C3%B3digos_de_estado_HTTP
+
+Métodos de petición
+Los métodos de petición también están definidos en diferentes RFCs, 
+pero podemos consultar la descripción en castellano de alguno de ellos 
+en wikipedia: https://es.wikipedia.org/wiki/Protocolo_de_transferencia_de_hipertexto#M%C3%A9todos_de_petici%C3%B3n
+
+
+
+
+TECNOLOGÍAS QUE USAREMOS CON LAS APLICACIONES WEB 
+
+
+BROWSWSER : HTML5 ,CSS3 ,JS, jQuery
+
+Gestor de plabtillas : Thymeleaf 
+
+WEB SERVER : Spring Boot ,Spring Web MVC ,Spring Data JPA ,Hibernate 
+
+DATABASE: H2
+
+
+
+
+------------------------------------------------------------------------------------------------------
+ALGUNOS PATRONES DE DISEÑO
+
+Cada patrón describe un problema que
+ocurre infinidad de veces en nuestro
+entorno, así como la solución al mismo,
+de tal modo que podemos utilizar esta
+solución un millón de veces más
+adelante sin tener que volver a
+pensarla otra vez
+
+PATRÓN DE DISEÑO
+
+Una posible solución correcta a un
+problema de diseño dentro de un
+contexto, y que se presenta
+frecuentemente.
+? Auge a partir del libro Design Patterns
+escrito por el grupo Gang of Four (GoF)
+(Erich Gamma, Richard Helm, Ralph
+Johnson y John Vlissides) 
+
+
+
+PATRÓN MVC: MODELO - VISTA - CONTROLADOR 
+VENTAJAS
+- Adaptación al
+cambio.
+- Soporte para
+múltiples tipos de
+vistas.
+
+DESVENTAJAS
+- Complejidad
+- Coste de
+actualizaciones
+frecuentes
+
+PATRÓN FRONT CONTROLLER 
+VENTAJAS
+- Centralización en un
+único punto de
+gestión de peticiones.
+- Aumento de la
+reusabilidad.
+- Mejora de la
+seguridad. 
+
+DESVENTAJAS
+- Disminución de la
+velocidad de
+respuesta (efecto
+embudo). 
+
+
+PATRÓN DAO:DATA ACCESS OBJECT 
+VENTAJAS
+- Adaptación al
+cambio.
+- Un objeto de negocio
+no tiene que conocer
+el destino de la
+información.
+
+DESVENTAJAS
+- Complejidad.
+- Configuración
+adicional.
+- Rendimiento en
+aplicaciones críticas. 
+
+
+----------------------------------------------------------------------------------------------------------
+ESTRUCTURA DE UN PROYECTO WEB
+
+¿Qué elementos va a
+incluir un proyecto
+para el desarrollo de
+una aplicación web?
+El patrón MVC nos
+dará pistas. 
+
+
+ESTRUCTURA SEGÚN MVC 
+-Controladores
+-Modelo
+	.Entidades
+	.Repositorios
+	.Servicios
+-Vistas
+
+Podemos añadir
+-Configuración
+-Seguridad
+-Utilidades 
+
+CONTROLADORES 
+Clases con métodos que atenderán las peticiones desde el navegador.
+Acceden al modelo, y lo retornan a la vista.
+Al menos un paquete para almacenarlos.
+
+MODELO
+Entidades: clases que modelan los objetos
+de nuestro modelo de negocio.
+Repositorios (almacenes)
+Servicios (Lógica de negocio) Un paquete por cada tipo
+
+
+VISTAS
+Plantillas (normalmente, HTML) que, tras ser procesadas, serán visualizadas por el
+navegador.
+Recursos estáticos (CSS, imágenes, JS, …)
+
+¿Y EL RESTO DE PAQUETES?
+Configuración
+Seguridad
+Utilidades 
+
+CONFIGURACIÓN
+Clases anotadas con @Configuration
+Modifican aspectos de configuración por defecto.
+Ejemplo: configuración de las propiedades de la base de datos.
+
+SEGURIDAD
+Útil si usamos Spring Security
+Clase que extiende a WebSecurityConfigurerAdapter
+Si nuestro manejo de seguridad es complejo, podemos tener subpaquetes
+(modelo, servicios, configuración, filtros,…)
+
+
+UTILIDADES
+Clases auxiliares que nos sirven para algunas tareas.
+Pueden ser o no componentes Spring. 
+
+
+--------------------------------------------------------------------------------------
+CONCEPTOS DE JAVA EE NECESARIOS 
+
+Una aplicación web con Spring MVC
+no deja de ser una aplicación web Java.
+Por tanto, necesitamos conocer
+algunos conceptos de este modelo de
+desarrollo de aplicaciones. 
+
+SERVLET 
+Clase que nos permite gestionar peticiones/respuestas de una aplicación servidora.
+Usualmente usados en contextos web bajo el protocolo HTTP.
+Se ejecutan en un contenedor de servlets (por ejemplo, Tomcat)
+
+WEB.XML:
+Fichero que indica cómo desplegar en el servidor los componentes de la aplicación
+(servlets entre otros)
+Formato XML
+Ruta /WEB-INF/web.xml 
+
+
+FILTER 
+Los filtros permiten transformar peticiones (sobretodo) o respuestas HTTP
+También nos permiten alterar el circuito normal que seguiría
+una petición/respuesta en función del contenido de estas.
+Por ejemplo, seguridad, cambiar codificación a UTF-8,
+
+DISPATCHER SERVLET
+Despacha todas las peticiones (delegando en otras clases).
+Necesita ser mapeado (descriptor de despliegue o JavaConfig).
+Si usamos Spring Boot, esto no es necesario, él se encarga de esta configuración. 
+
+CONTEXTOS
+Una aplicación Spring necesita un ApplicationContext: contenedor de
+inversión de control.
+Para apps web tenemos WebApplicationContext. 
+Usualmente (y así trabajaremos durante el curso) solo necesitaremos un
+WebApplicationContext, pero podemos tener una jerarquía.
+
+
+ALGUNOS BEANS ESPECIALES 
+
+Colaboran con el DispatcherServlet
+ HandlerMapping y HandlerAdapter: mapeo de peticiones a métodos de un controlador.
+ ViewResolver: transforma nombres de vistas en vistas con las que renderizar una respuesta
+
+
+¿Y QUÉ HACE SPRING BOOT POR NOSOTROS? 
+
+CONFIGURACIÓN DE DISPATCHER SERVLET
+Sin Spring Boot, tendríamos que hacer esto manualmente. 
+
+------------------------------------------------------------------------------------------------------------
+CONTROLADOR
+Clase que se va a encargar de atender peticiones y derivarnos a una vista adecuada. 
+
+
+¿CÓMO SE CREA UN CONTROLADOR?
+
+Clase POJO Java (Plain Old Java Object)
+ Anotación @Controller
+Métodos anotados con @RequestMapping o sus derivados
+@GetMapping
+@PostMapping
+@PutMapping
+@DeleteMapping
+@PatchMapping
+
+ESTRUCTURA BÁSICA DE UN MÉTODO DEL CONTROLADOR 
+La clase es un pojo, no tiene que extender a ninguna otra obligatoriamente, 
+tan solo anotada con @Controller 
+
+La anotación @GetMapping indica que este método se invoca cuando se produce una
+petición GET a / 
+El método puede tener un nombre cualquiera, y no tiene por que recibir parámetros 
+El método devuelve un String. Ruta de la plantilla sin la extensión 
+(que se supone es .html)
+
+
+CÓMO ENVIAR DATOS A LA VISTA 
+La clase Model es un Map, que nos permite pasar objetos del controlador a 
+la vista
+@GetMapping("/")
+public String welcome(Model model){
+model.addAttribute("mensaje","!Hola a todos");
+return "index"
+}
+
+En nuestra plantilla Thymeleaf, podemos utilizar los datos recibidos.
+<h1 th:text="${mensaje}">Mensaje</h1>
+
+POSIBLES ARGUMENTOS DE UN MÉTODO DEL CONTROLADOR
+java.util.Map, org.springframework.ui.Model,
+org.springframework.ui.ModelMap
+Nos permite pasar datos a la vista 
+@ModelAttribute Permite acceder a un objeto del modelo (útil con formularios) 
+
+
+POSIBLES ARGUMENTOS DE UN MÉTODO DEL CONTROLADOR
+@RequestBody Permite acceder a un objeto presente en el cuerpo de la petición
+HttpEntity<?> Permite acceder a la petición (encabezado
+y cuerpo) 
+
+POSIBLES TIPOS DE RETORNO EN UN MÉTODO DEL CONTROLADOR
+
+String: es el más usual en las últimas versiones de Spring. 
+Se trata del nombre de la plantilla, que será resuelto por el
+ViewResolver configurado (Spring Boot + Thyemeleaf en el classpath)
+
+@ResponseBody + cualquier tipo de dato:se convierte el valor devuelto a través del
+conversor configurado.
+
+HttpEntity<?>, ResponseEntity<?>: se devuelve la respuesta HTTP completa
+(cabeceras y cuerpo).
+
+ModelAndView: modelo + vista en un solo objeto. 
+
+CUÁNTOS MÉTODOS PUEDE TENER UN CONTROLADOR?
+Puede tener cuantos necesitemos. No hay un límite determinado. Lo
+establece el diseño de clases de nuestra aplicación. 
+
+
+CONTROLADOR DE UNA WEB CLÁSICA 
+
+Las webs clásicas de pequeños negocios solían incluir:
+Portada. Información sobre la organización (quiénes somos)
+Qué hacemos
+Dónde estamos e información de
+contacto.
+
+
+---------------------------------------------------------------------------------------------
+VISTA
+Es la parte encargada de renderizar las plantillas que visualizará el
+usuario. 
+
+Spring MVC está diseñado para ser independiente de la tecnología de lavista. 
+Podemos verlo como piezas deun puzzle que encajan. Así podemos seleccionar la tecnología más
+adecuada.
+
+
+POSIBLES TECNOLOGÍAS EN LA VISTA 
+
+Thyemeleaf: Motor de plantillas que enfatiza el uso de plantillas naturales. 
+Su integración con Spring es muy sencilla, e inmediata con Spring Boot
+
+FreeMarker: Apache FreeMarker es un motor de plantillas para generar contenido HTML.
+Integración sencilla con Spring. 
+
+Groovy Markup: Motor de plantillas para generar contenido XMLlike. 
+Requiere del uso de Groovy 2.3.1+
+
+JSP + JSTL: Tecnología Java que permite crear páginas web dinámicas. 
+A nivel de rendimiento es equivalente al uso de Servlets. 
+
+Tiles: Apache Tiles es un marco de desarrollo de plantillas que ha sido muy popular por su
+uso junto a Struts. 
+
+Otras (JSR-223): Handlebars, Mustache, React, EJS, … o cualquier otro sistema que pueda
+correr sobre un motor de scripting JSR-233.
+
+
+CARACTERÍSTICAS DE THYMELEAF
+
+Es un motor de plantillas: plantilla +
+modelo = resultado
+
+Natural Templating
+
+Procesador: un objeto que aplica una transformación a un determinado
+artefacto (texto, etiqueta, comentario, …)
+Dialectos: conjunto de procesadores.
+Spring posee un dialecto propio (SpringStandardDialect).
+Nos permite utilizar SpEL (Spring expression Language) en lugar del
+lenguaje de expresiones por defecto. 
+
+CÓMO CONFIGURAR THYMELEAF COMO MOTOR DE PLANTILLAS 
+La forma más sencilla: Spring Boot + starter de Thymeleaf 
+
+
+QUÉ HACE SPRING BOOT POR NOSOTROS PARA CONFIGURAR THYMELEAF? 
+
+Configura varios beans
+ViewResolver (ThymeleafViewResolver) Encargado de resolver las vistas.
+TemplateEngine (SpringTemplateEngine) indica el dialecto Thymeleaf y habilita el lenguaje
+de expresiones EL.
+TemplateResolver (SpringResourceTemplateResolver) Permite acceder físicamente a las plantillas,
+indicando ruta y sufijo 
+
+CÓMO MODIFICAR LA CONFIGURACIÓN POR DEFECTO DE THYMELEAF
+application.properties
+ spring.thymeleaf.cache
+ spring.thymeleaf.check-template
+ spring.thymeleaf.check-template-location
+ spring.thymeleaf.enabled
+ spring.thymeleaf.encoding
+ spring.thymeleaf.mode
+ spring.thymeleaf.prefix
+ spring.thymeleaf.suffix 
+
+----------------------------------------------------------------------------------------------------------------
+@PathVariable y @RequestMapping
+Podemos declarar variables en el path a nivel de método y a nivel de clase (haciendo uso de @RequestMapping):
+
+@Controller
+@RequestMapping("/owners/{ownerId}")
+public class OwnerController {
+
+    @GetMapping("/pets")
+    public Pet findAll(@PathVariable Long ownerId) {
+        // ...
+    }
+
+    @GetMapping("/pets/{petId}")
+    public Pet findPet(@PathVariable Long ownerId, @PathVariable Long petId) {
+        // ...
+    }
+}
+De esta forma, necesitaríamos inyectar la variable a través de @PathVariable en cada método.
+
+---------------------------------------------------------------------------------------------
+RECOGER PARÁMETROS DE UNA PETICIÓN HTTP 
+Es una forma de pasar información en la petición.
+Dos tipos
+ En el path de la URL
+  En la parte query de la URL 
+
+  
+@REQUESTPARAM 
+
+Una URL tiene dos partes
+ Path: http://www.openwebinars.net/
+ Query: /?categoria=backend
+ La parte Query viene delimitada por ?
+ Pares name=value
+ Si hay más de uno, n1=v1&n2=v2&n3=v3
+
+
+Con @RequestParam inyectamos el valor en una variable
+El tipo de dato suele ser String, pero puede tomar otros valores (int, long, Date, …)
+
+Por defecto, required=true
+Si realizamos la petición sin parámetro, obtenemos error 400 (Bad Request).
+Alternativas required=false+ defaultValue
+Uso de Optional. 
+
+@PATHVARIABLE 
+También podemos extraer partes del Path.
+Podemos declarar variables entre llaves {var}
+/pedidos/{clienteId}
+Pueden estar en medio de una ruta /pedido/{pedidoId}/articulos
+
+Con @PathVariable inyectamos el valor en una variable.
+Si el nombre de la variable es diferente del parámetro, lo inyectamos con
+@PathVariable(“name”)
+
+---------------------------------------------------------------------------------------------------------
+CONTENIDO ESTÁTICO
+
+Ficheros .html
+Imágenes
+Css
+Javascript
+Fichero binarios
+...
+
+¿DÓNDE ALMACENAMOS EL CONTENIDO ESTÁTICO? 
+Carpeta /src/main/resources/static 
+
+CÓMO ACCEDO AL CONTENIDO ESTÁTICO? 
+Spring Boot viene al rescate
+Sirve el contenido en
+ /static
+ /public
+ /resources
+ /META-INF/resources
+en la raíz de nuestro contexto. 
+
+CAMBIOS EN LA CONFIGURACIÓN
+
+Podemos cambiar el mapeo a la ruta raízpor otra que nos interese más
+
+spring.mvc.static-path-pattern=/resources/**
+
+También se puede cambiar la localización de los recursos a otra carpeta
+spring.resources.static-locations 
+
+------------------------------------------------------------------------------------
+WEBJARS: RECURSOS ESTÁTICOS COMO ARCHIVOS .JAR 
+
+jQuery
+Bootstrap
+moment.js 
+
+
+PODEMOS AÑADIR CON MAVEN ESTOS RECURSOS?
+
+ La respuesta es sí: webjars
+ https://www.webjars.org/
+ 
+ Ventajas
+No dependemos de la disponibilidad de un CDN.
+Velocidad de carga acorde a nuestra aplicación web. 
+
+¿CÓMO CONFIGURARLO? 
+
+Spring Boot viene de nuevo al rescate
+Todo contenido que esté en una ruta
+/webjars/** es servido desde el fichero .jar correspondiente como contenido estático
+de forma automática. 
+
+
+DEPENDENCIAS MÁS USADAS
+
+<dependency>
+ <groupId>org.webjars</groupId>
+ <artifactId>bootstrap</artifactId>
+ <version>3.3.7-1</version>
+</dependency> 
+
+<dependency>
+ <groupId>org.webjars</groupId>
+ <artifactId>jquery</artifactId>
+ <version>3.3.1-1</version>
+</dependency> 
+
+
+<dependency>
+ <groupId>org.webjars</groupId>
+ <artifactId>webjars-locator</artifactId>
+ <version>0.34</version>
+</dependency>
+
+
+
+
+CAMBIOS EN LAS RUTAS DE NUESTRA PLANTILLA
+
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+ <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/webjars/jquery/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+
+
+------------------------------------------------------------------------------------------------------------------
+FORMULARIOS CON SPRING MVC
+
+Spring ofrece funcionalidades para el manejo de formularios.
+Se realiza a través de un objeto, llamado Command Object, que es el bean que
+servirá para almacenar la información recogida en el formulario.
+Este objeto debe tener tantos atributos (con getters y setters) como campos tenga
+el formulario. 
+
+
+En algunas ocasiones, podremos usar como command object objetos (entidades)
+de nuestro modelo
+
+(1) Enviar objeto al formulario 
+
+@GetMapping - Añadimos al modelo un command object ¿vacío?
+- Nos dirigimos a la plantilla del formulario
+
+(2) Formulario
+- Tomamos del contexto el command object.
+- Asociamos cada uno de sus atributos a los campos correspondientes del
+formulario.
+- Dirigimos la acción del formulario hacia (3) 
+
+(3) Procesar los datos
+- @PostMapping
+- Recogemos el objeto enviado desde el formulario, ya relleno de datos.
+- Aplicamos la lógica de negocio correspondiente.
+- Redirigimos hacia otrocontrolador (¿delistado?) 
+
+
+FORMULARIOS CON SPRING MVC + THYMELEAF
+
+<form action="#"
+ th:action="@{/empleado/new/submit}"
+ th:object="${empleadoForm}"
+ method="post">
+ ...
+</form>
+
+<input type="text"
+ id="elID" th:field="*{campo}">
+ 
+ 
+ https://bootsnipp.com/forms  -> para generar formularios
+ 
+ 
+
+--------------------------------------------------------------------------------------
+FORMULARIOS PARA EDITAR REGISTROS 
+
+Idénticos a los de edición El command object debe llevar datos, en
+lugar de estar vacío.
+El servicio debe permitirnos rescatar los datos para editar.
+El url incluirá el id el dato a editar.
+
+(1) Enviar objeto al formulario
+- @GetMapping
+- Añadimos al modelo un command object con los datos a editar. Lo rescatamos desde el
+servicio usando el id.
+- Nos dirigimos a la plantilla del formulario.
+
+(2) Formulario
+- Tomamos del contexto el command object.
+- Asociamos cada uno de sus atributos a los campos correspondientes del
+formulario. Así, elnavegador los visualiza.
+- Dirigimos la acción del formulario hacia (3) 
+
+3) Procesar los datos 
+- @PostMapping
+- Recogemos el objeto enviado desde el formulario, ya relleno de datos.
+- Aplicamos la lógica de negocio correspondiente.
+- Redirigimos hacia otro controlador (¿de listado?) 
+
+-------------------------------------------------------------------------------------------
+Validación
+Spring permite usar el estándar JSR-303/JSR-380 Bean Validation API. Spring Boot configura por defecto la implementación de este estándar realizada por hibernate.
+Permite realizar la validación añadiendo anotaciones en nuestras clases modelo.
+
+Algunas anotaciones de validación:
+@NotNull: el atributo no puede ser nulo
+@Min, @Max: mayor o igual (o menor o igual) que un valor determinado.
+@NotEmpty: el atributo no puede estar vacío (Strings, colecciones, arrays, …)
+@Email: el atributo debe ser un email válido.
+@Size: el atributo tiene que tener un tamaño según el indicado.
+Puedes consultar toda la documentación en https://beanvalidation.org/2.0/spec/#builtinconstraints
+
+Visualización de errores con Thymeleaf
+Thymeleaf nos ofrece algunos elementos para gestionar los errores:
+
+Algunas funciones del objeto #fields: #fields.hasError(‘...’) y #fields.errors(‘...’)
+Atributos: th:errors y th:errorclass
+Todo esto lo podemos conjugar con el uso de Bootstrap para la visualización de errores:
+
+<div class="form-group"    th:classappend="${#fields.hasErrors('id')} ? 'has-error'">
+    <label for="id">ID</label> 
+    <input type="text" class="form-control" id="id" placeholder="1"
+        th:field="*{id}" th:attrappend="readonly=${empleadoForm.id != 0} ? 'readonly' : null" />
+    <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="help-block" id="id-error">Errores</span>
+</div>
+th:classappend="${#fields.hasErrors('id')} ? 'has-error'" nos permite añadir la clase css has-error, propia de bootstrap.
+Con <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="help-block" id="id-error">Errores</span> añadimos, justo debajo del campo del formulario, el/los mensaje/s de error.
+
+
+------------------------------------------------------------------------------------------------------
+MULTIPART
+Tipo de mensaje que permite que una petición tenga varias partes delimitadas,
+con su correspondiente Content-Type. 
+
+De esta forma, podemos enviar los datos del formulario y datos binarios, a la vez.
+<form enctype=”multipart/form-data”>
+
+El formulario debe incluir un campo de subida de ficheros:
+<input type=”file” … />
+Spring soporta perfectamente la gestión de peticiones multiparte. 
+
+MULTIPART CON SPRING
+
+Cuando Spring procesa una petición multiparte, nos deja acceder a ella (o ellas)
+a través de @RequestParam 
+
+La clase MultipartFile tiene métodos convenientes para permitirnos procesar el
+fichero. 
+
+¿DÓNDE LO ALMACENAMOS?
+
+Propio proyecto
+ Fácil para aprender
+ No es buena práctica en producción
+ Servicio de almacenamiento externo
+ GridFS
+ Nube (Amazon, Azure, Drive...)
+ Si son imágenes, servicios específicos, como imgur.
+
+--------------------------------------------------------------------------------------------------------------
+NUESTRO EJEMPLO
+
+Tomamos un ejemplo de Spring https://spring.io/guides/gs/uploadingfiles/
+La idea es crear un servicio de almacenamiento estándar (interface) y
+una implementación en local. 
+
+CLASE FileSystemStorageService
+
+Almacenamiento en nuestro sistema de
+ficheros.
+ Método store
+Recibe el multiparte y el ID del nuevo
+empleado.
+ Suponemos que estamos subiendo el
+avatar.
+Lo almacenamos como ID.ext (por
+ejemplo, 5.png, o 4.jpg).
+
+Método load
+ Devuelve la ruta de un fichero desde su nombre.
+Método loadAsResource
+ Recibe el nombre de un fichero.
+ Busca el fichero, y lo devuelve como una instancia de Resource (envoltorio
+conveniente para un fichero)
+
+CLASE FileSystemStorageService
+Método init
+ Inicializa el sistema de ficheros
+Método deleteAll
+ Elimina todos los ficheros 
+
+
+La clase FileSystemStorageService utiliza algunas clases de error y de configuración, y
+necesita ser invocado al lanzar el proyecto.
+
+
+CLASES DE ERROR
+
+StorageException
+Error general de almacenamiento.
+StorageFileNotFoundException
+Fichero no encontrado. 
+
+CLASES DE CONFIGURACIÓN
+
+StorageProperties
+ Anotada con @ConfigurationProperties
+ Envoltorio conveniente para uso de
+properties.
+ Inyectable mediante @Autowired
+ Tenemos que añadir
+@EnableConfigurationProperties
+ (StorageProperties.class)
+en una clase con @Configuration
+
+
+INVOCAR AL LANZAR EL PROYECTO 
+Creación de un CommandLineRunner en la clase Application.
+Permite encapsular un código que se
+ejecutará en el lanzamiento de la
+aplicación.
+Usamos una expresión lambda (muy
+habitual en este contexto). 
+
+
+CÓMO INTEGRARLO EN NUESTRO PROYECTO 
+
+Necesitamos que, cuando creamos unnuevo empleado, el fichero se almacene.
+Antes de terminar la petición, necesitamos la ruta del fichero, para guardarla junto al empleado
+En la vista, añadiremos lo necesario para que visualizar el avatar del usuario.
+El fichero no será obligatorio, así que mostraremos un avatar aleatorio para los que no tengan ninguno. 
+
+MÉTODO serveFile
+Método especial que será capaz de devolvernos el fichero como respuesta a una petición.
+Nos aisla tener que configurar el almacenamiento estático para obtener los ficheros. 
+
+@ResponseBody indica que el método no nos llevará a una vista, sino que devolverá un recurso.
+Usamos una expresión glob que, además, asigna el valor a la variable filename ("/files/filename:.+")
+Cargamos nuesta imagen como un Resource 
+La interfaz Resource es un envoltorio de un recurso (fichero binario, fichero en el classpath, …)
+
+	@GetMapping("/files/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+		Resource file = storageService.loadAsResource(filename);
+		return ResponseEntity.ok().body(file);
+	}
+	
+
+CAMBIOS EN EL CONTROLADOR
+
+Al crear un nuevo empleado queremos
+Almacenar el fichero.
+ Almacenar la ruta del fichero con la información del nuevo empleado. 
+
+MvcUriComponentsBuilder
+Nos permite armar una URI/URL fromMethodName lo hace usando un método, en nuestro caso anotado con la ruta /file/filename.
+Sustituye la variable por el nombre concreto del fichero.
+Obtenemos la URI completa en una cadena de caracteres. 
+
+Visualización del avatar
+Una nueva columna en la tabla
+Avatar por defecto
+Si la imagen es nula
+Utilizamos el servicio http://avatars.adorable.io/ que nos permite obtener un avatar a partir de un email. 
+
+---------------------------------------------------------------------------------------------
+SEGURIDAD CON SPRING = SPRING SECURITY
+Ofrece servicios de seguridad a aplicaciones Java EE.
+Integración muy sencilla con proyectos Spring MVC a través de Spring Boot.
+Dos procesos:
+Autenticación: ¿quién eres?
+Autorización: ¿para qué tienes permiso? 
+
+<dependency>
+<groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+PASO 1: CONFIGURACIÓN DE LA SEGURIDAD 
+Paquete seguridad
+Extiende a WebSecurityConfigurerAdapter
+Anotada con @EnableWebSecurity 
+
+PASO 2: CONFIGURAR EL MÉTODO DE AUTENTICACIÓN 
+
+Autenticación: ¿tú quién eres?
+En este primer ejemplo lo hacemos en memoria.
+Tampoco codificamos las contraseñas.
+Un solo usuario admin/admin/admin.
+
+
+
+
+
+Solo con este código ya tenemos
+Requisito de autenticación en todas las URLs
+Generación de un formulario de login
+Permitir el acceso a un usuario con
+Username admin y Password admin
+Permitir hacer logout
+Prevención de ataques CSRF, entre otras (Session Fixation, X-XSS-Protection, Clickjacking, …)
+
+
+Integración con métodos del api Servlet
+(HttpServletRequest)
+getRemoteUser()
+getUserPrincipal()
+isUserInRole(...)
+login(...)
+logout() 
+
+La clase de configuración ha registrado un filtro de Servlet especial, llamado
+springSecurityFilterChain.
+Es una cadena de filtros responsable de toda la seguridad (proteger las URLs, validar usuario y contraseña, redirigir al
+formulario de login, …)
+
+
+PASO 3: AUTORIZACIÓN 
+
+Autorización: ¿para qué tienes permiso?
+Lo configuramos mediante un objeto de tipo HttpSecurity.
+Uso de method chain. 
+
+
+
+
+PASO 4: LOGIN 
+Modificamos lo necesario para
+Cambiar el formulario de login y hacer uno propio
+Cambiar la ruta a /login
+Permitir que cualquiera acceda al formulario 
+Para customizar el formulario, necesitaríamos un controlador que nos lleve a la plantilla de login.
+Si un controlador tan solo sirve para llevarnos a la plantilla, lo podemos simplificar. 
+
+Creamos una clase de configuración, que implementa WebMvcConfigurer.
+Podemos mapear una ruta a una plantilla. 
+
+PASO 4: LOGIN (PLANTILLA) 
+
+Creamos una nueva plantilla (login.html)
+Nos podemos basar en otro ejemplo de bootstrap
+
+Para que funcione
+Apuntamos a las webjars
+Modificamos el formulario de login
+th:action=”@{/login}”
+Los campos deben deben tener
+name=”username” y
+name=”password”. 
+
+PASO 5: AUTORIZAR PETICIONES 
+
+Nuestra seguridad es tan restrictiva que no permite servir ni los estilos css.
+Añadimos rutas para las que permitiremos el acceso siempre.
+Lo hacemos mediante el método antMatchers(...), que acepta un varargs de
+String con rutas (podemos usar glob).
+
+PASO 6: LOGOUT 
+
+Permitimos que un usuario autenticado
+realice el logout para Invalidar la sesión
+Limpiar el contexto de seguridad (SecurityContextHolder)
+Redirigir al login (/login?logout)
+Añadimos los elementos necesarios a la plantilla. 
+
+¡ATENCIÓN! Desde las últimas versiones de Spring, la petición logout es POST (no GET).
+Motivo: uso de CSRF
+Solución:
+Deshabilitar CSRF (no recomendado)
+Realizar una petición POST (fácil) 
+
+De esta forma, no tenemos que deshabilitar CSRF, y aprovechamos los estilos de bootstrap sin modificaciones. 
+
+PASO 7: MOSTRAR EL NOMBRE DEL USUARIO LOGUEADO 
+Usual que podamos ver los datos del usuario logueado.
+Lo podemos sacar del objeto SecurityContextHolder y pasarlo a través del modelo.
+O podemos tomarlo directamente en la plantilla. 
+
+Thymeleaf ofrece una librería de extras con Spring
+Security (v. 3, 4 y 5).
+Añadimos un nuevo espacio de nombres:
+<html
+ xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+Podemos visualizar el nombre:
+<div sec:authentication=”name”></div>
+<div th:text=”${#authentication.name}”></div>
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+MANEJO DE SESIONES
+
+HTTPSESSION
+
+SIN ESTADOS
+Cuando realiza una petición, no puede recordar nada de lo anterior.
+Necesita un mecanismo auxiliar para que un dato sobreviva más allá de una petición.
+A dicho mecanismo se le conoce como sesiones. 
+
+Interfaz que ofrece Java EE
+Es un Map en el que se almacenan pares clave - objeto.
+Cuando creamos una sesión, se envía una cookie, que el navegador mantiene y reenvía en todas las peticiones siguientes.
+(JSESSIONID).
+La sesión es individual: cada usuario tiene la suya; los datos no se comparten entre
+sesiones. 
+
+PARA QUÉ SE USAN LAS SESIONES
+
+Spring Security la usa cuando nos logueamos.
+Así nos permite navegar entre páginas que requieren autenticación sin volver a loguearnos.
+Lógica de nuestra app
+Carrito de la compra
+Asistentes (proceso a realizar en varios pasos).
+
+USO DE HTTPSESSION CON SPRING 
+
+Podemos @Autowired el objeto HttpSession
+en cualquier controlador.Podemos pasarlo como argumento de cualquier método en un controlador
+
+DESVENTAJAS DE HTTPSESSION
+
+Dependemos de la implementación del servidor (contenedor de servlets) sobre el que desplegamos nuestra app.
+Problemas de escalabilidad
+En un grupo de servidores, podemos sincronizar sesiones entre ellos  mayor cargo.
+Integración continua: un despliegue de una nueva release provoca pérdida de sesiones. 
+
+SPRING AL RESCATE! SPRING SESSION 
+
+Integración transparente con HttpSession.
+Independencia de la implementación del servidor de aplicaciones.
+Sesiones en cluster
+Múltiples sesiones en un solo navegador
+Uso en APIs RESTfu
+
+
+SPRING SESSION 
+
+API de Spring que permite el manejo de sesiones en cluster sin estar atado alcontenedor de la aplicación.
+Módulos (entre otros) 
+
+Spring Session Core
+Funcionalidades principales y comunes.
+
+Spring Session Data Redis
+Almacenamiento de sesiones en Redis. 
+
+Spring Session Data JDBC
+Almacenamiento en una base de datos relacional. 
+
+
+
+¿QUÉ ES REDIS?
+
+Motor de base de datos NoSQL en memoria.
+Almacenamiento de hashes (key/value)
+Implementada en C. Redis Lab (BSD License)
+Almacenamiento de sesiones, caché, …
+Rendimiento extremo comparado con otros SGBD.
+Replicación master/slave en árbol. 
+
+
+INTEGRACIÓN DE NUESTRO PROYECTO CON SPRING SESSION 
+
+MODIFICACIONES
+Instalar redis (vía docker)
+Actualizar pom.xml
+Configuración (application.properties)
+Spring Boot se encarga de lo demás. 
+
+
+INSTALAR REDIS (VÍA DOCKER)
+Docker: gestor de contenedores
+Docker hub: repositorio de imágenes prefabricadas.
+Hay una imagen con la última versión estable de redis.
+https://docs.docker.com/samples/library/redis
+
+instalar redis
+$ docker run -d --name myredis -p 6379:6379 redis
+
+
+ACTUALIZAR POM.XML
+Añadimos dos nuevas dependencias
+
+<dependency>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+
+<dependency>
+ <groupId>org.springframework.session</groupId>
+ <artifactId>spring-session-data-redis</artifactId>
+</dependency> 
+
+
+CONFIGURACIÓN 
+
+Gracias a Spring Boot, la configuración se puede hacer vía application.properties spring.session.store-type=redis
+Spring Boot se encarga de crear un filtro, springSessionRepositoryFilter, encargado de la gestión de los objetos HttpSession. 
+
+
+OTROS ASPECTOS DE CONFIGURACIÓN
+server.servlet.session.timeout
+Duración del timeout de una sesión.
+
+spring.session.redis.flush-mode=on-save Modo de volcado de datos
+spring.session.redis.namespace=spring:session Espacio de nombre usado para las claves 
+spring.redis.host=localhost URL/IP del servidor Redis
+spring.redis.password Contraseña
+spring.redis.port=6379 Puerto del servidor Redis
+
+
+¿CÓMO COMPROBAMOS QUE FUNCIONA? 
+
+Ejecutamos la aplicación
+Nos logueamos
+Abrimos una consola y ejecutamos 
+
+Ejecutar redis
+$ docker exec -ti myredis bash 
+
+Ver las sesissiones activas
+root@......# redis-cli keys '*' 
+
+Probamos a borrar la sesión, y comprobamos que nos la aplicación nos vuelve a llevar al login. 
+
+root@......# redis-cli del spring:session:sessions:02e57ce5-734d-....
+ 
+ 
+Dependencias Maven
+Necesitamos dos dependencias
+
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+Esta primera dependencia es de Spring Data (en concreto, específicamente para Redis), el API de Spring que nos permite manejar datos en diferentes orígenes (bases de datos relacionales, NoSQL, …) a través de repositorios. Esta dependencia es usada por la siguiente.
+
+<dependency>
+   <groupId>org.springframework.session</groupId>
+   <artifactId>spring-session-data-redis</artifactId>
+</dependency>
+Esta es la dependencia específica para incluir Spring Session Core y el almacenamiento de sesiones en Redis.
+
+Instalación de Redis
+Para usar Redis vamos a trabajar con Docker. Si quieres saber más sobre esta tecnología, puedes visitar nuestro Curso de Introducción a Docker y también nuestro Curso de Docker para Desarrolladores.
+
+Una vez instalado docker, el comando para descargar, instalar y lanzar Redis es:
+
+$ docker run -d --name myredis -p 6379:6379 redis
+Si trabajas con Linux, posiblemente necesites poner antes sudo para poder ejecutarlo.
+
+También puedes descargar Redis desde su web: https://redis.io/download.
+
+Conexión al cliente de Redis
+Si quieres conectar con el cliente de Redis lo puedes hacer de la siguiente forma:
+
+$ docker exec -ti myredis bash
+$ redis-cli
+También lo puedes hacer en una sola línea de código
+
+$ docker exec -ti myredis redis-cli
+ 
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+INTRODUCCIÓN A SPRING DATA
+
+PERSISTENCIA DE DATOS 
+
+La mayoría de las aplicaciones necesitan persistir la información.
+Significa que esta sobreviva más allá de una sesión o un determinado tiempo.
+La solución nos la aportan las bases de datos. 
+
+
+BASES DE DATOS
+Dos grandes modelos: relacional y NoSQL 
+
+
+Relacional
+- Tablas, columnas, filas
+- Garantía frente a duplicidad.
+- Integridad referencial
+- Dificilmente escalables
+
+NoSQL
+- Diferentes modelos dedatos.
+- Velocidad, flexibilidad.
+- Escalabilidad
+- Volumen de datos. 
+
+
+DESFASE OBJETO - RELACIONAL 
+
+En Java usamos objetos (n-dimensiones)
+Las base de datos, tablas (2-dimensiones)
+¿Cómo salvar este desfase? 
+
+
+PreparedStatement ps = con.prepareStatement("SELECT * FROM empleados WHERE id = ?");
+ps.setInt(1, id);
+ResultSet rs = ps.executeQuery();
+Empleado result = null;
+if (rs.next()) {
+result = new Empleado(rs.getInt("id"),
+ rs.getString("nombre"),
+rs.getString("apellidos")
+
+rs.getDate("fecha_nacimiento").toLocalDate(),
+ rs.getFloat("sueldo"));
+}
+rs.close();
+ps.close();
+return result;
+
+
+SOLUCIÓN AL DESFASE OBJETO - RELACIONAL: ORM
+Hibernate -> Mybatis ->eclipseLink
+
+Object-Relational Mapping
+Una pieza de software se encarga de traducir objetos en filas y viceversa. 
+
+UNA PALABRA SOBRE JPA
+
+Java Persistence API
+Desde Java se propone un API estándar para tratar la persistencia de datos.
+Java no ofrece ninguna implementación concreta.
+La mayoría de ORMs comerciales, sí lo hacen.
+
+
+Una facilidad para especificar cómo nuestros objetos Java se relaciona con el esquema de una base de datos
+Una api sencillo para realizar las operaciones CRUD
+Un lenguaje y un API para realizar consultas sobre los datos (JPQL).
+Elementos de optimización (actualización de entidades, captura de asociaciones, caché, …)
+
+
+
+SPRING DATA 
+
+Se puede usar directamente JDBC
+Se puede utilizar directamente Hibernate
+Podemos usar JPA sobre Hibernate
+También tenemos disponible Spring Data. 
+
+
+Ofrece un modelo consistente de programación para acceder a datos.
+Facilita el uso de bases de datos relacionales y NoSQL
+Proyecto paraguas para muchos subproyectos. 
+
+Integra todas las funcionalidades de JPA con Spring Data
+Será con el subproyecto que trabajemos.
+ Nuestra SGBD será H2.
+ Embebible (Maven)
+ ACID
+ Ligero 
+ 
+ <dependency>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+ <groupId>com.h2database</groupId>
+ <artifactId>h2</artifactId>
+ <scope>runtime</scope>
+</dependency> 
+ 
+ 
+Módulos de Spring Data
+ 
+Módulos principales
+Spring Data Commons: elementos comunes al todos los demás módulos
+Spring Data JDBC: Repositorios de Spring Data sobre JDBC.
+Spring Data JDBC ext: Soporte para extensiones específicas de algunos SGBD.
+Spring Data JPA: Spring Data con soporte para JPA
+Spring Data KeyValue: Repositorios basados en Map (almacenes clave/valor)
+Spring Data LDAP: Repositorios con soporte para Spring LDAP.
+Spring Data MnogoDB: Repositorios para Mongodb con soporte objeto-documental.
+Spring Data Redis: Configuración fácil para el uso de Redis en aplicaciones Spring
+Spring Data for Apache Cassandra: Configuración y acceso fácil a Apache Cassandra.
+Spring Data for Apache Geode: Configuración y acceso fácil para Apache Geode.
+Spring Data for Apache Solr: Configuración y acceso fácil para Apache Solr.
+Spring Data for Pivotal GemFire: Configuración y acceso fácil para Pivotal GemFire.
+
+Módulos de la comunidad
+Spring Data Aerospike: Spring Data para Aerospike.
+Spring Data ArangoDB: Spring Data para ArangoDB.
+Spring Data Couchbase: Spring Data para Couchbase.
+Spring Data Azure Cosmos DB: Spring Data para Microsoft Azure Cosmos DB.
+Spring Data DynamoDB: Spring Data para DynamoDB.
+Spring Data Elasticsearch: Spring Data para Elasticsearch.
+Spring Data Hazelcast - Soporte de repositorios Spring Data para Hazelcast.
+Spring Data Jest - Spring Data para Elasticsearch basado en el cliente REST Jest.
+Spring Data Neo4j - Soporte para repositorios Spring Data para Neo4j.
+Spring Data Vault - Repositorios Vault sobre Spring Data KeyValue.
+
+Módulos relacionados
+Spring Data JDBC Extensions: extensiones a JDBC provistas en Spring Framework
+Spring para Apache Hadoop: Simplifica Hadoop ofreciendo una configuración y modelo unificado.
+Spring Content: Asociación de contenido con entidades Spring Datay almacenamiento de datos en un abanico de almacenes como S3, Mongo GridFS, …
+ 
+ 
+---------------------------------------------------------------------------------------------------------------------------
+ 
+SPRING DATA JPA ENTIDADES
+ 
+Representa los conceptos propios del problema a resolver.
+Vocabulario y conceptos clave.
+Entidades y relaciones 
+ 
+Clase (pojo) Java con @Entity
+Debe tener (al menos) un atributo que lo identifique 
+(concepto de PK de bases de datos) con @Id. Anotación sobre propiedad o método getter.
+También se trasladarán a la base de datos como columnas el resto de propiedades que
+tenga la clase. 
+ 
+ 
+@Entity
+public class Producto {
+	@Id @GeneratedValue
+	private Long Id;
+	private String nombre;
+	private String descripcion;
+	private float pvp;
+//… resto de métodos y atributos
+} 
+
+
+@Entity se mapea con una tabla que se llame igual que la clase.
+Con un @Table adicional, podemos cambiar el nombre.
+@Entity
+@Table(name=”PROD”)
+public class Producto {
+//… resto de métodos y atributos
+} 
+
+Los atributos también se mapean con su
+nombre
+Con un @Column, podemos cambiar el nombre. 
+
+@Entity
+@Table(name=”PROD”)
+public class Producto {
+@Column(name=”prod_nombre”)
+private String nombre;
+//… resto de métodos y atributos
+} 
+
+Además @Column nos permite definir otras propiedades:
+Nullable: si permite almacenar nulos
+Name: nombre de la columna en la BD
+Insertable, updatable: define si la entidad puede ser o no insertable o actualizable.
+Length: tamaño que tendrá el campo en la BD
+
+Es habitual utilizar campos artificiales, con el mismo nombre (id) y de tipo entero (long).
+- JPA se puede encargar de generarlo
+(@GeneratedValue).
+AUTO: Hibernate escoge la mejor estrategia para el SGBD elegido.
+SEQUENCE: se utiliza una secuencia
+IDENTITY: se utiliza un campo autonumérico
+TABLE: se utiliza una tabla extra especial.
+
+
+MAPEO DE VALORES. TIPOS DE DATOS 
+
+Tipos básicos
+Envoltorios de tipos básicos (Long, Double, …)
+String, BigInteger, BigDecimal, java.util.Date,
+java.util.Calendar, java.sql.Date, java.sql .Time,
+java.sql.Timestamp, byte[], Byte[],
+char[], o Character[]
+java.io.Serializable (representación en bytes)*
+@Embeddable
+
+
+MAPEO DE VALORES. ASOCIACIONES 
+
+JPA nos permite asociar dos entidades.
+Debemos conocer la multiplicidad de dicha asociación.
+@ManyToOne: muchos a uno
+@OneToMany: uno a muchos
+@ManyToMany: muchos a muchos
+@OneToOne: uno a uno. 
+
+MAPEO DE VALORES. ASOCIACIONES 
+
+@Entity
+public class Producto {
+	@Id @GeneratedValue
+	private Long Id;
+	//… resto de atributos
+	@ManyToOne
+	private Categoria categoria;
+} 
+
+--------------------------------------------------------------------------------------------------------------------------
+SPRING DATA JPA: REPOSITORIOS
+
+Interfaz principal de Spring Data.
+Toma una entidad y su tipo de id como argumentos.
+CrudRepository es un buen punto de partida para empezar.
+Operaciones CRUD
+count()
+existsById
+
+Para usarlo, tan solo tenemos que extender el repositorio.
+No tenemos que implementar ningún tipo de método para tener toda la funcionalidad de CrudRepository.
+public interface EmpleadoRepository extends CrudRepository<Empleado, Long> {
+} 
+
+
+CRUDREPOSITORY
+
+Métodos CRUD básicos
+save(...): almacena una entidad
+saveAll(...): almacena varias entidades
+findOne(...): devuelve una entidad por su PK
+findAll(): devuelve todas las entidades en un iterable
+count(): número total de entidades
+delete(...): elimina una entidad
+exists(...): verifica si existe una entidad por su PK. 
+
+
+PAGINGANDSORTINGREPOSITORY
+
+Añade al anterior:
+findAll(Sort sort): devuelve todos según un orden
+findAll(Pageable pageable): devuelve todos por páginas (usado en paginación de resultados). 
+
+
+
+JPAREPOSITORY
+Añade al anterior:
+findAll(), findAll(Sort sort): devuelve un List<T>
+save(...): devuelve en un List<T>.
+flush(): descarga todas las tareas pendientes a la base de datos.
+saveAndFlush(...): almacena la entidad y descarga los cambios a la base de datos.
+deleteInBatch(...): elimina un Iterable de entidades.
+
+
+
+
+
+Algunos elementos de Spring Framework
+Por si tienes oxidados algunos de los elementos de Spring Framework, aprovecho para recordar:
+
+Si utilizamos la anotacion @Autowired sobre una referencia de un tipo interfaz, Spring se encarga de buscar en el IoC container una instancia de un bean de un tipo que sea compatible, es decir, que implemente dicha interfaz.
+Si Spring encuentra más de una instancia de un tipo de bean (en nuestro caso, hay dos clases que implementan una interfaz, EmpleadoService), posiblemente tendríamos una excepción. Al anotar uno de los beans con @Primary, Spring escoge dicho bean entre los dos.
+Propiedades en application.properties para Spring Data JPA
+# URL jdbc de conexión a la base de datos
+# spring.datasource.url=jdbc:h2:mem:db
+spring.datasource.url=jdbc:h2:./openwebinars
+
+# Usuario y contraseña de la base de datos
+spring.datasource.username=sa
+spring.datasource.password=
+
+# Habilitamos la consola de H2
+# http://localhost:{server.port}/h2-console
+# En nuestro caso http://localhost:9000/h2-console
+spring.h2.console.enabled=true
+
+# Habilitamos los mensajes sql en el log
+spring.jpa.show-sql=true
+CommandLineRunner
+Se trata de una interfaz muy útil, ya que nos permite definir fragmentos de código que se lanzarán justo al iniciar la aplicación.
+
+Si vemos la estructura del código a usar:
+
+@Bean
+CommandLineRunner initData(EmpleadoRepository repositorio) {
+    return (args) -> {
+        //código a ejecutar
+    };
+}
+Apreciamos que estamos usando una expresión lambda para devolver el objeto. Como los demás métodos anotados con @Bean, lo podemos definir en una clase anotada con @Configuration o en la clase @SpringBootApplication.
+
+Actualización en la seguridad
+Como hemos visto en las propiedades, hemos habilitado la posibilidad de acceder a la consola de H2, pero al ser un acceso web que está dentro de nuestro proyecto, tenemos que darle “via libre” para entre en la configuración de seguridad.
+
+Vamos a dar un acceso total al cualquier usuario porque estamos aprendiendo. En otro caso, esto no sería una buena práctica, y solamente deberíamos dar acceso a algún usuario que cumpliera alguna característica, como tener el rol de administrador.
+
+Otra solución podría ser tener dos beans de configuración de la seguridad, y activar uno u otro en base a los perfiles. Si quieres saber cómo hacer esto, puedes visitar nuestro Curso de Spring Core.
+
+El código del método que gestiona la autorización debería quedar como sigue:
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    //... otros métodos
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {  
+        http
+            .authorizeRequests()
+                .antMatchers("/webjars/**", "/css/**", "/h2-console/**").permitAll()
+                .anyRequest().authenticated()
+            .and()
+            .formLogin()
+                .loginPage("/login")
+                .permitAll()
+            .and()
+                .logout();
+
+            http.csrf().disable();
+            http.headers().frameOptions().disable();
+
+    }    
+}
+Necesitamos esto porque:
+
+Tenemos que dar acceso a la ruta concreta de acceso a la consola, /h2-console/
+Por defecto, Spring Security habilita la protección contra CSRF, y para usar la consola de H2 esta no puede estar habilitada.
+La interfaz de usuario de la consola utiliza frames, y Spring Security no los permite por defecto (envía la cabecera X-Frame-Options: DENY). Al deshabilitar esa cabecera, ya podemos cargar frames.
+
+----------------------------------------------------------------------------------------------------------
+SPRING DATA JPA: CONSULTAS BÁSICAS
+
+Spring Data JPA ofrece varios mecanismos
+ Derivadas del nombre del método
+ @Query
+ Consultas JPQL
+ Consultas nativas SQL
+ Consultas con QueryDSL
+ Consultas con Query By Example
+ Consultas con Criteria API 
+
+DERIVADAS DEL NOMBRE DEL MÉTODO 
+
+CONSULTAS DERIVADAS DEL NOMBRE DEL MÉTODO 
+
+Definimos métodos en nuestro repositorio.
+Dichos métodos no necesitan implementación (se la da Spring Data).
+El nombre del método debe seguir una serie de reglas para que de él se pueda
+derivar la consulta. 
+
+
+ESTRUCTURA DE LA CONSULTA
+La consulta debe comenzar por
+ find...By
+ read...By
+ query...By
+ count...By
+ get...By
+ By es el delimitador para definir los criterios.
+
+TRADUCCIÓN DE LA CONSULTA 
+
+List<Person> findByLastname(String Lastname)
+ Repositorio sobre Person.
+ Incluye una propiedad llamada Lastname.
+ Queremos aquellas instancias de Person cuyo
+Lastname coincida con el que pasamos como argumento. 
+SELECT * FROM PERSON WHERE LASTNAME = ‘...’;
+
+
+ELEMENTOS TÍPICOS DE CONSULTAS 
+
+ Distinct
+ And, or
+ Between
+ IsNull, IsNotNull, NotNull
+ Like, NotLike
+ In, Not in
+ Containing
+ OrderBy
+
+EJEMPLOS DE CONSULTAS 
+List<...> findByEmailAddressAndLastname(EmailAddress emailAddress, String Lastname)
+List<...> findByStartDateBetween(Date start, Date end)
+List<...> findByLastnameIn(Collection<String> Lastnames) 
+
+LIMITACIÓN DE LOS RESULTADOS DE UNA CONSULTA
+First, Top
+Person findTopByOrderByAgeDesc()
+Podemos usar Optional (Java 8) para aquellas que devuelven un solo resultado
+Optional<Person> findTopByOrderByAgeDesc()
+Se pueden acompañar de un número
+List<Person> findTop10ByOrderByAgeDesc() 
+
+CONVIRTIENDO RESULTADOS DE CONSULTAS EN UN STREAM 
+
+Spring Data permite devolver los resultados como un Stream de Java 8, para poder
+procesarlos después.
+Stream<User> readAllByFirstnameNotNull();
+
+
+Querydsl
+La dependencia maven a incluir sería:
+
+<dependency>
+   <groupId>com.querydsl</groupId>               
+   <artifactId>querydsl-jpa</artifactId>
+</dependency>
+Además, necesitamos añadir un plugin, que es el que creará las clases derivadas de nuestro modelo de datos que se utilizan para consultar
+
+<plugin>
+    <groupId>com.mysema.maven</groupId>
+    <artifactId>apt-maven-plugin</artifactId>
+    <version>1.1.3</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>process</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>target/generated-sources/java</outputDirectory>
+                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+Query by Example
+Si nos fijamos en la especificación de métodos de JpaRepositoriy<T, ID>, nos damos cuenta de que podemos utilizar algún método que hace uso de Example<S>.
+
+public interface JpaRepository<T, ID> extends PagingAndSortingRepository<T, ID>, QueryByExampleExecutor<T> {
+
+    // otros métodos
+
+    @Override
+    <S extends T> List<S> findAll(Example<S> example);
+
+    @Override
+    <S extends T> List<S> findAll(Example<S> example, Sort sort);
+}
+
+
+CONSULTAS CON @QUERY 
+
+
+JPQL
+Java Persistence Query Language
+Lenguaje de consulta de JPA
+Inspirado en SQL y HQL (Hibernate Query Language)
+Orientado a objetos
+Consultas SELECT, UPDATE, WHERE 
+
+@QUERY
+Nos permite lanzar una consulta JPQL a través
+de un método.
+@Query("select p from Persona p where u.nombre = ?1")
+List<Persona> findByNombre(String nombre);
+Pasamos argumentos con ?1, ?2, …, ?n o
+parámetros con nombre :nombre, :apellidos.
+Más flexibilidad que el método anterior.
+Recomendado si venimos del mundo SQL. 
+También podemos usar SQL mediante consultas
+nativas.
+ @Query(value="select * from Persona where nombre = ?1",
+nativeQuery=true)
+ List<Persona> findByNombre(String nombre); 
+
+
+OTROS MÉTODOS DE CONSULTA
+
+
+QUERYDSL
+Framework que permite la construcciónde consultas.
+Estáticas, tipadas y a través de un API.
+Integrable no solo con Spring Data JPA,sino con otros módulos (por ejemplo,
+Spring Data MongoDB
+Cambios en el pom.xml 
+
+Extendemos QuerydslPredicateExecutor
+public interface QuerydslPredicateExecutor<T>
+{
+ Optional<T> findById(Predicate predicate);
+ Iterable<T> findAll(Predicate predicate);
+ long count(Predicate predicate);
+ boolean exists(Predicate predicate);
+ // … más metodos
+} 
+
+Extendemos QuerydslPredicateExecutor
+public interface UserInterface extends
+ CrudRepositorio<User, Long>,
+ QuerydslPredicateExecutor<User> {
+} 
+
+
+Podemos usar predicados para consultar
+Predicate predicate =
+user.firstname.equalsIgnoreCase("pepe")
+ .and(user.lastname.startsWithIgnoreCase("s"));
+userRepository.findAll(predicate); 
+
+QUERYBYEXAMPLE 
+Incluido dentro de Spring Data JPA
+? CrudRepository+
+QueryByExcampleExecutor o
+? JpaRepository
+? La idea subyacente es buscar dando un
+ejemplo (Example<S>) de lo que queremos
+encontrar. 
+
+
+Búsqueda sencilla
+Empleado filter = new Empleado();
+empleado.setTelefono("954000000");
+Example<Empleado> example = Example.of(filter);
+List<Empleado> result =
+
+ repositorio.findAll(example); 
+
+ 
+ Búsqueda algo más compleja
+Empleado filter = new Empleado();
+empleado.setNombre("mar");
+ExampleMatcher matcher = ExampleMatcher.matching()
+ .withStringMatcher(StringMatcher.CONTAINING
+)
+ .withIgnoreCase();
+Example<Empleado> example =
+ Example.of(filter, matcher);
+List<Empleado> result =
+
+ repositorio.findAll(example);
+ 
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
