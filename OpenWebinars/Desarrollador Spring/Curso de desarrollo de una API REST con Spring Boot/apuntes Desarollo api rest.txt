@@ -1,0 +1,1596 @@
+¿Qué es un servicio REST?
+
+Arquitectura de aplicaciones empresariales 
+
+Independientemente de la tecnología, durante muchos años se ha 
+tendido a la construcción de monolitos 
+
+
+Aplicación monolítica 
+
+Ventajas
+Uniformidad en el desarrollo. Todo en un solo lenguaje de
+programación (o un conjunto pequeño si es una aplicación web).
+Despliegue más sencillo (incluso con arquitecturas replicadas, balanceadas, …).
+Fácil para proyectos pequeños o al inicio de proyectos grandes.
+
+Ejemplo aplicación monolítica
+ https://github.com/thymeleaf/thymeleafexamples-petclinic
+Clásico ejemplo pet clinic (Spring + Thymeleaf) 
+
+
+Desventajas
+Escenarios heterogéneos. ¿Qué pasa si quiero integrar mi
+proyecto con aplicaciones móviles nativas? Desacoplamientode la vista.
+Integración proyectos legacy. ¿La elección tecnológica
+marcará definitivamente un proyecto de largo recorrido?
+Problemas de escalado. Si mi aplicación debe escalar, debe
+hacerlo por completo (vs microservicios).
+
+
+Servicios distribuidos 
+
+Concepto no nuevo (COM, CORBA, RPC, RMI, SOAP).
+Intento de desacoplar algunos elementos de nuestra aplicación lógica de negocio).
+Todos ofrecen algunas dificultades comunes
+Interfaces frágiles y dificilmente actualizables
+Tecnologías propietarias
+Problemas de comunicación (incluso a nivel de red) 
+
+El auge de la web 
+Pasó a ser la plataforma preferida para el desarrollo de mucho
+software (como comercio electrónico).
+● Uso de muchos pequeños estándares (RFC)
+● Aporte de gran flexibilidad (con respecto a los cambios)
+● Caldo de cultivo para el surgimiento de REST (motivado por el
+protocolo HTTP).
+
+REST 
+
+● Nuevo enfoque propuesto por Roy Fielding en su tesis doctoral.
+● Características
+	○ Basado en el protocolo HTTP
+	○ Sin estados
+	○ Representados por una URI
+	○ Interfaz uniforme
+	○ Sistema de capas
+	
+REST vs RPC 	
+
+RPC (remote procedure call) orientado a ofrecer una
+funcionalidad, un servicio.
+REST orientado a ofrecer recursos. 
+
+RPC
+/myapi/beerService/getAll
+/myapi/beerService/getById
+
+REST
+/myapi/beers
+/myapi/beer/123 
+
+
+Recursos vs. Representación 
+
+REST está orientado al concepto de recurso
+● Cada recurso debe ser accesible a través de una URI
+● El servidor puede ofrecer diferentes representaciones de un mismo recurso (por ejemplo en XML, JSON o HTML). 
+
+Ventajas del uso de REST
+Separación cliente - servidor
+● Visibilidad, fiabilidad y escalabilidad
+● Heterogeneidad
+● Variedad de formatos: JSON, XML, …
+● En general, es más rápido y utiliza menos ancho de banda. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+El protocolo HTTP
+
+HTTP
+● Protocolo de transferencia de
+hipertexto.
+● Permite transferencias de
+información en la WWW.
+● Desarrollado por el WWW
+Consortium y la IETF
+● Versión actual: HTTP/2
+(2.4.39 - 02/04/2019)
+
+Características de HTTP
+● Esquema de petición - respuesta (request/response)
+● Sin estados
+● HTTP/1.X orientador a carácter, HTTP/2 binario.
+● Conjunto de verbos u operaciones. 
+
+
+Petición / respuesta
+● El cliente (agente de usuario-user agent) realiza una petición
+enviando un mensaje al servidor.
+● El servidor recibe la petición, y envía un mensaje de respuesta al
+cliente. 
+
+
+Formato del mensaje
+● Válido tanto para request como response.
+● Solo cambia la línea inicial.
+● Estructura 
+
+
+Métodos (a.k.a verbos)
+● Tipos de peticiones diferentes.
+● Indica el tipo de acción a realizar sobre el recurso indicado.
+● Más conocidos
+○ GET: solicita un recurso al servidor
+○ POST: envía información para crear un nuevo recurso
+○ PUT: actualiza un recurso de forma completa
+○ DELETE: borra un recurso
+
+
+Códigos de respuesta
+● El servidor debe incluirlos en la primera línea
+● Indica qué ha pasado con la petición.
+● Cada código tiene un significado concreto.
+● Código numérico de 3 cifras 
+
+Códigos de respuesta más usados
+● 2XX. Respuestas correctas
+○ 200 OK. Respuesta estándar de peticiones correctas.
+○ 201 Created. Se ha creado un recurso.
+○ 204 No Content. Petición con éxito que no devuelve
+contenido en la respuesta.
+
+4XX. Errores de cliente
+○ 400 Bad request. Solicitud con sintaxis errónea. El servidor
+no procesará la solicitud porque no puede, o no debe, debido
+a un error del cliente.
+○ 401 Unauthorized. La autenticación ha fallado.
+○ 403 Forbidden. Solicitud legal, pero no se tienen privilegios
+para realizarla. 
+
+4XX. Errores de cliente
+○ 404 Not Found. Recurso no encontrado.
+○ 405 Method not allowed. La URI es correcta, pero no soporta
+el verbo utilizado.
+○ 415 Unsupported Media Type. La petición tiene un formato
+que no entiende el servidor y por eso no se procesa.
+○ 429 Too many requests. Indica que el usuario ha enviado
+demasiadas solicitudes en un período de tiempo
+determinado.
+
+5XX. Errores de servidor
+○ 500 Internal Server Error. El servidor tiene un error ajeno a la
+naturaleza del servidor web.
+○ 502 Bad Gateway. El servidor actua de proxy o gateway con
+otro servidor, y ha recibido una respuesta inválida del otro
+servidor.
+○ 503 Service unavailable. El servidor no puede responder a la
+petición por estar congestionado o en modo mantenimiento. 
+
+--------------------------------------------------------------------------------------------
+Algunos elementos de HTTP 
+Métodos
+● GET:
+○ Solicita un recurso al servidor.
+○ Solo deben recuperar datos, y no deben tener otro efecto.
+
+● POST:
+○ Envía datos para que sean procesados.
+○ Los datos se incluyen en el cuerpo de la petición.
+○ Creación / Edición 
+
+● PUT:
+○ Suele utilizarse en operaciones de actualización completa
+○ Debe ser idempotente
+
+● DELETE:
+○ Borra el recurso especificado 
+
+Otros métodos 
+
+● HEAD:
+○ Idéntico a GET, pero la respuesta no devuelve el cuerpo
+○ Útil para obtener metadatos
+
+● OPTIONS:
+○ Devuelve la lista de métodos HTTP que soporta un recurso.
+
+● PATCH:
+○ Actualización parcial de un recurso 
+
+
+Encabezados o cabeceras 
+
+Metadatos que contextualizan el mensaje
+● Estructura clave : valor
+Content-Type: application/json 
+
+
+Características 
+
+Dan gran flexibilidad
+○ El protocolo dice que puede haber encabezados.
+○ Con el tiempo se han añadido más y más
+○ No ha cambiado el contenedor, por lo que el impacto del
+cambio es muy pequeño.
+
+● Deben ser interpretados por el cliente, o el servidor, o los
+intermediarios (proxy, gateways, …)
+
+
+Tipos de encabezados 
+
+De petición: solo los encontraremos en peticiones
+● De respuesta: solo los encontraremos en mensajes de respuesta
+● Petición y respuesta: pueden aparecer en mensajes de ambos
+tipos. 
+
+Clasificación según función
+
+Capacidades aceptadas por el agente que envía el mensaje
+
+○ Accept (tipo MIME)
+○ Accept-Charset (código de caracteres)
+○ Accept-Encoding
+○ Accept-Language
+○ User-Agent (descripción del cliente)
+○ Allow (métodos permitidos) 
+
+
+● Que describen el contenido:
+○ Content-Type (tipo MIME del contenido)
+○ Content-Length
+○ Content-Range
+○ Content-Encoding
+○ Content-Language
+○ Content-Location
+
+
+● Que hacen referencia a las URIs:
+○ Location (indica donde está el contenido)
+○ Referer (indica el origen de la petición)
+
+● Para autenticación:
+○ Authorization
+○ WWW-Authenticate 
+
+Ejemplo de diálogo HTTP (wikipedia)
+● Cargar en el navegador: www.example.com/index.html
+○ Se abre conexión en el puerto 80
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Project Lombok 
+
+Generación de código
+● Reconoce que, aunque Eclipse hace el trabajo por ti, te da pereza
+generar los getters, setters, equals, hashCode, toString, ... 
+
+Tus clases ahora...
+@Data @AllArgsConstructor @NoArgsConstructor
+public class Persona {
+ private String dni;
+ private String nombre;
+ private String apellidos;
+}
+
+Anotaciones clave
+● @Getter
+● @Setter
+● @RequiredArgsConstructor
+● @AllArgsConstructor
+● @NoArgsConstructor
+● @EqualsAndHashCode
+● @ToString
+
+Anotaciones derivadas
+● Agregan la funcionalidad de más de una anotación anterior
+● @Data
+○ Equivalente a @Getter, @Setter,
+@RequiredArgsConstructor, @EqualsAndHashCode y
+@ToString. 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Soporte de Spring Boot para REST
+
+
+Toda la potencia de Spring Boot
+● En nuestros proyectos REST podemos aprovechar toda la
+potencia de lo que ya sabemos de Spring Boot
+○ Inyección de dependencias
+○ Acceso a datos
+○ Seguridad
+○ Utilidades 
+
+Soporte para REST
+● Controladores orientadores a REST con @RestController
+○ Combinación de @Controller y @ResponseBody
+○ Se modifica el mecanismo de renderización de la vista
+○ En lugar de redirigirnos a una plantilla Thymeleaf, JSP… se
+devuelve directamente el contenido que se envía al cliente. 
+
+
+
+● Controladores orientadores a REST con @RestController
+@RestController
+public class GreetingController {
+ @GetMapping("/greeting")
+ public Greeting greeting(@RequestParam Optional<String> name) {
+ return new Greeting(counter.incrementAndGet(),
+ String.format(template, name));
+ }
+} 
+
+
+HttpMessageConverter
+
+Ya que no vamos a utilizar un motor de plantillas en la vista,
+tenemos que entregar al cliente el contenido en algún formato.
+● Spring Boot, al incluir la dependencia starter web, incluye algunos
+conversores por defecto.
+○ StringHttpMessageConverter: convierte a cadenas de caracteres.
+○ MappingJackson[2]HttpMessageConverter: convierte a JSON
+usando Jackson (o Jackson 2) si está presente en el
+classpath. 
+
+● HttpEntity<T>: representa una petición o respuesta HTTP
+○ RequestEntity<T>
+○ ResponseEntity<T>: añade el código de estado (HttpStatus)
+● MediaType: subclase de MIME. Listado de constantes.
+● HttpHeaders: representa los encabezados de una petición o de
+una respuesta. 
+
+Seguridad
+● Se integra por completo con el esquema de Spring Security
+○ Idéntica forma de configurar autorización.
+○ Múltiples posibilidades de cara a la autenticación
+■ Básica
+■ JWT
+■ OAuth, OAuth2 
+
+
+No solo de servidor vive el hombre...
+● También podemos consumir de un API REST con Spring
+● Clase RestTemplate
+● Permite hacer peticiones de todo tipo
+● Aprovecha los diferentes converters que hemos explicado antes. 
+
+
+
+Elementos más avanzados
+
+● Spring Data REST
+○ Permite transformar rápidamente un repositorio de Spring
+Data en un API REST
+
+● Spring HATEOAS
+○ Nos permite crear fácilmente un API siguiendo el principio
+HATEOAS (Hypermedia as the Engine of Application State)
+○ Uso de HAL (Hypertext Application Language) 
+
+
+
+● Spring REST Docs
+○ Permite documentar un servicio REST combinando Spring
+MVC Test y Asciidoctor. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Mi primer servicio REST
+
+Vayamos a la fuente
+● Comenzaremos con un ejemplo muy básico proporcionado por el
+equipo de Spring.
+● https://spring.io/guides/gs/rest-service/
+● Opción de importar estos proyectos con código completo o
+incompleto. 
+
+
+¿Qué vamos a hacer?
+● Aceptaremos peticiones GET en la ruta
+http://localhost:8080/greeting
+● Y devolveremos un JSON como este
+{"id":1,"content":"Hello, World!"} 
+
+¿Qué vamos a hacer?
+● Y si nos proporcionan un parámetro opcional, name
+http://localhost:8080/greeting?name=User
+● La respuesta JSON será
+{"id":1,"content":"Hello, User!"} 
+
+
+Interacción
+● El servicio debe gestionar peticiones GET a /greeting
+● La petición debe devolver un código 200 OK, incluyendo en el
+cuerpo un objeto JSON.
+● El objeto debe incluir un ID (único) y un texto con el mensaje de
+bienvenida o saludo. 
+
+
+
+Clase modelo
+public class Greeting {
+ private final long id;
+ private final String content;
+ //resto del código
+} 
+
+
+Nuestro controlador
+@RestController
+public class GreetingController {
+//Resto del código
+@RequestMapping("/greeting")
+public Greeting greeting(
+@RequestParam(value="name", defaultValue="World")
+String name) {
+return new Greeting(counter.incrementAndGet(),
+ String.format(template, name));
+ }
+} 
+
+¿Cómo se devuelve JSON?
+● @RestController = @Controller + @ResponseBody
+● @ResponseBody: Lo que devolvemos en el método, es el cuerpo
+de la respuesta.
+● El HttpMessageConverter correspondiente lo transforma a JSON. 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Puesta en marcha de la aplicación 
+
+Ejecución de la aplicación
+● Como cualquier otro proyecto de Spring Boot
+○ Desde STS, Run As > Spring Boot App
+○ Desde consola
+$ mvn clean
+$ mvn install
+$ mvn spring-boot:run 
+
+Consumir desde POSTMAN
+● Pestaña para añadir nuevas peticiones. 
+● Barra de direcciones y desplegables con verbos HTTP
+● Botón para enviar petición
+● Zona de opciones: parámetros, encabezados, autorización, cuerpo
+de la petición, ...
+● Cuerpo de la respuesta 
+● Código de respuesta, tamaño y algunas opciones
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Estructura de las rutas 
+
+Gestión de un conjunto de productos simple.
+● Campos: ID, nombre del producto, precio.
+● Creamos también un repositorio.
+● Insertamos algunos datos de ejemplo (data.sql)
+
+
+
+Mapeo de rutas a operaciones CRUD
+
+
+● Read
+○ Todos → @GetMapping(“/producto”)
+○ Uno en particular → @GetMapping(“/producto/{id}”)
+● Create
+○ @PostMapping(“/producto”
+
+● Update
+○ @PutMapping(“/producto/{id}”)
+● Delete
+○ @DeleteMapping(“/producto/{id}”
+
+
+● @RequestBody
+○ Permite inyectar el cuerpo de la petición en un objeto
+● @PathVariable
+○ Nos permite inyectar un fragmento de la URL en una variable 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Anotaciones 
+Ya usadas
+○ Mapeo de métodos (@GetMapping, @PostMapping, …)
+○ @PathVariable
+○ @RequestBody
+
+Clases (que necesitamos ¡ya!)
+● ResponseEntity<T>
+○ Nos permite manejar de una forma más conveniente la
+respuesta que enviamos al cliente.
+○ Hereda de HttpEntity<T>
+○ Nos permite indicar el código de respuesta, qué se envía en el
+cuerpo, responder peticiones sin el mismo, ... 
+
+
+● @GetMapping
+○ Devolvemos 200 OK si localizamos el recurso
+○ Si no, devolvemos 404 Not Found
+
+● @PostMapping
+○ Devolvemos 201 Created 
+
+
+● @PutMapping
+○ Devolvemos 200 OK si localizamos y modificamos el recurso
+○ Si no, devolvemos 404 Not Found.
+● @DeleteMapping
+○ Devolvemos 204 No Content. 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Entidades
+● Para nosotros, clases Java con algunas anotaciones más.
+● Cumplen una serie de requisitos.
+● Se encargan de modelar nuestros objetos en la capa de lógica de
+negocio.
+● ¿Es bueno que los usemos en el resto de capas?
+○ Depende, pero es buena práctica no hacerlo. 
+
+
+
+DTO: Data Transfer Object
+● Objeto POJO que agrupa datos de la capa de negocio.
+○ Puede tener parte de los datos de una sola entidad
+○ Puede tener algunos datos de más de una entidad.
+○ Puede aglutinar todos los datos de varias entidades.
+● A veces es conocido como Value Object.
+● Pensado para aligerar las transacciones entre cliente/servidor. 
+
+Objeto plano (POJO). Nada de lógica de negocio.
+○ Getters, Setters o los constructores necesarios para facilitar
+el trabajo.
+● Serializable
+○ Para que pueda viajar a través de la red. 
+
+
+Cómo y dónde usarlo
+● Supongamos que tenemos un catálogo de productos como el de
+nuestro ejemplo.
+○ GET /producto/
+○ GET /producto/{id}
+
+
+GET /producto/
+● El listado de todos los productos puede ir orientado a ser
+visualizado en una página con todos los productos (o un
+subcojunto paginado de ellos).
+● ¿Necesitamos todos los datos del producto? NO
+● Podemos usar un DTO que incluya solamente los datos
+necesarios. 
+
+
+GET /producto/{id}
+● Nos permite obtener todos los datos de un producto en particular.
+○ En este caso puede que no necesitemos usar el DTO
+anterior.
+○ Alternativas
+■ No usar DTO y usar la entidad
+■ Crear otro DTO específico
+
+
+Múltiples DTOs para un solo BO
+● Es posible tener más de un Data Transfer Object para un solo
+objeto de negocio.
+● Ejemplo clásico: Usuario. 
+
+
+UserEntity - persistencia
+User - capa de seguridad
+CreateUserDTO - petición de creación
+GetUserDTO - solicitud de datos
+
+ 
+Defensores y detractores
+● DTO es un patrón de diseño que tiene defensores y detractores.
+● Cada equipo de trabajo puede encontrar su forma adecuada de
+transportar los datos a través de las diferentes capas de nuestra
+aplicación.
+● Mi recomendación
+○ No ofrecer más datos de los debidos en una petición.
+○ No abusar del DTO creando uno para cada tipo de petición. 
+
+
+Cómo implementar DTO
+● Manualmente
+○ Nos encargamos de gettear/settear los datos necesarios
+entre los diferentes objetos.
+○ Se puede crear algún builder (lombok)
+● ModelMapper
+● JsonViews
+○ A través de anotaciones, un mismo objeto puede devolver
+más o menos datos. 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Implementando DTO con ModelMapper 
+
+
+Cómo transformar BO ↔ DTO
+● Manualmente
+● ModelMapper
+○ Evita código repetitivo
+○ Facilita la creación de DTO mediante asignación dinámica.
+○ CoC y configurable.
+
+
+pom.xml
+<dependency>
+ <groupId>org.modelmapper</groupId>
+ <artifactId>modelmapper</artifactId>
+ <version>2.3.5</version>
+</dependency> 
+
+
+Configuración básica
+● Creamos un bean de tipo ModelMapper para toda nuestra
+aplicación.
+@Bean
+public ModelMapper modelMapper() {
+ return new ModelMapper();
+ } 
+
+
+Creamos nuestro DTO
+@Getter @Setter
+public class ProductoDTO {
+ private long id;
+ private String nombre;
+ private String categoriaNombre;
+} 
+
+
+Dónde hacer la transformación
+● Explícitamente, lo podemos hacer en el controlador.
+● Sin embargo, creamos un componente independiente, que
+inyectaremos para usar donde haga falta.
+@Component @RequiredArgsConstructor
+public class ProductoDTOConverter {
+ private final ModelMapper modelMapper;
+ public ProductoDTO convertToDto(Producto producto) {
+ return modelMapper.map(producto, ProductoDTO.class);
+ }
+} 
+
+@RestController @RequiredArgsConstructor
+public class ProductoController {
+private final ProductoDTOConverter productoDTOConverter;
+@GetMapping("/producto")
+public ResponseEntity<?> obtenerTodos() {
+ List<Producto> result = productoRepositorio.findAll();
+ if (result.isEmpty()) {
+ return ResponseEntity.notFound().build();
+ } else {
+ List<ProductoDTO> dtoList =
+ result.stream()
+.map(productoDTOConverter::convertToDto)
+ .collect(Collectors.toList());
+ return ResponseEntity.ok(dtoList);
+ }
+ } 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Posibles situaciones de error 
+
+● Al usar nuestra api podemos encontrarnos con posibles
+situaciones de error.
+● Algunas pueden venir asociadas a la lógica de negocio.
+● Otras son comunes
+○ Buscar un producto por su ID y que dicho producto no exista. 
+
+Hasta ahora
+● Tratamiento “artesanal”
+● No hemos utilizado el mecanismo de errores excepciones de
+Java.
+● Podemos crear excepciones y aderezarlas un poco
+
+
+Excepción
+● Producto no encontrado (peticiones GET, PUT y DELETE)
+public class ProductoNotFoundException extends RuntimeException {
+ public ProductoNotFoundException(Long id) {
+ super("No se puede encontrar el producto con la ID: "
++ id);
+ }
+}
+
+Respuesta en el cliente
+● Si lanzamos las excepción tal cual, el cliente recibe un error 500
+● Sin embargo, nos interesaría más que fuera 404.
+● Spring tiene la solución. 
+
+
+
+@ResponseStatus
+● Nos permite indicar un código de estado y un texto de respuesta.
+● Anotando la excepción
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ProductoNotFoundException extends RuntimeException {...} 
+
+
+Modificaciones en nuestro ejemplo
+● En lugar de manejar los errores con if/else y devolver
+constantemente ResponseEntity<?>, podemos simplificar nuestro
+código.
+------------------------------------------------------------------------------------------------------------------------------------------
+Modelo de respuesta para un error 
+
+Mensaje de error por defecto
+● Lo “fabrica” Spring
+● Contiene
+○ Fecha
+○ Estado
+○ Nombre del error
+○ Mensaje
+○ Ruta en la que se ha producido. 
+
+
+
+Error por defecto
+● Instancia de DefaultErrorAttributes
+{
+ "timestamp": "2019-10-05T16:38:25.227+0000",
+ "status": 404,
+ "error": "Not Found",
+ "message": "No se puede encontrar el producto con la ID: 1",
+ "path": "/producto/1"
+}
+
+
+Puede que nos interese customizarlo
+● Por ejemplo, para quitar el campo status (lo podemos obtener de
+la propia respuesta)
+● Personalizar errores (por ejemplo, varios tipos diferentes de
+BAD_REQUEST)
+● Añadir campos nuevos.
+● Agregar varios errores (por ejemplo de validación) en uno solo
+● .
+
+
+Modelo para el error
+● Clase POJO
+● Podemos usar lombok si es necesario
+● Debe incluir aquellos campos que estimemos necesarios. 
+
+Modelo básico
+● Estado (HttpStatus)
+● Fecha (LocalDateTime)
+● Mensaje (String) 
+
+Modelo más complejo
+● Estado (HttpStatus)
+● Fecha (LocalDateTime)
+● Mensajes (List<String>)
+○ Nos permite indicar más de un mensaje a la vez. 
+
+
+
+Modelo anidado
+● Estado (HttpStatus)
+● Fecha (LocalDateTime)
+● Mensaje (String)
+● MensajeDebug (String)
+○ Mensaje del sistema, con mayor grado de descripción del
+error.
+● List<SubError>
+○ Lista de pequeños errores contenidos en este error.
+
+
+SubError
+● Podemos definir un SubError genérico
+● O bien un SubError abstracto y crear subtipos
+○ Por ejemplo, para validación, incluyendo
+■ Objeto sobre el que hay un error
+■ Campo sobre el que hay un error
+■ Valor que provoca el error
+■ Mensaje de validación 
+
+Modelo de error más complejo
+Algunos autores, como Bruno Leite, proponen una implementación del modelo de respuesta más complejo como esta:
+
+class ApiError {
+
+   private HttpStatus status;
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+   private LocalDateTime timestamp;
+   private String message;
+   private String debugMessage;
+   private List<ApiSubError> subErrors;
+
+   private ApiError() {
+       timestamp = LocalDateTime.now();
+   }
+
+   ApiError(HttpStatus status) {
+       this();
+       this.status = status;
+   }
+
+   ApiError(HttpStatus status, Throwable ex) {
+       this();
+       this.status = status;
+       this.message = "Unexpected error";
+       this.debugMessage = ex.getLocalizedMessage();
+   }
+
+   ApiError(HttpStatus status, String message, Throwable ex) {
+       this();
+       this.status = status;
+       this.message = message;
+       this.debugMessage = ex.getLocalizedMessage();
+   }
+}
+ 
+abstract class ApiSubError {
+
+}
+
+@Data
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+class ApiValidationError extends ApiSubError {
+   private String object;
+   private String field;
+   private Object rejectedValue;
+   private String message;
+
+   ApiValidationError(String object, String message) {
+       this.object = object;
+       this.message = message;
+   }
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Manejo de errores con @ExceptionHandler 
+
+
+Modelo de error
+
+@Setter
+@Getter
+public class ApiError {
+ private HttpStatus estado;
+ @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy
+hh:mm:ss")
+ private LocalDateTime fecha;
+ private String mensaje;
+
+} 
+
+¿Qué buscamos?
+● Que nuestros errores sean ahora del tipo
+{
+ "estado": "NOT_FOUND",
+ "fecha": "05/10/2019 08:08:56",
+ "mensaje": "No se puede encontrar el producto con la ID: 1"
+} 
+
+Unificar excepciones y personalización
+del mensaje
+● Lo hacemos a través de la anotación @ExceptionHandler
+● Acepta como parámetro una o varias excepciones
+○ @ExceptionHandler(TheException.class)
+○ @ExceptionHandler( { OneException.class,
+TwoException.class })
+● Una primer aproximación nos permite ubicarla en un método de
+cualquier controlador.
+● Manejará las excepciones de uno o varios tipos que se produzcan
+en dicho controlador. 
+
+
+
+@ExceptionHandler
+
+● Anotando un método del controlador
+● Dicho método puede tener una firma variopinta.
+● Como argumento puede recibir:
+○ Una instancia de una excepción
+○ Objetos Request, Response
+○ Objetos de sesión (HttpSession)
+○ Locale
+
+● Como tipo de retorno, puede devolver:
+○ void
+○ Model, ModelAndView, Map (motor de plantillas)
+○ String
+○ @ResponseBody
+○ HttpEntity, ResponseEntity
+
+
+● Método handleProductoNotFoundException
+○ Para manejar excepciones de productos no encontrados
+● Método handleJsonMappingException
+○ Para manejar los errores de parseo de valores al crear/editar
+un producto (JsonMappingException) 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Manejo de errores con @ControllerAdvice 
+
+● Hemos podido manejar excepciones.
+● El mensaje de error es personalizado.
+● ¿Qué nos falta?
+○ Gestión global de errores.
+● @ExceptionHandler se ubica a nivel de método y funciona a nivel de
+clase.
+
+
+
+@ControllerAdvice
+● Especialización de @Component para clases que declaran los
+métodos @ExceptionHandler, @InitBinder o @ModelAttribute para ser
+compartidos entre múltiples clases de @Controller.
+● @RestControllerAdvice es una especialización que unifica
+@ControllerAdvice y @ResponseBody.
+● Para manejar una excepción, se escogerá el primer método dentro
+de la clase @ControllerAdvice que esté anotado para trata la
+excepción (con @ExceptionHandler).
+
+
+● Puede existir más de una clase anotada con @ControllerAdvice.
+● En tal caso, puede ser recomendable el uso de @Order o @Priority
+para establecer una predecencia en el tratamiento de errores.
+● En caso de varias opciones para una excepción dentro de una clase,
+escogerá la más cercana a la raíz (FileNotFoundException vs
+IOException).
+
+
+Si no indicamos nada, la anotación hace que la clase trate posibles
+excepciones producidas en cualquier controlador.
+● Podemos acotar el radio de acción
+○ @ControllerAdvice("my.chosen.package")
+○ @ControllerAdvice(value = "my.chosen.package")
+○ @ControllerAdvice(basePackages = "my.chosen.package")
+○ @ControllerAdvice(basePackageClasses = MyClass.class)
+○ @ControllerAdvice(assignableTypes = MyController.class)
+○ @ControllerAdvice(annotations = RestController.class)
+
+
+
+
+@RestControllerAdvice
+public class GlobalControllerAdvice {
+// Manejo de errores personalizado
+}
+● Incluimos dentro todos los @ExceptionHandler que hemos definido
+hasta ahora 
+
+
+@Setter @Getter @RequiredArgsConstructor @NoArgsConstructor
+public class ApiError {
+ @NonNull
+ private HttpStatus estado;
+ @JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy
+hh:mm:ss")
+ private LocalDateTime fecha = LocalDateTime.now();
+ @NonNull
+ private String mensaje;
+
+} 
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Manejo de errores con @ControllerAdvice (II) 
+
+
+@ControllerAdvice
+
+● Hemos anotado una clase que hemos creado por nuestra cuenta
+● ¿No hay ninguna interfaz/clase base que podamos extender?
+○ Sí: ResponseEntityExceptionHandler
+○ Según la propia documentación de Spring, se trata de una
+clase base conveniente para las clases @ControllerAdvice
+que desean proporcionar un manejo centralizado de
+excepciones en todos los métodos @RequestMapping a
+través de los métodos @ExceptionHandler
+
+
+ResponseEntityExceptionHandler
+● Proporciona una larga lista de métodos que podemos sobrescribir
+○ handleExceptionInternal
+○ handleMissingPathVariable
+○ handleTypeMismatch
+● También podemos añadir los métodos de nuestra cosecha, como
+hasta ahora. 
+
+
+handleExceptionInternal
+● Según la documentación, es un único lugar para personalizar el
+cuerpo de respuesta de todos los tipos de excepción.
+● Si lo sobrescribimos, y lo personalizamos con nuestra clase
+ApiError, el resto de errores manejados por la clase base
+ResponseEntityExceptionHandler utilizarán nuestra clase de error. 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ResponseStatusException
+● Disponible desde Spring 5
+● Se trata como cualquier otra excepción (throw new …)
+● Nos permite indicar
+○ Estado (HttpStatus) (obligatorio)
+○ razón (String) (opcional).
+○ causa (Throwable) (opcional). 
+
+Ejemplo
+public ResponseEntity<?> obtenerTodos() {
+List<Producto> result = productoRepositorio.findAll();
+if (result.isEmpty()) {
+throw new ResponseStatusException(
+HttpStatus.NOT_FOUND, "No hay productos registrados");
+} else {
+ // Resto del código
+}
+} 
+
+@GetMapping("/producto/{id}")
+public Producto obtenerUno(@PathVariable Long id) {
+ try {
+ return productoRepositorio.findById(id)
+ .orElseThrow(() -> new
+ProductoNotFoundException(id));
+ } catch (ProductoNotFoundException ex) {
+ throw new ResponseStatusException(
+HttpStatus.NOT_FOUND, ex.getMessage());
+ }
+} 
+
+Ventajas
+● Muy bueno al empezar a desarrollar nuestra aplicación
+○ Manejo de errores con poco esfuerzo
+● Un tipo de excepción puede llevar asociados, en diferentes
+lugares, diferentes tipos de código de estado .
+● No necesitamos tantas clases de excepción personalizadas.
+● Más control del manejo de excepciones (se lanzan
+programáticamente). 
+
+
+Desventajas
+● Perdemos la globalidad ganada con @ControllerAdvice
+● Duplicación de código.
+● El modelo de error vuelve a ser el estándar. 
+
+
+
+Conclusión
+● Podemos combinar @ControllerAdvice para elementos globales,
+con ResponseStatusException para elementos puntuales o más
+específicos.
+● Cuidado con manejar un tipo de excepción más de una vez
+(ResponseStatusException + @ControllerAdvice). 
+
+
+Modelo de error
+● Hemos vuelto al modelo estándar. ¿No podemos hacer nada?
+● Modificar el modelo estándar.
+● Debemos crear un @Component que extienda a
+DefaultErrorAttributes.
+● Sobreescribimos el método getErrorAttributes. Este devuelve un
+map a partir del cual se generará el JSON
+
+
+
+
+Puede ser interesante fijarse en algunas de sus subclases:
+
+MediaTypeNotSupportedStatusException: excepción que encaja con el código de respuesta 415.
+MethodNotAllowedException: excepción que encaja con el código de respuesta 405.
+NotAcceptableStatusException: excepción que encaja con el código de respuesta 406
+ServerErrorException: excepción para el código 500 que expone información extra.
+ServerWebInputException: excepción que encaja con el código de respuesta 400 para ser usada en aplicaciones web.
+UnsupportedMediaTypeStatusException: excepción que encaja con el código de respuesta 415.
+
+-------------------------------------------------------------------------------------------------------------------------------
+¿Qué es CORS y por qué me va a dar problemas? 
+
+Hasta ahora
+● Hemos probado nuestra API con Postman o curl y no hemos
+tenido ningún problema en consumir/producir datos
+
+
+Sin embargo...
+● Si queremos consumir de nuestra API desde una aplicación
+angular, vue, jQuery o un objeto XHR… la respuesta que da el
+navegador es: 
+Access to XMLHttpRequest at 'http://localhost:8080/producto/' from origin
+'null' has been blocked by CORS policy: No 'Access-Control-Allow-Origin'
+header is present on the requested resource.
+
+
+Por seguridad... 
+
+Por razones de seguridad, los navegadores prohíben las llamadas
+AJAX a recursos que residen fuera del origen actual.
+● Por ejemplo, mientras revisas tu cuenta bancaria en una pestaña,
+podrías tener el sitio web evil.com en otra pestaña. Los scripts de
+evil.com no deberían poder realizar solicitudes AJAX a la API de
+tu banco (¡retirar dinero de tu cuenta!) utilizando sus credenciales.
+● CORS es una especificación del W3C implementada por casi
+todos los navegadores que permite especificar qué dominios
+estarán autorizados para qué.
+
+¿Qué es CORS?
+● Es una política de seguridad.
+● ¿Y qué es una política de seguridad?
+○ Es lo que significa ser seguro para una entidad.
+○ Puede implicar una serie de reglas de control de acceso,
+autenticación, ..
+
+
+Entonces… ¿qué es CORS?
+● Cross-Origin Resource Sharing (CORS)
+● Mecanismo que utiliza cabeceras ResponseStatusException adicionales para permitir
+a un cliente (User-Agent) acceder a recursos desde un (servidor)
+origen diferente al sitio (servidor) actual. 
+
+
+¿Cómo es que funciona en POSTMAN?
+● Es una herramienta de desarrollo, y no un navegador al uso. 
+
+
+Ventajas del uso de CORS
+● Permite indicar quién puede acceder a nuestros recursos
+● También permite indicar cómo se puede acceder (métodos HTTP)
+○ Puedes habilitar GET…
+○ Y deshabilitar PUT, DELETE, ... 
+
+Qué se puede hacer?
+● Cabecera Access-Control-Allow-Origin
+○ Puede indicar un dominio
+Access-Control-Allow-Origin: http://www.example.com
+○ O un carácter comodín
+Access-Control-Allow-Origin: *
+● ¡OJO! Usar comodines en casos específicos (por ejemplo, un
+CDN de jQuery o Bootstrap).
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Configuración CORS con @CrossOrigin
+
+
+@CrossOrigin
+● Disponible desde Spring 4.2
+● A nivel de método o de clase (controlador).
+● Atributos
+○ origins: lista de orígenes permitidos (también *)
+○ methods: lista de métodos HTTP soportados (también *)
+○ maxAge: duración máxima en segundos de la duración de la
+caché 
+
+
+Otros atributos
+○ allowCredentials: (true) permite que se incluyan cookies (u otras
+credenciales de usuario).
+○ allowedHeaders: indica que encabezados se pueden utilizar
+(además de los básicos).
+○ exposedHeaders: indica que encabezados se pueden exponer
+como parte de la respuesta (por defecto, solo unos pocos). 
+
+
+
+@CrossOrigin a nivel de método
+@CrossOrigin(origins = "http://localhost:9001")
+@GetMapping("/producto")
+public ResponseEntity<?> obtenerTodos() {
+//…
+} 
+
+
+@CrossOrigin a nivel de clase
+@CrossOrigin(origins = "http://localhost:9001",
+methods={RequestMethod.GET, RequestMethod.POST})
+@RestController
+@RequiredArgsConstructor
+public class ProductoController {
+ // ...
+} 
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Configuración CORS global 
+
+Configuración a nivel de método/clase
+● Si el número de métodos/clases es grande no es asumible.
+● Además, si queremos actualizar dicha configuración (lista de
+orígenes) es difícilmente mantenible.
+● Spring permite realizar una configuración global.
+● Similar al uso de filtros.
+● Se puede combinar con @CrossOrigin
+○ Definir algunos elementos a nivel global.
+○ Matizar otros a nivel de método/clase.
+
+
+Configuración básica (deprecada)
+@Configuration
+@EnableWebMvc
+public class WebConfig extends WebMvcConfigurerAdapter {
+ @Override
+ public void addCorsMappings(CorsRegistry registry) {
+ registry.addMapping("/**");
+ }
+} 
+
+
+Configuración básica (Spring Boot)
+@Configuration
+public class MyConfiguration {
+ @Bean
+ public WebMvcConfigurer corsConfigurer() {
+ return new WebMvcConfigurerAdapter() {
+ @Override
+ public void addCorsMappings(CorsRegistry registry) {
+ registry.addMapping("/**");
+ }
+ };
+ }
+} 
+
+Configuración más ajustada
+@Bean
+ public WebMvcConfigurer corsConfigurer() {
+ return new WebMvcConfigurer() {
+ @Override
+ public void addCorsMappings(CorsRegistry
+registry) {
+ registry.addMapping("/producto/**")
+
+.allowedOrigins("http://localhost:9001")
+ .allowedMethods("GET",
+"POST", "PUT", "DELETE")
+ .maxAge(3600);
+ }
+
+ };
+
+---------------------------------------------------------------------------------------------------------
+Servicio de subida de ficheros 
+
+
+Contenido Multiparte
+● Tipo de mensaje que permite que una petición tenga varias partes
+delimitadas, con su correspondiente Content-Type. 
+
+Multipart con Spring
+● Cuando Spring procesa una petición multiparte, nos deja acceder a
+ella (o ellas) a través de @RequestParam.
+@PostMapping(“/upload”)
+public String handleUpload(...,
+@RequestParam(“file”) MultipartFile file)
+{ … }
+● La clase MultipartFile tiene métodos convenientes para permitirnos
+procesar el fichero. 
+
+
+
+¿Dónde lo almacenamos?
+● Propio proyecto
+○ Fácil para aprender
+○ No es buena práctica en producción
+● Servicio de almacenamiento externo
+○ Nube (Amazon, Azure, Drive...)
+○ GridFS
+○ Si son imágenes, servicios específicos, como imgur.
+
+Punto de partida
+● Spring nos ofrece un tutorial completo de como implementar la
+subida y almacenamiento de ficheros.
+https://spring.io/guides/gs/uploading-files/
+● Nos permite crear un servicio estándar, que luego podemos
+modificar para pasar del almacenamiento propio a uno externo. 
+
+
+INTERFAZ StorageService
+● Tiene los métodos que debería proporcionarnos un servicio de
+almacenamiento de ficheros.
+● Algunos están modificados sobre el ejemplo original de Spring. 
+
+
+CLASE FileSystemStorageService
+● Almacenamiento en nuestro sistema de ficheros.
+● Método store
+○ Modifica el nombre del fichero, añadiendo la fecha y hora como
+milisegundos.
+○ Método para prevenir problemas a la hora de subir dos ficheros
+que se llamen igual.
+○ Si aún así, el fichero existe, se sobrescribe.
+○ Devuelve el nombre del fichero para almacenarlo en el modelo 
+
+
+
+CLASE FileSystemStorageService
+● Método load
+○ Devuelve la ruta de un fichero desde su nombre.
+● Método loadAsResource
+○ Recibe el nombre de un fichero.
+○ Busca el fichero, y lo devuelve como una instancia de Resource
+(envoltorio conveniente para un fichero) 
+
+
+CLASES DE ERROR
+● StorageException
+○ Error general de almacenamiento.
+● StorageFileNotFoundException
+○ Fichero no encontrado.
+
+
+
+Inicialización
+● Clase Application
+○ Durante el desarrollo, limpiamos siempre el sistema de
+almacenamiento para no acumular demasiadas fotos.
+○ Seguimos el mismo esquema que utilizamos con la base de
+datos. 
+
+
+
+CONTROLADOR FicherosController
+● Método serveFile
+○ Método especial que será capaz de devolvernos el fichero como
+respuesta a una petición.
+○ Nos aísla tener que configurar el almacenamiento estático para
+obtener los ficheros. 
+-------------------------------------------------------------------------------------------------------------------------------------------
+Utilizar el servicio de subida de ficheros 
+
+Recordemos la estructura de la petición
+● La petición deberá incluir dos partes
+○ Una, llamada nuevo, de tipo mime application/json
+○ Otra, llamada file, de tipo application/octet-stream
+
+¿Cómo lo hacemos con cURL
+● curl -i -X POST -H "Content-Type: multipart/form-data" -F
+"file=@./cafe.jpg" -F "nuevo={\"nombre\": \"Café\", \"precio\": 3,
+\"categoriaId\": 2};type=application/json"
+http://localhost:8080/producto
+○ El tipo es multipart/form-data
+○ Subimos una parte con el fichero
+○ Otra parte es el objeto en formato JSON. 
+
+
+
+¿Cómo lo hacemos con Postman?
+● Añadimos la cabecera Content-Type: multipart/form-data
+● En body, añadimos dos ficheros
+○ Uno que incluya el contenido JSON
+○ Otro que sea la imagen a subir.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+¿Qué es Swagger? 
+
+
+
+Documentación de nuestra API
+● Una API que no está documentada, posiblemente sea difícil de
+utilizar.
+○ No todo el mundo entiende lo mismo por REST.
+○ En ocasiones, se implementan reglas de validación que nos
+obligan a utilizar tipos de datos concretos.
+● ¿Cómo crear esta documentación?
+○ Spring REST Docs vs Swagger + Swagger UI 
+
+
+Spring Rest Docs
+● Combina documentación escrita a mano con Asciidoctor y
+fragmentos autogenerados producidos con Spring MVC Test.
+○ Positivo
+■ Proyecto dentro del paraguas de Spring
+■ Nos obliga a escribir tests y tenerlos actualizados
+○ Negativo
+■ Nos obliga a escribir tests. 
+
+
+
+Swagger
+● Swagger es un framework de código abierto respaldado por un gran
+ecosistema de herramientas que ayuda a los desarrolladores a
+diseñar, construir, documentar y consumir servicios web RESTful.
+● Una de las más utilizadas es Swagger UI tool.
+● Para nosotros, Swagger es una serie de reglas, especificaciones y
+herramientas que nos ayudan a documentar nuestras APIs. 
+
+
+
+Swagger
+● Utiliza un json que incluye toda la documentación de nuestra API 
+
+
+
+Swagger UI
+● Es capaz de transformar ese JSON y hacerlo interactivo
+● Nos permite probar las peticiones, incluso con nuestros propios
+datos 
+
+
+Dependencias en el pom.xml
+En primera instancia, nos basta con añadir las siguientes dependencias:
+
+<dependency>
+<groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger2</artifactId>
+    <version>2.9.2</version>
+</dependency>
+<dependency>
+    <groupId>io.springfox</groupId>
+    <artifactId>springfox-swagger-ui</artifactId>
+    <version>2.9.2</version>
+</dependency>
+Sin embargo, se ha detectado que a día de hoy se puede producir en el log una excepción de tipo NumberFormatException al cargar la UI. Este error viene provocado por alguna de las librerías que usa SpringFox y Swagger internamente. Tenemos dos alternativas:
+
+Deshabilitar el log para esas librerías (y así, ni nos enteraremos de que ha sucedido).
+Ajustar las dependencias para incluir determinadas versiones concretas que no incluyen el error.
+Para la segunda solución, debemos modificar las dependencias anteriores por estas:
+
+    <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger</groupId>
+                    <artifactId>swagger-models</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.21</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.21</version>
+        </dependency>
+La versión correcta de annotations y models eliminan dicho error.
+
+Lista completa de anotaciones
+En los ejemplos de esta lección hemos usado algunas anotaciones. La lista completa de todas ellas la puedes encontrar en https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X.
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+¿Cómo incluir Swagger en nuestro proyecto? 
+
+
+Swagger + SpringFox
+● SpringFox es un conjunto de librerías que nos permite generar
+automáticamente la documentación de nuestra API.
+● Es capaz de generar esta documentación en formato Swagger.
+● La ventaja es que no tenemos que generar, manualmente, el
+fichero swagger.json.
+● Disponemos de clases y anotaciones para poder afinar la
+configuración.
+
+
+Nuevas dependencias en pom.xml
+<dependency>
+<groupId>io.springfox</groupId>
+ <artifactId>springfox-swagger2</artifactId>
+ <version>2.9.2</version>
+</dependency>
+<dependency>
+ <groupId>io.springfox</groupId>
+ <artifactId>springfox-swagger-ui</artifactId>
+ <version>2.9.2</version>
+</dependency> 
+
+
+
+Configuración
+● Anotación @EnableSwagger2 en una clase @Configuration
+● Necesitamos un bean de tipo Docket que incluya la configuración
+para generar la documentación.
+
+Configuración básica
+@Configuration @EnableSwagger2
+public class SwaggerConfig {
+ @Bean
+ public Docket api() {
+ return new Docket(DocumentationType.SWAGGER_2)
+ .select()
+ .apis(
+RequestHandlerSelectors
+ .basePackage("com.openwebinars.rest.controller"))
+ .paths(PathSelectors.any())
+ .build();
+ }
+} 
+
+
+Personalización
+● Podemos personalizar (a través de anotaciones y
+programáticamente) el resultado de la documentación.
+● Podemos incluir una ApiInfo acorde a nuestro proyecto.
+@Bean
+public Docket api() {
+return new Docket(DocumentationType.SWAGGER_2)
+ .select()
+ .apis(RequestHandlerSelectors
+.basePackage("com.openwebinars.rest.controller"))
+ .paths(PathSelectors.any())
+ .build().apiInfo(apiInfo());
+ } 
+
+
+
+Anotaciones
+● Disponemos de algunas anotaciones que nos permiten
+personalizar determinados aspectos
+● A nivel de método de controlador
+○ @ApiOperation: describe qué hace el método del controlador
+○ @ApiResponse/s: describen las diferentes respuestas que
+puede dar dicho método
+○ @ApiParam: describen el parámetro que recibe el método 
+
+
+
+
+ A nivel de objetos POJO
+○ @ApiModelProperty: nos permite personalizar la información
+que aparece de cada propiedad del modelo
+■ Nombre
+■ Tipo de dato
+■ Valor de ejemplo
+■ Posición.
+
+
+
+
+
+----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
