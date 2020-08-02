@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<link rel='stylesheet' href='/webjars/bootstrap/4.5.0/css/bootstrap.min.css'>
+	<script src="/webjars/jquery/3.5.1/jquery.min.js"></script>
+	<script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<style>
+		table , form {
+			margin:20px;
+		}
+	</style>
+	<script type="text/javascript">
+	
+		$(document).ready(function () {
+			
+			//Ocultamos el formulario de insertar
+			$("#formulario").hide();
+			
+			//Peticion ajax
+			cargarTabla();
+			
+			//Añadir evento al formulario
+			$("#formularioNuevo").submit(function () {
+				
+				$("#listado").hide();
+				$("#formulario").show();
+				
+				return false;
+				
+			});
+			
+			
+			
+			$("#formulario").submit(function() {
+				
+				//objeto persona
+				var persona = {
+						nombre : $("#nombre").val(),
+						apellidos : $("#apellidos").val(),
+						edad : $("#edad").val(),
+				}
+				
+				//Peticion ajax post
+				var peticion = $.ajax(
+					{ //Objeto ajax
+						type: "POST",
+						url: "http://localhost:8080/webapi/personas",
+						contentType: "application/json;charset=utf8",
+						data : JSON.stringify(persona)
+						
+					}).done(function () {
+						
+						//Si funciona cargamos la tabla
+						cargarTabla();
+						
+					}).then(function () {
+						$("#listado").show();
+						$("#formulario").hide();
+					})
+				
+					return false;
+				
+			});
+
+		});
+	
+
+		function cargarTabla() {
+			
+			return 	$.get("http://localhost:8080/webapi/personas", function(listaPersonas) {
+				
+				console.log(listaPersonas);
+				
+				$(".table").empty();
+				
+				//Recorremos la lista
+				listaPersonas.forEach(function(persona) {
+					//añadimos la respuest del servicio a la tabla usando la plantilla
+					$(".table").append(plantillaTabla(persona));
+				});
+			});
+			
+			
+		}
+		
+		function plantillaTabla(persona) {
+			//ES6
+			var plantilla =
+			`<tr>
+				<td>${persona.nombre}</td>
+				<td>${persona.apellidos}</td>
+				<td>${persona.edad}</td>
+			</tr>`
+			
+			return plantilla;
+		}
+		
+		
+		
+		
+	</script>
+</head>
+<body>
+
+ <!-- Vista lista -->
+	<div id="listado">
+		<table class="table">	
+		</table>
+		<form action="formulario" id="formularioNuevo">
+			<input type="submit" value="nuevo" class="btn btn-primary"/>
+		</form>
+	</div>
+	
+	<!-- Vista formulario -->
+	<div id="formulario">
+		<form action="insertar">
+		<div class="form-gropup">
+			<label for="nombre">Nombre: </label>
+			<input type="text" name="nombre" class="form-control" id="nombre" />
+		</div>
+		<div class="form-gropup">
+			<label for="apellidos">Apellidos: </label>
+			<input type="text" name="apellidos" class="form-control" id="apellidos" />
+		</div>
+		<div class="form-gropup">
+			<label for="edad">Edad: </label>
+			<input type="text" name="edad" class="form-control" id="edad" />
+		</div>
+		<div class="form-gropup">
+			<input type="submit" value="enviar" class="btn btn-primary" />
+		</div>
+	
+	</form>
+
+
+	</div>
+</body>
+</html>
