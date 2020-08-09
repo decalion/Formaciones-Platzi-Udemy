@@ -1,0 +1,16 @@
+version: '3'
+services:
+	web1:
+		container_name: spa
+		build:
+			context: docker3
+			dockerfile: F:\Cursos de Java\Spring boot\docker\Cliente Spring
+		ports:
+		- "8081:8080"
+	web2
+		container_name: rest
+		build:
+			context: docker2
+			dockerfile: F:\Cursos de Java\Spring boot\docker\Servidor spring
+		ports:
+		- "8080:8080"

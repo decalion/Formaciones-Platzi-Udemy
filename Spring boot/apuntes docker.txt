@@ -1,0 +1,73 @@
+
+Docker container : Donde se despliega una app
+Docker image : Son imagenes configuradas con los recursos necesarios JDK,TOMCAR...ETC
+Docker files : Se utiliza para almacenar una lista de comandos o acciones para autocrear una imagen personalizada basada en otra imagen.
+
+Docker compose: Sirve para unir 2 microservicios en un mismo container
+
+
+Comandos:
+
+docker pull : descargar imagen del docker hub
+
+docker run : generar un container de la imagen descargada
+
+docker ps :muestra los containers que estan arrancados
+
+docker images : ver las imagenes descargadas
+
+docker ps -a : ver la lista de container ejecutados
+
+docker rm : eliminar container
+
+docker rmi : elimiar imagen
+
+docjer run -it : mantener un terminar interactivo y mantener el container de docker en ejecucion
+
+docker start: arrancar el container
+
+docker attach: linkar una consola
+
+docker stop : parar el container
+
+docker build -t nuenombre : crear una nueva imagen desde un docker file
+
+docker run -p 8080:8080 springbootservidor : arrancar el servidor en el 8080
+
+docker-compose up : arrancar el fichero  yml de docker composse
+
+
+control p + q : Salir sin cerrar el bash
+
+----------------------------
+*062 es el identificador del container
+
+*EL DOCKER FILE NO TIENE QUE TENER EXTENSION
+
+control p + q
+
+docker pull ubunutu
+
+docker run ubuntu echo holadocker
+
+docker run -it ubuntu bash
+
+docker stop 062
+
+docker start 062
+
+docker attach 062
+
+docker build . -t miubuntu
+
+docker run -it miubuntu bash
+
+docker run -p 8080:8080 springbootservidor
+
+docker run -p 8081:8081 springbootcliente
+
+
+
+
+
+
