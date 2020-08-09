@@ -1,0 +1,13 @@
+datos:
+   twitter:
+      icaballero.com
+   web:
+      icaballero.com
+management:
+   endpoints:
+      enable-by-default:
+         true
+      web:
+         exposure:
+            include:
+               "*"      
