@@ -1,0 +1,873 @@
+QUÉ ME VA A APORTAR THYMELEAF?
+
+-Un lenguaje de plantillas elegante que
+permite natural templating.
+▸ Integración perfecta con Spring (Spring
+MVC, Spring Boot, Validación y errores,…)
+
+- Posibilidad de integrar estas plantillas
+con otros frameworks (Play, Java EE 8 MVC, …)
+
+- Curva de aprendizaje poco pronunciada.
+
+- Plantillas HTML, CSS, Javascript, Texto,
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+Qué es Thymeleaf?
+Thymeleaf es un motor de plantillas, es decir, un software dedicado a combinar una plantilla con un modelo de datos, para producir un documento como resultado. 
+Existen docenas de motores en el mercado, pero Thymeleaf, además de integrarse perfectamente con Spring (Boot), tiene la ventaja de permitirnos hacer natural templating.
+
+¿Qué es el natural templating?
+Muchos motores de plantillas que trabajan con HTML basan su funcionamiento en añadir nuevas etiquetas a las que ya define este lenguaje de marcado, para poder realizar su funcionamiento.
+
+Por contra, Thymeleaf funciona añadiendo, a las etiquetas HTML estándar, una serie de atributos. Estos, en caso de visualizar estáticamente un documento, son descartados por el navegador. 
+Esto aporta la ventaja de que podemos trabajar tanto el diseño web como la integración con el aplicativo sobre un mismo documento (cosa que no podríamos hacer, por ejemplo con JSP).
+
+Tipos de documentos
+Thymeleaf permite el procesamiento de diferentes tipos de documentos:
+
+HTML: en sus versiones HTML4, HTML5 y XHTML. No realiza ninguna validación o comprobación de si está bien formado
+XML: espera que el documento esté bien formado (puede lanzar excepciones si no lo está). No hace validaciones frente a DTD o XML Schema.
+Texto: aplicado a un texto que no utiliza un lenguaje de marcado (HTML o XML). Sirve para emails, documentación, …
+Javascript y CSS: permite procesar estos ficheros del mismo modo que trabaja con HTML, si bien está realizando un tratamiento de tipo texto.
+RAW: es un modo en el que no se hace ningún tratamiento al documento. Sirve para insertar bloques sin procesar en plantillas sí procesadas.
+Dialectos
+En Thymeleaf, llamados procesador a un objeto que realiza la transformación de una etiqueta, texto, comentario, … aplicando una determinada lógica. Un dialecto es un conjunto de procesadores.
+
+Thymeleaf ofrece un dialecto standard, que puede ser extendido por los programadores. De hecho, existen muchos derivados (como los de las versiones 3, 4 y 5 de Spring). 
+La mayoría de ellos trabajan procesando atributos, permitiendo así el natural templating
+
+<span th:text="${usuario.nombre}">Pepe Pérez</span>
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Nuestro IDE
+Utilizaremos Spring Tool Suite. Podemos descargarlo, para diversos sistemas operativos y arquitecturas, en https://spring.io/tools/sts/all.
+
+Conceptos de repaso de Spring
+Os recomendamos encarecidamente que podáis visitar nuestro curso de Spring antes de realizar este; con todo, repasamos algunos de los conceptos necesarios que vamos a utilizar en este proyecto de ejemplo y en las siguientes lecciones:
+
+Spring Web MVC es un framework para implementar apliaciones web bajo el patrón Modelo-Vista-Controlador. Nos permite (conjuntamente con Spring Core) realizar inversión de control.
+Spring Boot nos permite configurar casi instantáneamente una aplicación Spring (por ejemplo, una aplicación web, que utilice un ORM, la base de datos, …) aplicando el principio de convención sobre configuración.
+
+Spring Data JPA es una capa de abstración sobre JPA (Java Persistence API). Añade a esta algunas características, como CRUDs automáticos, generación sencilla de consultas, …
+
+h2 database: es una base de datos relacional muy sencilla. Se embebe como un jar dentro del proyecto, y el fichero con toda la información también reside en el mismo.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+CONFIGURACIÓN THYMELEAF
+ھ Spring Boot nos ofrece una configuración
+por defecto.
+ھ Varias vías de modificar la configuración
+ڿ application.properties
+ 
+FICHERO application.properties
+ھ Nos permite configurar cientos de
+aspectos a través de propiedades.
+ھ Thymeleaf tiene un conjunto de ellas.
+ھ En esta lección trabajaremos las más
+comunes. 
+
+
+
+FICHERO application.properties
+
+spring.thymeleaf.cache=true
+ھ Indica si se va a realizar un cacheo de
+plantillas.
+
+ھ Si lo establecemos a false, podemos
+hacer un hotswapping.
+
+spring.thymeleaf.check-template=true
+ھ Comprueba si la plantilla existe antes de
+intentar renderizarla 
+
+spring.thymeleaf.check-template-location=true
+ھ Comprueba si la ruta de la plantilla existe
+
+spring.thymeleaf.enabled=true
+ھ Podemos indicar si thymeleaf está habilitado o no
+
+spring.thymeleaf.encoding=UTF-8
+ھ Codificación de las plantillas
+
+spring.thymeleaf.mode=HTML
+
+moddo en el que trabajará Thymeleaf al procesar las
+plantillas. 
+
+spring.thymeleaf.prefix=classplath:/templates/
+ھ Prefijo en la ruta de las plantillas
+
+spring.thymeleaf.suffix=.html
+ھ Sufijo en la ruta de las plantillas
+
+
+CONFIGURACIÓN JavaConfig
+ھ Configuración programática.
+ھ Una clase anotada con @Configuration
+ھ Implementamos la interfaz
+ApplicationContextAware para acceder al
+ApplicationContext (necesario en
+Thymeleaf 3.X)
+
+@Configuration
+public class ThymeleafConfig implements
+ ApplicationContextAware {
+} 
+
+ھ Configuramos el acceso al contexto
+ھ Necesario desde Thymeleaf 3.X
+
+private ApplicationContext applicationContext;
+public void setApplicationContext(
+ApplicationContext applicationContext) {
+ this.applicationContext = applicationContext;
+} 
+
+CONFIGURACIÓN JavaConfig
+ھ Configuramos el componente que
+resolverá las plantillas
+@Bean
+public SpringResourceTemplateResolver templateResolver() {
+ Sp
+ringResourceTemplateResolver templateResolver = new
+SpringResourceTemplateResolver();
+ templateResolver.setApplicationContext(this.applicationCo
+ntext);
+templateResolver.setPrefix("classpath:/templates/");
+templateResolver.setSuffix(".html");
+templateResolver.setTemplateMode(TemplateMode.HTML);
+templateResolver.setCacheable(true);
+return templateResolver; 
+
+Configuramos el motor que procesará las
+plantillas
+@Bean
+public SpringTemplateEngine templateEngine() {
+ SpringTemplateEngine engine = new SpringTemplateEngine();
+ //engine.setEnableSpringELCompiler(true);
+ engine.setTemplateResolver(templateResolver());
+
+ return engine;
+}
+
+Configuramos el view resolver, que
+resuelve las vistas en Spring MVC
+@Bean
+public ViewResolver viewResolver() {
+ ThymeleafViewResolver resolver =
+ new ThymeleafViewResolver();
+ resolver.setTemplateEngine(templateEngine());
+ resolver.setCharacterEncoding("UTF-8");
+
+ return resolver;
+} 
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+Podemos manejar el contenido de
+cualquier etiqueta con contenido textual
+▸ Las propiedades son th:text y th:utext
+▸ Podemos inyectar cualquier tipo de
+contenido textual
+TEXTO Y VARIABLES
+<span th:text="${nombre}">mundo</span>
+
+Lo podemos manejar mediante los atributos th:text y th:utext. Con ellos, podemos inyectar cualquier tipo de contenido textual.
+
+<span th:text="${nombre}">mundo</span>
+Si el texto a inyectar incluye etiquetas HTML y queremos que estas sean procesadas, th:text no va a producir el resultado esperado. Para ello, deberíamos usar th:utext, que mostrará el texto sin procesarlas.
+
+También podemos utilizar th:text y th:utext para inyectar valores numéricos. Se realizará el casting correspondiente para mostrarlo como texto.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lenguaje de expresión
+Thymeleaf utiliza en su dialecto estándar el lenguaje OGNL (Object-Graph Navigation Language), un lenguaje de expresiones para Java, que permite trabajar con objetos, tomando y estableciendo propiedades, 
+haciendo llamadas a métodos, manejo de arrays, …
+
+Sin embargo, el dialecto para Spring utiliza SpEL (Spring Expression Language), otro lenguaje de expresiones que es común a todos los módulos y tecnologías de Spring, con análgas funcionalidades.
+
+En nuestro caso, dado que utilizaremos Thymeleaf con Spring (con su correspondiente dialecto), tendremos que hacer uso de SpEL, si bien, en la gran mayoría de los casos, las expresiones OGNL y SpEL serán iguales.
+
+Expresiones básicas
+SpEL (y OGNL) nos proveen de diferentes tipos de expresiones. Algunas las dejaremos para el curso avanzado de Thymeleaf.
+
+Expresiones variables: ${...}
+Expresiones variables de selección: *{...}
+Expresiones de mensaje: #{...}
+Expresiones de enlaces: @{...}
+Expresiones de fragmentos: ~{...}
+También podemos hacer uso de literales, como en otros lenguajes de expresión (textuales, numéricos, booleanos, nulos, …)
+
+Expresiones variables
+Dada una expresión, como ${today}, Thymeleaf buscará en el contexto una variable llamada today.
+
+Tenemos también múltiples posibilidades, con la notación de punto (${persona.nombre}) o de corchete (${persona['padre']['nombre']}); así como la manipulación de maps (${personas['Luismi'].edad}) 
+y arrays (${arrayPersonas[0].nombre}).
+
+También podemos realizar llamadas a métodos definidos en los objetos (${persona.nombreCompleto()}).
+
+Expresiones de selección
+Las expresiones de selección o expresiones en selección son expresiones variables que nos permiten ejecutarlas en el marco de un objeto, creando entonces expresiones más abreviadas.
+
+Los siguientes fragmentos de una plantilla nos ilustrarán como ejemplo, y son equivalentes.
+
+<div th:object="${session.usuario}">
+    <p>Nombre: <span th:text="*{nombre}">Luis Miguel</span>.</p>
+    <p>Apellidos: <span th:text="*{apellidos}">López</span>.</p>
+    <p>Nacionalidad: <span th:text="*{nacionalidad}">Español</span>.</p>
+</div>
+ 
+<div>
+    <p>Nombre: <span th:text="${session.usuario.nombre}">Luis Miguel</span>.</p>
+    <p>Apellidos: <span th:text="${session.usuario.apellidos}">López</span>.</p>
+    <p>Nationality: <span th:text="${session.usuario.nacionalidad}">Español</span>.</p>
+ </div>
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Disponemos de múltiples objetos de utilidad, con decenas de métodos, que nos ayudarán en las tareas más comunes:
+
+#execInfo: información sobre la plantilla que estamos procesando.
+#messages: tratamiento de expresiones de mensajes conjuntamente con expresiones variables.
+#uris: métodos para el tratamiento de URLs/URIs
+#conversions: métodos para ejecutar conversiones (si es que las hay configuradas)
+#dates: tratamiento de fechas java.util.Date.
+#calendars: tratamiento de fechas java.util.Calendar.
+#numbers: formateo de números
+#strings: tratamiento de cadenas de caracteres.
+#objects: métodos para objetos en general.
+#bools: métodos para la evaluación de booleanos
+#arrays: métodos para el tratamiento de arrays.
+#lists: métodos para el tratamiento de listas.
+#sets: métodos para el tratamiento de sets.
+#maps: métodos para el tratamiento de maps.
+#aggregates: metodos para el cálculo de medias aritméticas y sumas en arrays o colecciones.
+#ids: métodos para la gestión del atributo id.
+Dada la cantidad de clases y métodos disponibles, os animo a que visitéis la documentación del paquete org.thymeleaf.expressions, donde están definidos los métodos de cada uno de estos objetos: https://www.thymeleaf.org/apidocs/thymeleaf/3.0.0.RELEASE/org/thymeleaf/expression/package-summary.html
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Operadores aritméticos
+Suma: ${4 + 0.2}
+Resta: ${3 - 0.12}
+Multiplicación: ${4 * 3}
+Divisón entera: ${4 / 3}
+Resto: ${5 % 3}
+Divisón no entera ${4 / 3.0}
+Potencia ${4^3}
+Cambio de signo ${-(-2)}
+Operadores textuales
+Concatenación: ${'Hola ' + 'mundo'}
+Sustitución de literales: |Mi nombre es ${nombre}|
+
+
+Operadores relacionales
+Menor: ${3 < 2} o ${3 lt 2}
+Menor o igual: ${3 <= 3} o ${3 le 3}
+Mayor: ${3 > 2} o ${3 gt 2}
+Mayor o igual: ${3 >= 3} o ${3 ge 3}
+Igual: ${'hola' == 'Hola'} ${'hola' eq 'Hola'}
+Distinto: ${'hola' != 'Hola'} o ${'hola' ne 'Hola'}
+
+También tenemos los habituales
+                 <, <=, >, >=, ==, !=
+Versión textual: lt, le, gt, ge, eq, ne 
+
+
+
+
+
+
+
+Operadores booleanos
+And: ${(3 < 4) and (4 < 5)}
+Or: ${(3 > 4) or (4 < 5)}
+Negacion: ${ not (3 < 4) }
+
+También tenemos los habituales
+ and, or, not, ! 
+
+
+
+Comparaciones
+th:if y th:unless
+<div th:if="${not #lists.isEmpty(lista)}">
+  <p th:text="|Nombre del producto: ${lista[0].nombre}|">nombre</p>
+</div>
+<div th:unless="${not #lists.isEmpty(lista)}">
+  <p>No hay productos disponibles en la lista</p>
+</div>
+
+
+En ocasiones, podemos resumir el uso
+de th:if y th:unless en una sola expresión.
+ El operador ternario ? : es la solución
+ 
+ ${condición} ? valor verdadero : valor
+falso
+
+<p th:text="${not #lists.isEmpty(lista)} ? |Nombre del producto: ${lista[0].nombre}| : 'No hay productos disponibles en la lista'">nombre</p> 
+
+
+
+
+
+Operadores condicionales
+Mediante el uso del operador condición ? valor si verdadero : valor si falso
+
+<p th:text="${not #lists.isEmpty(lista)} ? |Nombre del producto: ${lista[0].nombre}| : 'No hay productos disponibles en la lista'">nombre</p>
+
+
+Expresiones por defecto
+<p th:text="*{descripcion}?: 'Si quiere más información sobre nuestro productos, no dude en contactar con nosotros'">texto</p>
+Token no-op
+<p th:text="*{descripcion}?: _">Si quiere más información sobre nuestro productos, no dude en contactar con nosotros</p>
+
+
+Elemento th:block (o th-block)
+th:block es un contenedor de atributos Thymeleaf. Estos atributos serán procesados, y posteriormente desaparecerá el bloque, pero no su contenido. Es muy útil en varios contextos, como aplicación de condiciones a un grupo de elementos.
+
+Por ejemplo:
+
+<table>
+    <th:block th:each="user : ${users}">
+        <tr>
+            <td th:text="${user.login}">...</td>
+            <td th:text="${user.name}">...</td>
+        </tr>
+        <tr>
+            <td colspan="2" th:text="${user.address}">...</td>
+        </tr>
+    </th:block>
+</table>
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+terar con Thymeleaf
+Thymeleaf nos permite iterar sobre colecciones utilizando el atributo th:each.
+
+<tr th:each="producto : ${productos}">
+  <td th:text="${producto.nombre}">Nombre</td>
+  <td th:text="${producto.precio}">1.00</td>
+</tr>
+Nos permite iterar sobre un extenso elenco de colecciones
+
+java.util.List.
+Arrays
+java.util.Iterable.
+java.util.Collection.
+java.util.Enumeration.
+java.util.Iterator.
+java.util.Map (devuelve objetos de tipo java.util.Map.Entry)
+Estado de la iteración
+Al usar th:each, Thymeleaf nos ofrece un buen mecanismo para identificar el estado de la iteraciones: la variable status:
+
+El índice actual (index), con valor inicial 0.
+El índice actual (count), con valor inicial 1.
+El número total de elementos (size).
+Si la iteración es par o impar (even/odd).
+Si es la primera iteración (first) o la última (last).
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Código fuente
+El código fuente del listado de productos (el de categrías es prácticamente análogo) sería el siguiente:
+
+        <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Pvp</th>
+                            <th>Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="producto : ${productos}">
+                            <td><img
+                                th:src="${not (#strings.isEmpty(producto.imagen))}
+                                              ? ${producto.imagen} : 'http://placehold.it/48x48'"
+                                class="img-responsive icono-categoria" alt="imagen" /></td>
+                            <td th:text="${producto.nombre}"></td>
+                            <td th:text="${#numbers.formatCurrency(producto.pvp)}"></td>
+                            <td class="operaciones"><a href="#"                                
+                                class="btn btn-primary">Editar</a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal"
+                                    data-target="#delete-modal">Borrar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+Como decíamos en el vídeo, la expresión para dibujar la imagen, la podríamos haber resumido más:
+
+  <td>
+    <img th:src="${producto.imagen} ?: 'http://placehold.it/48x48'"
+                                class="img-responsive icono-categoria" alt="imagen" />
+  </td>
+Como siempre, podéis encontrar los ejemplos completos en el repositorio del curso.
+
+----------------------------------------------------------------------------------------------------------------------------
+Código fuente
+El código fuente del listado de categorías es muy sencillo. Para el listado de productos, este sería el código fuente:
+
+<div class="col-sm-3" th:each="producto : ${productos}">
+  <div class="col-item">
+    <div class="photo">
+      <img src="http://placehold.it/350x260"
+        th:src="${#strings.isEmpty(producto.imagen)} ? 'http://placehold.it/350x260' : ${producto.imagen}"
+        class="img-responsive" alt="a" />
+    </div>
+    <div class="info">
+      <div class="row">
+        <div class="price col-md-12">
+          <h5 th:text="${#strings.abbreviate(producto.nombre,65)}">Nombre</h5>
+          <div class="price-text-color">
+            <span
+              th:text="${producto.descuento == 0}
+                    ? ${#numbers.formatCurrency(producto.pvp)}
+                    : ${#numbers.formatCurrency(producto.pvp * (1 - producto.descuento))}">10</span>
+
+            <th:block th:if="${producto.descuento > 0}">
+              <span class="price-original"
+                th:text="${#numbers.formatCurrency(producto.pvp)}"></span>
+              <span class="label label-danger"
+                th:text=${#numbers.formatPercent(producto.descuento,1,0)}></span>
+            </th:block>
+          </div>
+        </div>
+        <div class="row">
+          <div class="rating col-md-4">
+            <p>
+              <span
+                th:text="${#numbers.formatDecimal(producto.getPuntuacionMedia(),1,1)}">4</span>/5
+            </p>
+          </div>
+          <div class="rating col-md-8">
+            <span class="glyphicon glyphicon-star"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+Como siempre, podéis encontrar los ejemplos completos en el repositorio del curso.
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+tipos de URLs
+Absolutas: https://openwebinars.net
+Relativas
+A la página (admin/categoria/)
+Al contexto (/index?categoria=3)
+Al servidor (~/usuario/factura/)
+Al protocolo (//code.jquery.com/jquery-3.3.1.min.js)
+Construcción de URLs con Thymeleaf
+De forma general, una URL en Thymeleaf será una expresión del tipo @{...}.
+
+URLs con parámetros
+Cuando queremos construir URLs que contengan parámetros, y obtener estos en base a una expresión, la notación será:
+
+@{/../path?(p1=v1, p2=v2, p3=v3, ...)}
+Por ejemplo:
+
+<a th:href="/(idCategoria=${categoria.id})" th:text="${categoria.nombre}">Categoría</a>
+Daría como resultado:
+
+<a href="/?idCategoria=7" >Categoría 7</a>
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Las URLs con variables en el path son del estilo a www.mitienda.com/productos/detalle/17
+
+Cuando queramos que una URL tenga variables en el path, la notación será:
+
+@{/.../path/{var1}/{var2}(var1=v1, var2=v2)}
+Por ejemplo:
+
+<a href="#"
+     th:href="@{/product/{id}(id=${producto.id})}">
+     <div class="col-item">
+     …
+     </div>
+</a>
+Daría como resultado:
+
+<a th:href="@{/product/6}">
+     <div class="col-item">
+     …
+     </div>
+</a>
+
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Manejo de CSS
+Thymeleaf nos ofrece algunas posibilidades para manejar el CSS a aplicar:
+
+th:class: Permite definir, mediante thymeleaf, las clases de un elemento. Dentro podemos usar literales, variables o expresiones (por ejemplo, condiciones)
+
+th:classappend y th:styleappend: Permiten añadir (bien al conjunto de clases, bien al conjunto de estilos en línea) una nueva clase o estilo. Dentro podemos usar literales, variables o expresiones (por ejemplo, condiciones)
+
+-------------------------------------------------------------------------------------------------------------------------------
+Formularios con Spring MVC
+Spring ofrece funcionalidades para el manejo de formularios.
+ Se realiza a través de un objeto, llamado Command Object, que es el bean que servirá para almacenar la información recogida en el formulario.
+ Este objeto debe tener tantos atributos (con getters y setters) como campos tenga el formulario.
+
+En muchas ocasiones, podremos usar nuestras entidades como command object.
+
+Flujo de un formulario en Spring MVC
+Enviar el objeto al formulario
+Lo hacemos desde una petición GET
+Añadimos al modelo un objeto (normalmente vacío)
+Redirigimos hacia la plantilla del formulario
+Formulario
+Tomamos del contexto el command object
+Asociamos los atributos con los campos del formulario
+Dirigimos la acción del formulario hacia (3)
+Procesamiento de los datos
+Lo hacemos desde una petición POST
+Recogemos el objeto enviado desde el formulario
+Aplicamos la lógica de negocio correspondiente.
+Redirigimos hacia otro controlador.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+En ocasiones, necesitaremos dibujar estos campos a partir de una lista de valores. Las expresiones de utilidad #ids nos serán de gran ayuda.
+
+<ul>
+     <li th:each="tipo : ${tipos}">
+          <input type="radio" th:field="*{tipoEnvio}" th:value="${tipo}" />
+          <label th:for="${#ids.prev('tipoEnvio')}"
+            th:text="${tipo.nombre}">Tipo de envío</label>
+     </li>
+</ul>
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Tienen dos partes: select y un conjunto de etiquetas option anidadas. Solo el campo select necesita el atributo th:field. Las diferentes etiquetas option deberán tener su correspondiente atributo th:value.
+
+Lo usual es que generemos las diferentes etiquetas option a partir de una lista de valores.
+
+<select th:field="*{categoria}" class="form-control">
+    <option value="-1">---</option>
+    <option th:each="categoria : ${categorias}"
+                th:value="${categoria.id}"  
+                               th:text="${categoria.nombre}">
+                    Categoría
+              </option>
+</select>
+
+------------------------------------------------------------------------------------------------------------
+Borrado de productos
+El borrado de elementos es tarea, eminentemente, de Spring:
+
+invocación de un controlador específico
+desde ahí, invocar la lógica de negocio necesaria
+Para realizar el borrado en cascada de las puntuaciones cuando se borre un producto, la asociación correspondiente está anotada de la siguiente forma:
+
+@OneToMany(mappedBy="producto", cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
+private Set<Puntuacion> puntuaciones = ...;
+Borrado de categorías
+Al borrado de categorías le sucede algo parecido (es tarea eminentemente de Spring).
+
+Decir que en esta parte, hemos incluido la lógica para gestionar que no se pueda borrar una categoría que tenga productos asociados.
+
+Como siempre, podéis encontrar los ejemplos completos en el repositorio del curso.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+Validación en Spring
+Spring permite usar el estándar JSR-303/JSR-380 Bean Validation API. Spring Boot configura por defecto la implementación de este estándar realizada por hibernate.
+Permite realizar la validación añadiendo anotaciones en nuestras clases modelo.
+
+Algunas anotaciones de validación:
+@NotNull: el atributo no puede ser nulo
+@Min, @Max: mayor o igual (o menor o igual) que un valor determinado.
+@NotEmpty: el atributo no puede estar vacío (Strings, colecciones, arrays, …)
+@Email: el atributo debe ser un email válido.
+@Size: el atributo tiene que tener un tamaño según el indicado.
+Puedes consultar toda la documentación en https://beanvalidation.org/2.0/spec/#builtinconstraints
+
+Formulario con validación
+Para poder validar un formulario, tenemos que modificar el código del controlador, de forma que quede, por ejemplo, así:
+
+@PostMapping("/nuevo/submit")
+    public String submitNuevoProducto(@Valid Producto producto, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categorias", categoriaService.findAll());
+            return "admin/form-producto";
+        } else {
+            productoService.save(producto);
+            return "redirect:/admin/producto/";
+
+        }
+
+    }
+Visualización de los errores
+Thymeleaf nos ofrece algunos elementos para gestionar los errores:
+
+Algunas funciones del objeto #fields: #fields.hasError(‘...’) y #fields.errors(‘...’)
+Atributos: th:errors y th:errorclass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
