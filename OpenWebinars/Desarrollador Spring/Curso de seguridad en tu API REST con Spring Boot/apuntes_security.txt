@@ -1,0 +1,1357 @@
+pom.xml
+ Añadiendo dependencias starter
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-security</artifactId>
+</dependency
+
+Spring Security
+
+- Gran aceptación por la comunidad de desarrolladores por su
+flexibilidad en los modelos de autenticación.
+
+- Rápida integración sin necesidad de una migración de los sistemas a
+un entorno de terceros.
+
+- Plataforma abierta y en constante evolución. 
+
+
+Módulos
+- Desde Spring Security 3, el código se encuentra dividido en
+diferentes .jars, para separar claramente funcionalidades y
+dependencias de terceros.
+- Algunos de ellos son:
+- Core: contiene los elementos centrales de autenticación y
+control de acceso.
+-○ Web: contiene los filtros y el código que articula la
+infraestructura de seguridad de una aplicación web. 
+
+
+Algunos de ellos son:
+○ LDAP: provee los mecanismos necesarios para la autenticación
+vía LDAP.
+○ OAuth 2.0 Core: provee las clases e interfaces para dar soporte
+al framework OAuth 2.0 y OpenID Connect Core 1.0
+○ OAuth 2.0 Client: proporciona el soporte cliente para OAuth
+2.0 y OpenID Connect Core 1.0
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+Qué es un Principal?
+Según la wikipedia), un Principal, en el ámbito de la seguridad informática, es una entidad (persona, grupo, servicio, proceso, …) 
+que puede ser autenticado en un sistema informático o red. En la literatura de Java y Microsoft suele encontrarse como security principal.
+
+En Java, viene representado por la interfaz java.security.Principal.
+
+¿Y un Authentication?
+En Spring Security, la interfaz org.springframework.security.core.Authentication, que es nombrada en repetidas ocasiones durante esta lección, es una subinterfaz de Principal, 
+proporcionando además de la información de esta, otra referente a credenciales, authorities y mecanismos para identificar si está autenticado o no.
+
+En el mecanismo de autenticación, se utiliza en el método AuthenticationManager.authenticate(Authentication)
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Autenticación y autorización
+● La seguridad de una aplicación suele reducirse a dos problemas más
+o menos independientes
+○ Autenticación: ¿quién es usted?
+○ Autorización: ¿qué se le permite hacer?
+● En ocasiones se llama control de acceso a la autorización. 
+
+
+
+Autenticación
+● Spring Security proporciona un interfaz, AuthenticationManager,
+que implementa el patrón estrategia.
+
+public interface AuthenticationManager {
+ Authentication authenticate(Authentication authentication)
+ throws AuthenticationException;
+}
+
+Un AuthenticationManager puede hacer tres cosas con su único
+método:
+○ Devolver un Authentication (normalmente con
+authenticated=true)
+○ Lanzar una excepción de tipo AuthenticationException
+○ Devolver null 
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+A continuación podemos ver el listado de enlaces a la documentación de las clases, interfaces y anotaciones que se explican en esta lección:
+
+WebSecurityConfigurerAdapter: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/configuration/WebSecurityConfigurerAdapter.html
+
+@EnableWebSecurity: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/web/configuration/EnableWebSecurity.html
+
+Authentication: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/Authentication.html
+
+AuthenticationManagerBuilder: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/config/annotation/authentication/builders/AuthenticationManagerBuilder.html
+
+UserDetails: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/userdetails/UserDetails.html
+
+User: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/userdetails/User.html
+
+GrantedAuthority: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/GrantedAuthority.html
+
+SimpleGrantedAuthority: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/authority/SimpleGrantedAuthority.html
+
+UserDetailsService: https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/core/userdetails/UserDetailsService.html
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Estas podrían ser algunas pruebas realizadas sobre nuestra API Rest con cURL
+
+Si queremos codificar el username:password en base64, lo podemos hacer en alguna web como https://www.base64encode.org/
+
+Petición GET para obtener los productos
+Nos autenticamos como marialopez:Marialopez1, que en Base64 equivale a bWFyaWFsb3BlejpNYXJpYWxvcGV6MQ==
+
+Al encauzar la salida de curl a jq . conseguimos que esta aparezca prettyficada.
+
+curl -v -H "Authorization: Basic bWFyaWFsb3BlejpNYXJpYWxvcGV6MQ==" http://localhost:8080/producto/ | jq .
+La salida debe ser algo así como:
+
+{
+  "content": [
+    {
+      "id": 1,
+      "nombre": "Juice - Orange, Concentrate",
+      "imagen": "http://dummyimage.com/139x103.bmp/5fa2dd/ffffff",
+      "precio": 91,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 2,
+      "nombre": "Beef - Ground, Extra Lean, Fresh",
+      "imagen": "http://dummyimage.com/206x125.bmp/cc0000/ffffff",
+      "precio": 87,
+      "categoria": "Comida"
+    },
+    {
+      "id": 3,
+      "nombre": "Cheese - Parmesan Grated",
+      "imagen": "http://dummyimage.com/133x134.bmp/dddddd/000000",
+      "precio": 39,
+      "categoria": "Comida"
+    },
+    {
+      "id": 4,
+      "nombre": "Cups 10oz Trans",
+      "imagen": "http://dummyimage.com/245x246.jpg/dddddd/000000",
+      "precio": 67,
+      "categoria": "Comida"
+    },
+    {
+      "id": 5,
+      "nombre": "Wine - Beringer Founders Estate",
+      "imagen": "http://dummyimage.com/139x103.bmp/5fa2dd/ffffff",
+      "precio": 27,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 6,
+      "nombre": "Bread - Wheat Baguette",
+      "imagen": "http://dummyimage.com/206x125.bmp/cc0000/ffffff",
+      "precio": 82,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 7,
+      "nombre": "Un producto nuevo",
+      "imagen": "http://dummyimage.com/133x134.bmp/dddddd/000000",
+      "precio": 123.4,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 8,
+      "nombre": "Cheese - Mascarpone",
+      "imagen": "http://dummyimage.com/245x246.jpg/dddddd/000000",
+      "precio": 97,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 9,
+      "nombre": "Mace",
+      "imagen": "http://dummyimage.com/139x103.bmp/5fa2dd/ffffff",
+      "precio": 25,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 10,
+      "nombre": "Oil - Shortening - All - Purpose",
+      "imagen": "http://dummyimage.com/206x125.bmp/cc0000/ffffff",
+      "precio": 63,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 11,
+      "nombre": "Marjoram - Fresh",
+      "imagen": "http://dummyimage.com/133x134.bmp/dddddd/000000",
+      "precio": 60,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 12,
+      "nombre": "Turnip - White",
+      "imagen": "http://dummyimage.com/245x246.jpg/dddddd/000000",
+      "precio": 74,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 13,
+      "nombre": "Pork Salted Bellies",
+      "imagen": "http://dummyimage.com/139x103.bmp/5fa2dd/ffffff",
+      "precio": 38,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 14,
+      "nombre": "Longos - Greek Salad",
+      "imagen": "http://dummyimage.com/206x125.bmp/cc0000/ffffff",
+      "precio": 15,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 15,
+      "nombre": "Amaretto",
+      "imagen": "http://dummyimage.com/133x134.bmp/dddddd/000000",
+      "precio": 85,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 16,
+      "nombre": "Godiva White Chocolate",
+      "imagen": "http://dummyimage.com/245x246.jpg/dddddd/000000",
+      "precio": 97,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 17,
+      "nombre": "Tomatoes - Roma",
+      "imagen": "http://dummyimage.com/139x103.bmp/5fa2dd/ffffff",
+      "precio": 61,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 18,
+      "nombre": "Oven Mitt - 13 Inch",
+      "imagen": "http://dummyimage.com/206x125.bmp/cc0000/ffffff",
+      "precio": 1,
+      "categoria": "Complementos"
+    },
+    {
+      "id": 19,
+      "nombre": "Vermouth - White, Cinzano",
+      "imagen": "http://dummyimage.com/133x134.bmp/dddddd/000000",
+      "precio": 72,
+      "categoria": "Bebida"
+    },
+    {
+      "id": 20,
+      "nombre": "Club Soda - Schweppes, 355 Ml",
+      "imagen": "http://dummyimage.com/245x246.jpg/dddddd/000000",
+      "precio": 38,
+      "categoria": "Bebida"
+    }
+  ],
+  "pageable": {
+    "sort": {
+      "sorted": false,
+      "unsorted": true,
+      "empty": true
+    },
+    "pageSize": 20,
+    "pageNumber": 0,
+    "offset": 0,
+    "paged": true,
+    "unpaged": false
+  },
+  "last": false,
+  "totalPages": 2,
+  "totalElements": 30,
+  "first": true,
+  "sort": {
+    "sorted": false,
+    "unsorted": true,
+    "empty": true
+  },
+  "numberOfElements": 20,
+  "size": 20,
+  "number": 0,
+  "empty": false
+}
+Petición GET para obtener los pedidos de un usuario
+Nos volvemos a autenticar como marialopez:Marialopez1, que en Base64 equivale a bWFyaWFsb3BlejpNYXJpYWxvcGV6MQ==
+
+curl -v -H "Authorization: Basic bWFyaWFsb3BlejpNYXJpYWxvcGV6MQ==" http://localhost:8080/pedido/ | jq .
+Petición GET para obtener todos los pedidos (como ADMIN)
+Un administrador si será capaz de obtener todos los pedidos, independientemente del usuario que los haya realizado. Ejecutamos la misma petición, autenticados como un administrador.
+
+Para autenticarnos como administrador, lo hacemos con admin:Admin1, que en Base64 equivale a YWRtaW46QWRtaW4x
+
+curl -v -H "Authorization: Basic YWRtaW46QWRtaW4x" http://localhost:8080/pedido/ | jq .
+Petición PUT para modificar un producto
+Si en esta petición nos autenticamos como marialopez:Marialopez1, obtenedremos un error 403 Forbidden.
+
+Creamos un fichero json con el siguiente contenido (o uno parecido):
+
+{
+    "nombre": "Producto nuevo",
+    "precio": 12,
+    "categoriaId": 1
+}
+Lo más fácil es ejecutar este comando desde la ubicación del archivo
+
+curl -X PUT -H "Authorization: Basic YWRtaW46QWRtaW4x" -H "Content-Type: application/json" -d "@modificaproducto.json" http://localhost:8080/producto/7 | jq .
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Puedes leer la información más completa sobre la especificación JWT aquí: https://tools.ietf.org/html/rfc7519.
+
+Para depurar tus tokens JWT, puedes utilizar la siguiente herramienta: https://jwt.io/#debugger-io.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+Las dependencias a incluir para trabajar con JWT es:
+
+<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-impl -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.10.7</version>
+    <scope>runtime</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.10.7</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-jackson -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.10.7</version>
+    <scope>runtime</scope>
+</dependency>
+Puedes encontrar una documentación más extensa sobre esta librería en https://github.com/jwtk/jjwt. Tal y como indica dicha documentación, la mayor parte de la complejidad se oculta detrás de una interfaz fluida basada en un generador. Valga el siguiente ejemplo:
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+
+// We need a signing key, so we'll create one just for this example. Usually
+// the key would be read from your application configuration instead.
+Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+String jws = Jwts.builder().setSubject("Joe").signWith(key).compact();
+El resultado parecerá algo así:
+
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2UifQ.1KP0SsvENi7Uz1oQc07aXTL7kpQG5jBNIybqr60AlD4
+
+
+--------------------------------------------------------------------------------------------------------------------------------------
+token signWith
+La librería JJWT ha cambiado en sus últimas versiones, sobre todo con respecto a firmar el token.
+
+Con el siguiente código, podemos generar una clave aleatoria:
+
+Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+String jws = Jwts.builder().setSubject("Joe").signWith(key).compact();
+Según la documentación, podemos la librería puede encargarse de determinar el mejor algoritmo en función de la longitud en bytes de la misma. Por ejemplo, si llamamos a signWith con una SecretKey de 32 bytes, no será suficientemente fuerte para el algoritmo HS384 o HS512, por lo que la librería aplicará el algoritmo HS256. Además, cuando se firma, automáticamente se añade el algoritmo en el parámetro alg en el encabezado.
+
+El método utilizado en el ejemplo es HS512, porque la longitud de la clave lo permite:
+
+return Jwts.builder.signWith(Keys.hmacShaKeyFor(jwtSecreto.getBytes()), SignatureAlgorithm.HS512)...
+El método hmacShaKeyFor crea una nueva SecretKey para usar con algoritmos basados en HMAC-SHA, recibiendo la clave como un array de bytes.
+
+Descifrado del token
+Podemos descifrar el token aplicamos de nuevo la clave secreta, y a partir de ahí podemos obtener el claim que necesitemos:
+
+public Long getUserIdFromJWT(String token) {
+    Claims claims = Jwts.parser()
+                        .setSigningKey(Keys.hmacShaKeyFor(jwtSecreto.getBytes()))
+                        .parseClaimsJws(token)
+                        .getBody();
+
+    return Long.parseLong(claims.getSubject());
+    }
+
+----------------------------------------------------------------------------------------------------------------------
+
+Según la documentación de Spring Security, para realizar la autenticación basada en usuario y contraseña, podemos utilizar una instancia de UsernamePasswordAuthenticationToken. Se trata de una implementación de Authentication.
+
+Si la autenticación se realiza correctamente (en nuestro caso, si el token es validado), debemos almacenar en el contexto de seguridad una instancia de dicha clase:
+
+if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+    Long userId = tokenProvider.getUserIdFromJWT(token);
+
+    UserEntity user = (UserEntity) userDetailsService.loadUserById(userId);
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getRoles(), user.getAuthorities());
+    authentication.setDetails(new WebAuthenticationDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+La documentación oficial sobre OAuth 2.0 la podemos encontrar en https://oauth.net/2/.
+
+En ella, se indican algunos RFCs útiles sobre dicho framework:
+
+RFC 6749: OAuth 2.0 Framework https://tools.ietf.org/html/rfc6749
+RFC 6750: Bearer Tokens https://oauth.net/2/bearer-tokens/
+RFC 6819: Threat Model and Security Considerations https://oauth.net/2/security-considerations/
+Sobre Tokens y su gestión
+
+RFC 7662: Token Introspection https://oauth.net/2/token-introspection/
+RFC 7009: Token revocation https://oauth.net/2/token-revocation/
+RFC 7519: Json Web token https://oauth.net/2/jwt/
+ 24_OAuth2_En_q
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+La dependencia necesaria para implementar nuestro servidor de autenticación es la siguiente:
+
+		<dependency>
+			<groupId>org.springframework.security.oauth.boot</groupId>
+			<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+			<version>2.1.8.RELEASE</version>
+		</dependency>
+		
+		
+donde 2.X.Y.RELEASE es la versión de Spring Boot.
+
+-------------------------------------------------------------------------------------
+
+En el siguiente enlace podemos encontrar el DDL necesario para generar las tablas para persistir la información asociada a OAuth2.0: clientes, tokens, …
+
+https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
+
+-- used in tests that use HSQL
+create table oauth_client_details (
+  client_id VARCHAR(256) PRIMARY KEY,
+  resource_ids VARCHAR(256),
+  client_secret VARCHAR(256),
+  scope VARCHAR(256),
+  authorized_grant_types VARCHAR(256),
+  web_server_redirect_uri VARCHAR(256),
+  authorities VARCHAR(256),
+  access_token_validity INTEGER,
+  refresh_token_validity INTEGER,
+  additional_information VARCHAR(4096),
+  autoapprove VARCHAR(256)
+);
+
+create table oauth_client_token (
+  token_id VARCHAR(256),
+  token LONGVARBINARY,
+  authentication_id VARCHAR(256) PRIMARY KEY,
+  user_name VARCHAR(256),
+  client_id VARCHAR(256)
+);
+
+create table oauth_access_token (
+  token_id VARCHAR(256),
+  token LONGVARBINARY,
+  authentication_id VARCHAR(256) PRIMARY KEY,
+  user_name VARCHAR(256),
+  client_id VARCHAR(256),
+  authentication LONGVARBINARY,
+  refresh_token VARCHAR(256)
+);
+
+create table oauth_refresh_token (
+  token_id VARCHAR(256),
+  token LONGVARBINARY,
+  authentication LONGVARBINARY
+);
+
+create table oauth_code (
+  code VARCHAR(256), authentication LONGVARBINARY
+);
+
+create table oauth_approvals (
+    userId VARCHAR(256),
+    clientId VARCHAR(256),
+    scope VARCHAR(256),
+    status VARCHAR(10),
+    expiresAt TIMESTAMP,
+    lastModifiedAt TIMESTAMP
+);
+
+
+-- customized oauth_client_details table
+create table ClientDetails (
+  appId VARCHAR(256) PRIMARY KEY,
+  resourceIds VARCHAR(256),
+  appSecret VARCHAR(256),
+  scope VARCHAR(256),
+  grantTypes VARCHAR(256),
+  redirectUrl VARCHAR(256),
+  authorities VARCHAR(256),
+  access_token_validity INTEGER,
+  refresh_token_validity INTEGER,
+  additionalInformation VARCHAR(4096),
+  autoApproveScopes VARCHAR(256)
+);
+En esta web se indica que se ha probado con HSQL, y también funciona en H2.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5.1 Y volvemos a comenzar
+Vamos a realizar, por tercera vez, la misma operación. En este caso, el punto de partida será un proyecto Spring Boot. Animamos al lector a que al menos visite el curso online de Spring MVC para manejar bien algunos conceptos como la inyección de dependencias, el patrón MVC de Spring o el uso de Spring Boot.
+
+5.2 Creación del proyecto
+5.2.1 Datos iniciales
+Creamos un nuevo proyecto. En este caso, se trata de un proyecto Spring Starter Project. Podemos dejar los elementos de configuración (Maven, Java 1.8, …).
+
+groupId: com.openwebinars.hibernate
+artifactId: PrimerEjemploSpringJPAHibernate
+description: a gusto del programador
+package: com.openwebinars.hibernate.primerejemplospringjpahibernate
+(Como siempre, estos datos pueden ser establecidos por el alumno siguiendo su propia nomenclatura).
+
+5.2.2. Dependencias
+Para aquellos que ya hayan creado algún proyecto de Spring Boot será conocido que este asistente nos permite seleccionar las dependencias que vamos a utilizar. Spring nos facilita mucho el trabajo, ya que podemos marcar aquello que sea necesario, y él se encargará de incluirlo en el pom.xml:
+
+Web: indicaremos que vamos a crear un proyecto Web MVC. Se encarga de insertar las dependencias, también, de IoC container.
+SQL > MySQL: incluirá el conector de Mysql para Java.
+JPA: nos permite utilizar en nuestro proyecto JPA, Spring Data JPA, Spring ORM e Hibernate. Esta dependencia nos ahorra tener que incluir manualmente las dependencias de JPA+Hibernate.
+5.3 Configuración de la base de datos
+Ya que estamos usando Spring Boot, haremos uso de la configuración vía Java, en lugar de a través de descriptores XML. Para configurar la base de datos, usaremos una clase con todos los elementos necesarios, y el fichero de properties.
+
+Creamos una nueva clase, llamada DatabaseConfig:
+
+
+import java.util.Properties;
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+@Configuration
+@EnableTransactionManagement
+public class DatabaseConfig {
+
+    /**
+     * Definición del DataSource para la conexión a nuestra base de datos.
+     * Las propiedades son establecidas desde el fichero de properties, y
+     * asignadas usando el objeto env.
+     *
+     */
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
+        return dataSource;
+    }
+
+    /**
+     *
+     * Declaración del EntityManagerFactory de JPA
+     */
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+
+        //Le asignamos el dataSource que acabamos de definir.
+        entityManagerFactory.setDataSource(dataSource);
+
+        // Le indicamos la ruta donde tiene que buscar las clases anotadas
+        entityManagerFactory.setPackagesToScan(env.getProperty("entitymanager.packagesToScan"));
+
+        // Implementación de JPA a usar: Hibernate
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
+
+        // Propiedades de Hiberante
+        Properties additionalProperties = new Properties();
+        additionalProperties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        additionalProperties.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+        additionalProperties.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        entityManagerFactory.setJpaProperties(additionalProperties);
+
+        return entityManagerFactory;
+    }
+
+    /**
+     * Inicializa y declara el gestor de transacciones
+     */
+    @Bean
+    public JpaTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
+        return transactionManager;
+    }
+
+    /**
+     *  
+     * Este bean es un postprocessor que ayuda a relanzar las excepciones específicas
+     * de cada plataforma en aquellas clases anotadas con @Repository
+     *
+     */
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
+
+}
+Y el fichero de properties:
+
+# Base de datos
+db.driver: com.mysql.jdbc.Driver
+db.url: jdbc:mysql://localhost/hibernate
+db.username: openwebinars
+db.password: 12345678
+
+# Hibernate
+hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+hibernate.show_sql: true
+hibernate.hbm2ddl.auto: create
+entitymanager.packagesToScan: com.openwebinars.hibernate.primerejemplospringjpahibernate
+Los diferentes métodos anotados con @Bean sirven para construir esos beans al vuelo e inyectarlos directamente.
+
+El bean dataSource es el que crea dicho objeto con los datos definidos en el fichero de properties. Un DataSource es un objeto Java que nos permite generar conexiones con una base de datos.
+El bean entityManagerFactory es el que utilizaremos más adelante para construir instancias de EntityManager. Para crearlo, le tenemos que asignar el dataSource y un vendorAdapter, es decir, una implementación concreta de JPA. En nuestro caso es Hibernate.
+El bean transactionManager permitira utilizar la anotación @Transactional, que estudiaremos más adelante.
+Por último, el bean exceptionTranslation sirve para propagar las excepciones de bases de datos a las clases que implementemos y anotemos con @Repository.
+5.4 Nuestro modelo y nuestra clase DAO (Data Access Object)
+Nuestro modelo sigue siendo el mismo de los últimos proyectos:
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+public class User {
+
+    @Id
+    private int id;
+
+    @Column
+    private String userName;
+
+    @Column
+    private String userMessage;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserMessage() {
+        return userMessage;
+    }
+
+    public void setUserMessage(String userMessage) {
+        this.userMessage = userMessage;
+    }
+
+}
+En este proyecto, vamos a añadir una nueva clase, haciendo uso del patrón Data Access Object, que nos invita a crear un objeto que encapsule las operaciones CRUD sobre una entidad.
+
+
+
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Transactional
+public class UserDao {
+
+    // A través de la anotación @PersistenceContext, se inyectará automáticamente
+    // un EntityManager producido desde el entityManagerFactory definido en la clase
+    // DatabaseConfig.
+    @PersistenceContext
+    private EntityManager entityManager;
+
+
+    /**
+     * Almacena el usuario en la base de datos
+     */
+    public void create(User user) {
+        entityManager.persist(user);
+        return;
+    }
+
+    /**
+     * Elimina el usuario de la base de datos.
+     */
+    public void delete(User user) {
+        if (entityManager.contains(user))
+            entityManager.remove(user);
+        else
+            entityManager.remove(entityManager.merge(user));
+        return;
+    }
+
+    /**
+     * Devuelve todos los usuarios de la base de datos.
+     */
+    @SuppressWarnings("unchecked")
+    public List<User> getAll() {
+        return entityManager.createQuery("from User").getResultList();
+    }
+
+    /**
+     * Devuelve un usuario en base a su Id
+     */
+    public User getById(int id) {
+        return entityManager.find(User.class, id);
+    }
+
+    /**
+     * Actualiza el usuario proporcionado
+     */
+    public void update(User user) {
+        entityManager.merge(user);
+        return;
+    }
+
+}
+Destaquemos algunos elementos:
+
+El estereotipo @Repository indica que esta clase es algo así como un almacén de datos.
+La anotación @Transactional permitirá, al tener definido un motor de transacciones en la clase DatabaseConfig, provocará que se invoquen los métodos begin() y commit() de forma “mágica” en el inicio y el fin cada método de esta clase.
+La anotación @PersistenceContext nos permite realizar dos operaciones en una: inyectar un EntityManager que será creado desde el bean entityManagerFactory.
+5.5 Controlador
+Por último, nuestro proyecto MVC necesita un controlador. Veamos el código fuente:
+
+package com.openwebinars.hibernate.primerejemplospringjpahibernate;
+
+import java.util.Random;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+public class UserController {
+
+
+    // Inyectamos el DAO dentro del Controller
+    @Autowired
+    private UserDao userDao;
+
+    /**
+     *
+     * Crea un nuevo usuario con un Id autogenerado, y con los datos recibidos
+     * por la URL
+     *
+     * /create?name=...&message=....
+     *
+     */
+    @RequestMapping(value = "/create")
+    @ResponseBody
+    public String create(String name, String message) {
+        try {
+            User user = new User();
+            // Estas líneas de código generan un Id aleatorio.
+            // En las próximas lecciones veremos como delegar esto en la base de
+            // datos
+            Random r = new Random();
+            int randomId = r.nextInt(Integer.MAX_VALUE);
+            // Asignamos los datos
+            user.setId(randomId);
+            user.setUserName(name);
+            user.setUserMessage(message);
+
+            userDao.create(user);
+        } catch (Exception ex) {
+            return "Error creando el usuario: " + ex.toString();
+        }
+        return "Usuario creado correctamente";
+    }
+
+    /**
+     *
+     * Elimina un usuario, localizándolo por su Id
+     *
+     * /delete?id=...
+     *
+     */
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public String delete(int id) {
+        try {
+            User user = new User();
+            user.setId(id);
+            userDao.delete(user);
+        } catch (Exception ex) {
+            return "Error eliminando el usuario: " + ex.toString();
+        }
+        return "Usuario eliminado correctamente";
+    }
+
+    /**
+     *
+     * Actualiza el nombre y el mensaje de un usuario, localizándolo por su Id
+     *
+     * /update?id=...&name=...&message=....
+     *
+     */
+    @RequestMapping(value = "/update")
+    @ResponseBody
+    public String updateName(int id, String name, String message) {
+        try {
+            User user = userDao.getById(id);
+            user.setUserName(name);
+            user.setUserMessage(message);
+            userDao.update(user);
+        } catch (Exception ex) {
+            return "Error actualizando el usuario: " + ex.toString();
+        }
+        return "Usuario actualizado correctamente";
+    }
+
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6.1 Modelo de Dominio
+Un modelo de dominio es una descripción de las diferentes entidades, atributos y relaciones asociados a un problema específico (Modelo de dominio).
+
+Para representar este modelo, se suele utilizar un diagrama de clases UML, una herramienta potente que nos permite describir este tipo de modelos.
+
+Modelo de dominio
+
+Este tipo de diagramas, a la hora de definir nuestro problema (lo que en Ing. del Software se llama la fase de análisis), no representa ningún tipo de clase asociada a la solución del problema. Básicamente, es la información que necesitamos persistir. Serán las clases que el ORM debe transformar en filas de tablas de nuestra base de datos relacional, y las representaremos mediante clases POJO (Plain Old Java Object) o JavaBeans.
+
+6.2 Valores y entidades
+En Hibernate, una entidad será la representación de una clase del modelo. En cambio, un valor será la representación de un atributo de una clase.
+
+Por ejemplo, si estuviéramos implementando una lista de contactos, el Contacto sería, con toda probabilidad, una entidad; y el email sería un valor de la misma.
+
+6.2.1 Valores
+A diferencia de las entidades, no tienen un ciclo de vida propio, y existen tres categorías:
+
+Tipos básicos
+Tipos embeddable
+Tipos colección
+6.2.2 Entidades
+Las entidades si tienen un ciclo de vida; además, por el hecho de tener un identificador único (en el campo de las RDBMS se llama clave primaria), existen independientemente de otros objetos. Esto no sucede con los valores.
+
+Identidad e igualdad
+En Java, hay diferencia entre identidad e igualdad. Dos objetos tienen la misma identidad si la comparación con el operador == devuelve true; es decir, son dos referencias apuntando al mismo objeto en memoria.
+Por otro lado, la igualdad, también llamada a veces equivalencia, hace referencia al método equals. Dos objetos son iguales si su estado (el valor de sus propiedades) es el mismo.
+Las bases de datos relacionales complican este panorama. Dos objetos almacenados en una base de datos relacional son idénticos si están en la misma tabla y tienen la misma clave primaria (a esto se le llama identidad de base de datos).
+
+6.3 Mapeo de entidades con anotaciones
+Para convertir una clase Java en una entidad, tan solo tenemos que hacer dos cosas:
+
+Anotarla con @Entity.
+Incluir un atributo que esté anotado con @Id.
+@Entity
+public class MyEntity {
+
+    @Id
+    private long id;
+
+
+    public long getId() {
+        return id;
+    }
+
+}
+Por defecto, esta entidad se mapea en la base de datos con una tabla llamada MIENTIDAD.
+
+Como la anotación @Id es sobre un campo, por defecto, Hibernate habilitará por defecto todos los atributos de la clase como propiedades persistentes.
+
+6.3.1 Eligiendo la clave primaria.
+Si bien en el mundo de los diseñadores de bases de datos relacionales ha existido siempre una serie de procesos formales para la determinación de dependencias entre atributos y el cálculo de las claves primarias, es una práctica habitual entre los desarrolladores el utilizar un valor numérico (entero y potencialmente grande), como en el ejemplo anterior (long id).
+Además, para tranquilidad del programador, este valor puede ser autogenerado (por ejemplo, puede comenzar en 1, y asignar el siguiente valor a cada fila insertada).
+
+Añadiendo la anotación @GeneratedValue a continuación de @Id, JPA asume que se va a generar un valor y a asignar el mismo antes de almacenar la instancia de la entidad. Existen diferentes estrategias de asignación:
+
+GenerationType.AUTO: Hiberante escoge la mejor estrategia en función del dialecto SQL configurado (es decir, dependiendo del RDBMS).
+GenerationType.SEQUENCE: Espera usar una secuencia SQL para generar los valores.
+GenerationType.IDENTITY: Hibernate utiliza una columna especial, autonumérica.
+GenerationType.TABLE: Hibernate usa una tabla extra en nuestra base de datos. Tiene una fila por cada tipo de entidad diferente, y almacena el siguiente valor a utilizar.
+Generación de los ID antes o después de la inserción
+Normalmente, un ORM optimizará las inserciones en una base de datos, agrupándolas por lotes. Esto supone que, en la realidad, es posible que no se realice la inserción al llamar al método entityManager.persist(someEntity). Si esperamos a generar el ID a insertar los datos tiene como inconveniente que si llamamos a someEntity.getId(), obtendremos nulo. Por tanto, suele ser buena estrategia generar el ID antes de insertar, por ejemplo a través de una secuencia. Las columnas autoincrementales, los valores por defecto o las claves generadas por un trigger solo están disponibles después de la inserción.
+
+6.3.2 Control de nombres
+Por defecto, Hibernate toma una estrategia de generación de nombres para transformar el nombre de una clase (que en Java normalmente estará escrita en notación UpperCamelCase) al nombre de una tabla (por defecto, suele usar el mismo nombre en MAYÚSCULAS).
+
+Se puede controlar el nombre de la tabla a través de la anotación @Table(name= "NEWNAME").
+
+@Entity
+@Table(name= "MY_ENT")
+public class MyEntity {
+
+    @Id
+    private long id;
+
+
+    public long getId() {
+        return id;
+    }
+
+}
+6.4 Mapeo de valores
+Cuando mapeamos una entidad, todos sus atributos son considerados persistentes por defecto. Las reglas por defecto son:
+
+Si la propiedad es un tipo primitivo, un envoltorio de un tipo primitivo (Integer, Double, …), String, BigInteger, BigDecimal, java.util.Date, java.util.Calendar, java.sql.Date, java.sql .Time, java.sql.Timestamp, byte[], Byte[], char[], o Character[] se persiste automáticamente con el tipo de dato SQL adecuado.
+Si es java.io.Serializable, se almacena con su representación serializada (esto no será lo que habitualmente deseemos).
+Si usamos @Embeddable (lo estudiaremos después), también lo persiste.
+En otro caso, lanzará un error en la inicialización. Hibernate escoge, dependiendo del dialecto configurado, la mejor correspondencia de tipos de dato en el RDBMS para los tipos Java que hayamos usado.
+
+6.4.1 Anotación @Column
+Esta anotación, sobre una propiedad, nos permitirá indicar algunas propiedades, entre las que se encuentran:
+
+nullable: nos permite indicar si la columna mapeada puede o no almacenar valores nulos. En la práctica, es como marcar el campo como requerido.
+name: permite modificar el nombre por defecto que tendrá la columna mapeada.
+insertable, updatable: podemos modificar si la entidad upede ser insertada, modificada, …
+length: nos permite definir el número de caracteres de la columna.
+¿Dónde anotar? ¿En las propiedades o en los getter?
+Hibernate nos permite definir las anotaciones (@Id, @Column, …) tanto sobre las propiedades como sobre los métodos getter (nunca sobre los setter). La pauta la marca la anotación @Id. Allá donde usemos esta anotación, marcaremos la estrategia a seguir.
+
+6.4.2 Tipos temporales
+Los tipos de datos temporales, de fecha y hora, tienen un tratamiento algo especial en Hibernate. Para un campo que contiene este tipo de información, se añade la propiedad @Temporal.
+
+Esta anotación la podemos usar con los tipos java.util.Date, java.util.Calendar, java.sql.Date, java.sql.Time, java.util.Timestamp. Hibernate también soporta los nuevos tipo de java.time disponibles en el JDK 8.
+
+Como propiedad, podemos indicar que tipo de dato temporal vamos a querer usar a través del atributo TemporalType, teniendo disponibles DATE, TIME, TIMESTAMP.
+
+@Entity
+@Table(name= "MY_ENT")
+public class MyEntity {
+
+    @Id
+    private long id;
+
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date createdOn;
+
+  //...
+
+}
+Hibernate utiliza por defecto TemporalType.TIMESTAMP si no encuentra una anotación @Temporal sobre alguno de los tipos de datos definidos más arriba.
+
+6.5 Tipos embebidos
+En ocasiones, nos puede interesar tratar un grupo de atributos como si fueran uno solo. Un ejemplo clásico suele ser la dirección (nombre de la vía, número, código postal, …). Para este tipo de situaciones tenemos la posibilidad de covertir una clases en Embeddable. Veamoslo con un ejemplo:
+
+
+@Embeddable
+public class Direccion {
+
+  @Column(nullable=false)
+  private String via;
+
+  @Column(nullable=false, length = 5)
+  private String codigoPostal;
+
+  @Column(nullable=false)
+  private String poblacion;
+
+  @Column(nullable=false)
+  private String provincia;
+
+  //...
+
+
+}
+ 
+@Entity
+@Table(name="USERCONEMBEDD")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private long id;
+
+    private String name;
+
+  @Temporal(TemporalType.DATE)
+    private Date birthDate;
+
+  private Direccion address;
+
+    //...
+}
+De esta forma, Hibernate detecta que el campo Direccion es una clase Embeddable, y mapea las columnas a la tabla USER.
+
+6.5.1 Sobrescritura con @Embedded
+¿Qué pasaría si quisiéramos añadir dos direcciones a un usuario? Hibernate nos lanzará un error, indicando que no se soportan columnas con nombre repetido.
+
+La solución la podemos aportar sobrescribiendo los atributos de la clase embebida, para que tengan otro nombre (o incluso otras propiedades)
+
+@Entity
+@Table(name="USERCONEMBEDD")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private long id;
+
+  //Otros atributos
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "via", column = @Column(name="VIA_FACTURACION")),
+        @AttributeOverride(name = "codigoPostal", column = @Column(name="CODIGOPOSTAL_FACTURACION", length=5)),
+        @AttributeOverride(name = "poblacion", column = @Column(name="POBLACION_FACTURACION")),
+        @AttributeOverride(name = "provincia", column = @Column(name="PROVINCIA_FACTURACION"))
+
+    })
+    private Direccion billingAddress;
+
+
+  //...
+La anotación @Embedded es util cuando queremos mapear otras clases. El atributo @AttributeOverrides selecciona las propiedades que serán sobrescritas. El atributo @AttributeOverride indica el cambio que va a haber en un determinado atributo.
+
+6.6 Ciclo de vida de una entidades
+Si bien profundizaremos sobre este apartado en lecciones posteriores, no está de más que vayamos conociendo los diferentes estados en los que se puede encontrar una entidad JPA.
+
+transient (nueva): la entidad acaba de ser creada (posiblemente con el operador new) y aun no está asociada al contexto de persistencia. No tiene representación en la base de datos.
+managed, persistent: la entidad tiene un identificador y está asociada al contexto de persistencia. Puede estar almacenada en la base de datos, o aun no.
+detached: la entidad tiene un identificador, pero no está asociada al contexto de persistencia (normalmente), porque hemos cerrado el contexto de persistencia.
+removed: la entidad tiene un identificador y está asociada al contexto de persistencia, pero este tiene programada su eliminación.
+Ciclo de vida de una entidad
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

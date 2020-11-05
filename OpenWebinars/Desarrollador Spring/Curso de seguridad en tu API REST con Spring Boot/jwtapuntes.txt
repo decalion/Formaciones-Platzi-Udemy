@@ -1,0 +1,295 @@
+
+JWT
+● JSON Web Token (RFC 7519)
+● Es un mecanismo para propagar de forma seguridad la identidad (y
+claims o privilegios) entre dos partes.
+● Los privilegios se codifican como objetos JSON.
+● Estos objetos se usan en el cuerpo (payload) de un mensaje firmado
+digitalmente.
+
+
+
+
+Token JWT
+● Se trata de una cadena de texto con 3 partes codificadas en Base64
+● Las partes están separadas por un punto
+○ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6I
+kpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.ikFGEvw-
+Du0f30vBaA742D_wqPA5BBHXgUY6wwqab1w
+● Las partes están separadas por un punto
+● Podemos utilizar un debugger online para decodificarlo
+○ https://jwt.io/#debugger-io
+
+
+Token JWT
+● Hemos dicho que tiene 3 partes
+○ Header: indica el algoritmo y el tipo de token (HS256 y JWT)
+○ Payload: datos del usuario y privilegios
+■ Como nosotros generamos el token, podemos incluir todos
+los datos que estimemos convenientes.
+○ Signature: firma para verificar que el token es válido (aquí
+radica el quid de la cuestión).
+
+
+Firma de un token JWT
+● La firma se construye de tal forma que podemos verificar que el
+remitente es quien dice ser, y que el mensaje no ha cambiado por el
+camino.
+● Se construye como el HMACSHA256 de
+○ Codificación en base64 de header
+○ Codificación en base 64 de payload
+○ Un secreto (establecido por la aplicación)
+
+
+Firma de un token JWT
+● Si alguien modifica el token por el camino:
+...iOiJKV1QiLCJhbGci… a ...iOiRFH1QiLCJhbGci…
+● La comprobación de la firma no será correcta
+● No podemos confiar en el token recibido, y deberíamos denegarlo.
+● Siempre debemos verificar la firma de un token recibido.
+
+
+Token JWT seguro
+● Con todo, el header y payload no están
+cifrados, solo codificados en base64.
+● Esto nos invita a pensar que toda
+comunicación que hagamos debería ser
+con HTTPS para encriptar el tráfico.
+● En el fondo, siempre deberíamos utilizar
+HTTPS y un servidor con certificado.
+
+
+
+Spring Security y JWT
+● Spring Security, de forma nativa, nos permite utilizar JWT en el
+contexto del uso del framework OAuth2.0
+● Si queremos implementar la autenticación basada en JWT con el
+mecanismo que hemos visto en la lección anterior, necesitamos
+alguna librería externa.
+
+
+
+
+JJWT: Java JWT
+● Java / Android
+● Integrable vía Maven/Gradle
+● Uso ampliamente extendido
+● Actualizada recientemente y con frecuencia
+
+
+JJWT: funcionalidades
+● Construir un token con sus diferentes partes:
+String jws =
+Jwts.builder().setSubject("Joe").signWith(key).compact();
+● Construimos un JWT con un claim sub con el valor Joe
+● Firmamos el JWT con un algoritmo adecuado (HMAC-SHA256)
+● Lo compactamos en un String.
+eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJKb2UifQ.1KP0SsvENi7Uz1oQc07a
+XTL7kpQG5jBNIybqr60AlD4
+
+
+JJWT: funcionalidades
+● Parsear un token, verificando así si está correctamente firmado
+● Comprobar si
+○ Ha expirado (ExpiredJwtException)
+○ No está bien formado (MalformedJwtException)
+○ Si la firma no es válida (SignatureException)
+
+
+Spring Security y JWT
+● Cómo hemos visto en la lección anterior, Spring Security no nos
+proporciona todo lo necesario para trabajar con JWT.
+● Implementaremos la seguridad a través de controladores y filtros:
+○ Controlador de autenticación: recogerá el usuario y contraseña y,
+si es válido, construirá el token.
+○ Filtro de autorización: recogerá un token y, si es válido, permitirá
+realizar la petición.
+
+
+Más cambios
+● EntryPoint
+○ Modificaremos el EntryPoint con uno customizado (más
+adelante)
+● Política de sesiones
+○ Establecemos explícitamente que la política es sin sesiones.
+● Seguridad a nivel de método
+○ También la habilitaremos con @EnableGlobalMethodSecurity
+
+
+
+JWT: AuthenticationEntryPoint
+● Se invoca cuando alguien realice un login incorrecto
+● Debe devolver error 401 Unauthorized
+● Lo complementamos con un mensaje de error en JSON
+● Implementamos la interfaz AuthenticationEntryPoint (en seguridad
+básica teníamos una clase base; aquí usamos directamente la
+interfaz).
+
+
+Modelo de usuario
+● Nos sirve el que tenemos en el proyecto base.
+● Más adelante, es posible que tengamos que refactorizar o crear
+algún nuevo Dto
+○ Registro + login → GetUserDto con token
+○ Login → GetUserDto con token o un nuevo LoginUserDto.
+
+
+UserDetailsService
+● Podemos comenzar con la implementación que tenemos en el
+proyecto base.
+● Nuestro filtro necesitará un método para buscar un usuario por ID.
+○ Podemos utilizar directamente UserEntityService
+○ Creamos un envoltorio en UserDetailsService
+■ Si el día de mañana modificamos nuestro modelo de
+usuario, separándolo de UserDetails, solo tendremos que
+refactorizar este último método.
+
+
+JwtProvider
+● Se encargará de
+○ Generar un token a partir de un Authentication (un usuario
+logueado)
+○ Obtener el ID de usuario a partir del payload de un token
+○ Verificar si un token es válido.
+
+
+
+Algunas clases a utilizar
+● JwtBuilder
+○ Nos permite construir un token JWT de una manera fluida.
+○ Métodos
+■ setSubject: indica el sujeto (para nosotros, el ID de usuario)
+■ setIssuedAt: indica la fecha de creación del token
+■ setExpiration: indica la fecha de expiración del token
+
+
+Algunas clases a utilizar
+● JwtBuilder
+○ Más métodos
+■ claim: permite indicar datos adicionales para el payload.
+● Añadiremos el username y los roles.
+■ setHeaderParam: permite indicar parámetros para la
+cabecera del token.
+■ compact: construye el token y lo serializa.
+
+
+Algunas clases a utilizar
+● JwtBuilder
+○ Más métodos
+■ signWith: permite firmar el token
+● A partir de la versión 0.10.X, es recomendable usar la
+firma signWith(Key key, SignatureAlgorithm alg)
+● Key
+○ Keys.hmacShaKeyFor(byte[]) : permite generar un SecretKey
+basado en un array de bytes (listo para ser cifrado).
+
+
+
+Filtro de autorización
+● Encargado de revisar si una petición incluye un token JWT válido.
+● Si verificamos que es válido, autenticamos al usuario en el contexto
+de seguridad.
+● Algunas clases
+○ OncePerRequestFilter: filtro que va a ejecutarse una vez en cada
+petición.
+○ UsernamePasswordAuthenticationToken: una representación de
+Authentication muy simple, para presentar username y
+password.
+
+
+Algoritmo del filtro
+● Extraemos el token de la petición
+● Si el token no es vacío y es válido
+○ Obtenemos el ID de usuario del token
+○ Obtenemos el usuario por su ID
+○ Construimos un Authentication
+○ Lo establecemos en el contexto de seguridad
+● En otro caso, error, y la cadena de filtros no continua.
+
+
+
+Petición de login
+● Implementaremos más adelante el controlador.
+● Este necesitará recibir las credenciales (username y password)
+● Necesitamos un modelo para recibirlo en el método del controlador
+
+
+Respuesta
+● La respuesta puede ser tan solo el token obtenido o
+● Podemos incluir algo más de información.
+● Extenderemos la clase GetUserDto para incluir el token, y así
+enviar: nombre de usuario, avatar, nombre completo, roles y token.
+
+
+AuthenticationController
+● Petición de login
+○ Logueamos al usuario vía AuthenticationManager
+○ Almacenamos el Authentication en el contexto de seguridad
+○ Devolvemos el usuario y token al cliente.
+● Petición me
+○ Igual de sencilla que en la autenticación básica
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

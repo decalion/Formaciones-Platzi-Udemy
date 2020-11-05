@@ -1,0 +1,470 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Por qué surge OAuth?
+● Paliar la necesidad del envío continuo de credenciales entre cliente
+y servidor.
+● Integración con aplicaciones de terceros.
+● El usuario delega la capacidad de realizar ciertas acciones en su
+nombre.
+● Al desarrollar una aplicación, no tenemos necesidad de almacenar
+username/password del usuario.
+
+
+
+Algunos conceptos
+● OAuth 2.0 es un framework para la autorización (control de acceso)
+no para la autenticación.
+● Roles: intervienen varios actores, que desgranaremos en las
+próximas lecciones.
+● Flujos: en función de alguno de los tipos de actores, el flujo entre los
+diferentes actores podrá variar (i.e.: aplicaciones nativas vs.
+aplicaciones web).
+
+
+
+
+
+
+Roles
+● En OAuth2 Se definen varios roles
+○ Dueño del recurso (Owner)
+○ Cliente (Client)
+○ Servidor de recursos protegidos (Resource Server)
+○ Servidor de autorización (Authorization Server)
+
+
+
+
+Cliente
+● El cliente es la aplicación que desea acceder a la cuenta del
+usuario.
+● Antes de que pueda hacerlo, debe ser autorizado por el
+usuario, y dicha autorización debe ser validada por la API.
+● Este cliente puede ser una aplicación web, móvil, de
+escritorio, para Smart TV, un dispositivo IoT, otra API,
+etcétera.
+
+
+
+Servidor de autorización
+● Es el responsable de gestionar las peticiones de
+autorización.
+● Verifica la identidad de los usuarios y emite tokens de
+acceso a la aplicación cliente.
+● En muchas ocasiones, estará implementado por un tercero
+conocido (Facebook, Twitter, Github, Google, Okta, ….)
+● Puede formar parte de la misma aplicación que el servidor
+de recursos.
+
+
+
+
+
+Servidor de recursos
+
+Será nuestra API, el servidor que aloja el recurso protegido
+al que queremos acceder.
+● Puede formar parte de la misma aplicación que el servidor
+de autenticación.
+
+
+
+Luces, cámara, acción
+● Ahora, nos toca ver a estos 4 actores en acción.
+● Lo hacemos en la siguiente lección
+
+
+
+
+
+¿Por qué abstracto?
+● No hay un único flujo en el protocolo
+● En próximas lecciones veremos que diferentes tipos de actores
+pueden realizar diferentes concreciones del flujo que presentamos
+ahora.
+● Vamos a conocer algunos de los elementos comunes del mismo.
+
+
+Consentimiento
+● Procedimiento que nos permite
+verificar qué pide la aplicación de
+nosotros (usuarios dueños de los
+recursos).
+● OAuth 2.0 permite asegurarnos
+de que los usuarios sean
+conscientes, y de que el permiso
+se tenga que dar explícitamente.
+● Seguro que es una página que has visto más de una vez.
+
+
+
+Scopes o ámbitos
+● Relacionado con el consentimiento
+● Son los permisos que concedemos al cliente para realizar
+determinadas operaciones con un recurso protegido en nombre de
+un usuario.
+● Deben ser lo más concretos posibles (para que no haya equívocos
+
+
+
+
+
+Endpoints
+● Para autorizar la aplicación y obtener el token, necesitamos algunos
+servicios (endpoints) con los que interactuar.
+○ Authorization (/oauth/authorize): para la autorización de la
+aplicación.
+○ Token (/oauth/token): para la obtención del token.
+
+
+
+
+Tipos de clientes
+● Clientes confidenciales: son aquellos capaces de guardar una
+contraseña sin que esta sea accesible o expuesta (aplicaciones
+nativas, otra api, …)
+● Clientes públicos: son aquellos que no son capaces de guardar una
+contraseña y mantenerla a salvo (aplicaciones Javascript, Angular,
+…)
+● En función del tipo de cliente, necesitaremos implementar el flujo de
+OAuth2 de diferentes formas concretas.
+
+
+
+Grant Types o tipos de otorgamiento
+● Diferentes formas de obtener el token.
+● Surgen a causa de los diferentes tipos de clientes que pueden
+querer acceder a una serie de recursos.
+○ Una aplicación móvil nativa.
+○ Una aplicación web con Angular.
+○ Una TV con una aplicación en la plataforma X.
+○ Un dispositivo IoT como una bombilla inteligente.
+
+
+
+Grant Types
+● Authorization Code
+● Implicit
+● Resource Owner Password Credentials
+● Client Credentials Flow
+● Device Code Flow
+●
+
+
+
+Authorization Code
+● Es el más completo de todos.
+● Se utiliza con clientes confidenciales (que son capaces de guardar la
+contraseña convenientemente).
+● Veamos los pasos que se siguen
+
+
+
+Authorization Code
+● Cuando el cliente es validado, se devuelve una respuesta así:
+https://cliente.ejemplo.com/cb?code=AbCdEfGHiJK12345&state=xyz
+○ code: código que representa el consentimiento del usuario y su
+autorización
+○ state: debe ser igual que en la petición
+● Con el código, hacemos una petición POST como la siguiente
+
+
+
+
+Authorization Code
+POST /token HTTP/1.1
+Host: autorizacion.servidor.com
+Authorization: Basic afds8709afs8790asf
+grant_type=authorization_code
+&code=AbCdEfGHiJK12345
+&redirect_uri=https://cliente.ejemplo.com/cb
+
+
+Authorization Code (alternativa)
+
+POST /token HTTP/1.1
+Host: autorizacion.servidor.com
+grant_type=authorization_code
+&code=AbCdEfGHiJK12345
+&redirect_uri=https://cliente.ejemplo.com/cb
+&client_id=the-client-id
+&client_secret=qwepuirqewipor09748nmenads
+
+
+
+Respuesta (si todo va bien)
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+
+
+Implicit
+● Se utiliza con clientes públicos (que no son capaces de guardar la
+contraseña convenientemente).
+● Pensado para aplicaciones Javascript, Angular, ...
+● Veamos los pasos que se siguen
+
+El cliente redirige al usuario al endpoint de autorización, con una
+serie de parámetros
+https://autorizacion.servidor.com/authorize?response_type=token&client_id=the-clientid&
+state=xyz&redirect_uri=https://cliente.ejemplo.com/cb&scope=api_read
+○ response_type: token
+○ client_id
+○ redirect_uri
+○ scope
+
+
+
+Password
+● Apropiado cuando entre el cliente y el servidor de autorización hay
+una relación de confianza.
+● Debería ser usado cuando no se pueda utilizar otra alternativa de
+flujo.
+● Se puede utilizar para migrar desde la autenticación Básica hacia
+OAuth2
+
+
+
+
+Password
+POST /token HTTP/1.1
+Host: autorizacion.servidor.com
+Authorization: Basic afds8709afs8790asf
+Content-Type: application/x-www-form-urlencoded
+grant_type=password
+&username=luismi
+&password=AsDf1234
+
+
+Respuesta (si todo va bien)
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+
+
+
+
+Client Credentials
+● Apropiado cuando no existen usuarios propietarios del recurso. Es
+decir, si no hay usuarios involucrados.
+● Sin haberlos, podemos seguir utilizando OAuth para proteger
+nuestra API.
+● La aplicación cliente, en sí, es el propietario del recurso y no hay
+usuarios involucrados.
+
+
+Client credentials
+
+POST /token HTTP/1.1
+Host: autorizacion.servidor.com
+Content-Type: application/x-www-form-urlencoded
+grant_type=client_credentials
+&client_id=the-client-id
+&client_secret=qwepuirqewipor09748nmenads
+&scope=API_READ
+
+
+Respuesta (si todo va bien)
+HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+Cache-Control: no-store
+Pragma: no-cache
+{
+"access_token":"2YotnFZFEjr1zCsicMWpAA",
+"token_type":"example",
+"expires_in":3600,
+"refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+"example_parameter":"example_value"
+}
+
+
+
+Spring Security y OAuth2
+● A lo largo de la versión 5 (5.0, 5.1, 5.2) la implementación de
+OAuth2 en Spring Security está sufriendo cambios.
+● Se puede encontrar una matriz con este cambio en
+https://github.com/spring-projects/spring-security/wiki/OAuth-
+2.0-Features-Matrix
+● Vamos a realizar un ejemplo que nos pueda dar garantías tanto con
+respecto a proyectos legacy como con respecto al futuro
+
+
+
+Spring Boot y OAuth2
+● En versiones anteriores de Spring Boot, existía una integración
+automática.
+● A partir de la versión 2, OAuth2 queda dentro de Spring Security.
+● Si queremos utilizar algunos componentes, como el servidor de
+autorización, tenemos que añadir una dependencia.
+<groupId>org.springframework.security.oauth.boot</groupId>
+<artifactId>spring-security-oauth2-autoconfigure</artifactId>
+<version>2.X.Y.RELEASE</version>
+
+
+
+
+¿En qué parte nos centramos en este
+momento?
+1. Petición de autorización
+2. Concesión de autorización  ---> Cliente
+3. Concesión de autorización  ---> Cliente
+4. Token de acceso
+5. Token de acceso
+6. Recurso protegido
+Dueño del
+recurso
+Servidor de
+autorización
+Servidor de
+recursos
+
+
+Servidor de autorización
+● Extiende a AuthorizationServerConfigurerAdapter
+● Anotado con @EnableAuthorizationServer + @Configuration
+● Configuramos
+○ Los diferentes clientes con sus características
+○ La seguridad de los tokens
+○ Conexión con el modelo de autenticación
+○ ….
+
+
+Cambios en SecurityConfig
+● Exponemos el método de autenticación como un bean
+● Permitimos acceder al login (el login por defecto, será el que
+utilicemos como login del servidor de autorización).
+● Modificamos la precedencia del bean, dándole más que sobre el
+resto del mismo tipo.
+● Comprobaremos el funcionamiento de todo más adelante.
+
+
+
+¿En qué parte nos centramos en este
+momento?
+1. Petición de autorización
+2. Concesión de autorización
+3. Concesión de autorización
+4. Token de acceso
+5. Token de acceso ----> Servidor de recursos
+6. Recurso protegido ---> Servidor de recursos
+Dueño del
+recurso
+Servidor de
+autorización
+Cliente
+
+Servidor de recursos
+● Es el encargado de proteger los recursos de nuestro sistema
+● Comprueba, gracias al servidor de autorización, los tokens que
+recibe en las peticiones, para verificar si está autenticado.
+● Se parece mucho a las clases de configuración de seguridad que
+hemos trabajado en lecciones anteriores
+
+
+
+Servidor de autorización
+● En el podemos configurar
+○ La protección de los recursos
+■ Por defecto, todo lo que no esté en /oauth/** está
+protegido, pero sin reglas específicas.
+■ Propiedades específicas del servidor de recursos (como
+resource id).
+
+
+
+Algunos cambios
+● Para que OAuth2 funcione correctamente (cualquier tipo de grant
+type) necesitamos hacer algunos cambios en la seguridad.
+
+
+
+CORS
+● Eliminamos la configuración heredada del proyecto base.
+● Configuramos a través de una instancia de Filter.
+● Le damos la prioridad más alta a dicho filtro.
+
+
+
+SecurityConfig
+● Permitimos que se realicen peticiones OPTIONS a cualquier URL.
+● Esto suele ser necesario para algunos tipos de clientes, como
+Angular.
+● También añadimos otros elementos de configuración
+
+
+Servidor de autorización
+● Inyectamos el datasource (configurado vía properties).
+● Configuramos los clientes a través de JDBC
+public void configure(ClientDetailsServiceConfigurer clients) {
+clients.jdbc(dataSource) ...
+● Creamos un TokenStore almacenado a través de JDBC, y lo
+configuramos.
+@Bean
+public TokenStore tokenStore() {
+return new JdbcTokenStore(dataSource);
+
+
+
+
+
+
+
+
+
+
+
