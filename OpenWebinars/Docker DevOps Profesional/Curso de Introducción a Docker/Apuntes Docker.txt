@@ -1,0 +1,127 @@
+Docker es una aplicacion cluente-servidor y tiene 3 componentes:
+-Demonio Docker
+-Unas Rest Api que nos permite comunicrnos con el demonio docker.
+-Una intrfaz de comandod (CLI)
+
+-------------
+Docker Registry.
+-El registro de docker es un servicio que permite almacenar imagenes.
+-Pueden ser publicos o privados.
+https://hub.docker.com/
+
+------------
+Imagen
+Es una plantilla de solo lectura
+Sistema de ficheros y paremetros listos para ejecutar
+
+-----
+Contenedor
+Es una instancia de la imagen.
+Es un directorio dentro del sistema.
+Pueden ser reiniciados,parados...etc
+
+
+
+Comandos docker
+-------------------------------------------------------
+Docker version : Ver la version
+
+Gestion de imagenes.
+docker images: ver las imagenes
+docker history: Muestra el historia de cambios de una imagen concreta
+docker inspect:Muestra una descripcion detalla de las caracteristicas de la imagen
+docker save/load: guarda o carga una imagen a partir de un tag
+docker rmi: Elimina una imagen
+
+Gestion de contenedores.
+docker attach: agregamos al contenedor
+docker exec: Ejecutar un comando en el contenedor
+docker inspect: vemos los detalles del contenedor
+docker kill: matamos el contenedor
+docker logs: vemos los logs del contenedor
+docker pause/unpause : pausamos el contenedor
+docker port: analizamos o establecemos un puerto del contendor
+docker ps: muestra  a lista de contenedores activos
+docker rename: renombra el nombre de un contenedor
+docker start/stop/restar: iniciamos, paramos o reiniciamos un contenedor
+docker rm: borra un contenedor.
+docker run: arranca o instancia un contenedor a traves de una imagen 
+docker stats: estado del contenedor
+docker top: monitorizacion del contenedor
+docker update: actualizar un contenedor en base una imagen
+
+
+docker ps -a : ver todos los contenedores tanto activos como parados
+
+
+docker run -t -i [nombreImagen] /bin/bash : Arrancar una imagen para hacer cambios
+
+docker commit -m "mensaje" -a "Author"  [image]  [nombreUsuario:tag] : Hacer un commit de la imagen
+
+docker tag : poner un nuevo tag a una imagen
+docker pull : descargar una imagen
+docker push: subir una imagen
+docker build: construir una imagen
+docker login: hacer login en docker hub
+
+docker build -t ismael/openjdk:8-alpine .
+
+
+
+-----------------------------------------------
+Docker Files
+https://docs.docker.com/engine/reference/builder/#dockerfile-reference
+
+---------------------------------------------
+Networking docker.
+
+Docker cuando se instala genera 3 tipos de redes.
+
+bridge: interfaz puente que es la que utilizan los container
+host: Se utiliza para enlazar diferentes tipos de container dentro de un host
+none : sirve para aislarlar un contener simple
+
+docker network ls : ver las redes
+docker network connect/disconnect : connectar o desconectar a una red
+docker network create : crear una red
+docker network inspect: inspeccionar una red
+docker network rm : Eliminar una red
+
+
+
+
+---------------------------------------------------
+Almacenamiento
+Se puede realizar de 2 maneras
+-Volumenes de datos
+-Contenedores de volumenes de datos
+
+docker volumen create
+docker volumen inspect
+docker volumen ls
+docker volumen rm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
