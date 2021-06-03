@@ -1,0 +1,451 @@
+Introduccion
+
+La nube son servicios automatizados bajo demanda.
+
+-Servicio disponible de forma automatica y  a demanda
+-Accesible a traves de la red.
+-Modelo multi-tenancy (Se comparten los recursos con otros usuarios, pero debe garantizarse aislamiento y seguridad)
+-Los recursos se agrupan en pools
+-Elasticidad
+-Pago por uso
+
+NIST: Organismo de EEUU 
+
+as a Service
+-Modelo de negocio no basado en la venta de licencias o hardware
+-Oferta de servicios con características de la nube
+-Tradicionalmente se definen tres capas:
+SaaS, PaaS, IaaS
+
+
+Software as a Service (SaaS)
+
+-Aplicación como servicio en la nube
+-El usuario utiliza una aplicación a través de la web en lugar de tenerla instalada en el propio equipo.
+-No todas las aplicaciones web son SaaS, deben cumplir con las características
+-Utilizado por cualquier usuario
+-Ya lo usamos, pero se prevé que se use cada vez más
+-Ejemplos: Servicios de Google, Office365
+
+
+
+Platform as a Service (PaaS)
+-Plataforma de desarrollo web en la nube
+-Utilizado por desarrolladores de software
+-Se proporciona toda la plataforma de desarrollo y despliegue de una aplicación al desarrollador
+-Ejemplos: Heroku, Google App Engine,
+Windows Azure, Openshift,
+CloudFoundry
+
+https://paasfinder.org/vendors
+
+
+Infrastructure as a Service (IaaS)
+-Infraestructura como servicio en la nube
+-Utilizado principalmente por administradores de sistemas
+-Se proporciona principalmente capacidad de cómputo, redes y diversos modos de almacenamiento
+-Ejemplos: AWS, GCE, Azure, OpenStack
+
+
+
+
+APLICACIÓN MONOLÍTICA
+-Todos los componentes en el mismo nodo
+-Escalado vertical
+-Arquitectura muy sencilla
+-Consideraciones de seguridad
+-Interferencias entre componentes
+-Complejidad en las actualizaciones
+-Infraestructura estática y fija por años
+-Aplicación no tolerante a fallos
+
+
+
+APLICACIÓN DISTRIBUIDA
+-Idealmente un componente por nodo
+-Escalado horizontal
+-Arquitectura más compleja
+-Consideraciones de seguridad
+-Menos interferencias entre componentes
+-Simplicidad en las actualizaciones
+
+
+SOA
+-Service-Oriented Architecture
+-Servicios independientes
+-Multiples tecnologías interaccionando
+-Comunicación vía WSDL y SOAP
+-Colas de mensajes
+-Se relaciona con aplicaciones corporativas
+
+CLOUD NATIVE
+-Énfasis en la adaptación de la infraestructura a la demanda
+-Uso extensivo de la elasticidad: Infraestructura dinámica
+-Aplicaciones resilientes
+-Elasticidad horizontal
+-Automatización
+
+
+MICROSERVICIOS
+-Deriva del esquema SOA
+-No existe una definición formal
+-Servicios llevados a la mínima expresión (un proceso por nodo): Microservicios
+-Comunicación vía HTTP REST
+-Relacionado con procesos ágiles de desarrollo: entrega continua
+-Suele implementarse sobre contenedores
+
+--------------------------------------------------------------------------------
+Infraestructura como codigo
+
+-Tratar la infraestructura como código
+-Utilizando metodologías de desarrollo:
+	– Control de versiones
+	– Lenguajes de programación
+	– Gestión de la configuración
+	– Despliegues automatizados
+	– Basado en pruebas: Integración continua, entrega continua y despliegue continuo
+
+
+
+
+
+Desarrollo de software
+-Análisis
+-Diseño
+-Desarrollo
+-Pruebas
+-Despliegue
+
+
+Metodologías ágiles
+-Agile Manifesto
+-XP
+-Lean
+-Scrum
+-Test driven development
+
+
+Integración continua
+-Práctica habitual en desarrollo ágil
+-Se aplican cambios de forma continua
+-Se automatiza integración: compilación y pruebas entre componentes
+-Objetivo: detectar pronto los errores
+
+Aplicaciones utilizadas
+-Control de versiones: git, svn, ...
+-Software CI: jenkins, bamboo, travis, ...
+
+
+Objetivos y responsabilidades
+-Desarrolladores (devs) que quieren pasar a producción todas las modificaciones
+-Administradores (ops) que quieren mantener el sistema funcionando sin errores
+
+
+DevOps
+-Desarrolladores
+-Testeadores (Q&A)
+-Operadores
+
+
+
+Entrega y despliegue continuos
+-Más allá de CI
+-Se automatiza la generación de una versión publicable (entrega continua)
+-Se automatiza su paso a producción (despliegue continuo)
+-Incluye en el ciclo a Q&A y Ops
+
+
+Aplicaciones utilizadas
+-Control de versiones
+-Herramientas de empaquetado
+-Orquestación de escenarios
+-Automatización de la configuración
+
+
+¿devops sin devs?
+-¿Podemos tratar la configuración de sistemas como código?
+-¿Un administrador que sólo programa y monitoriza?
+-Administramos sin tocar en producción
+-¿desarrolladores de sistemas?
+
+Site Reliability Engineer
+-No necesariamente integrado con devs
+-Centrado en el entorno de producción
+-Gestión automática de infraestructura
+-Actualizaciones
+-Respuesta a eventos
+
+
+
+Aprovisionamiento de recursos
+-Forma parte de un concepto más amplio: orquestación
+-Esencial en cloud computing
+
+Aprovisionamiento fácil
+-Creación de escenarios sencillos para demos: Vagrant
+-Vagrant utiliza por defecto Virtualbox
+
+Aprovisionamiento “para mayores”
+-AWS Cloudformation
+-OpenStack Heat
+-Hashicorp Terraform
+-OASIS TOSCA
+
+
+Aprovisionamiento de recursos
+Configuration Management Software
+-Base de la Infraestructura como código
+-Puede realizar aprovisionamiento, pero se especializa en la configuración
+
+-CFEngine
+-Puppet (Manifiestos - Manifests)
+-Chef (Recetas - Recipes)
+-Ansible (Libros de jugadas - Playbooks)
+-Salt (Estados - States)
+-Juju (Encantamientos - Charms)
+
+
+
+
+---------------------------------------------------------
+Infraestructura
+
+Evolución de la infraestructura
+-Servidores físicos
+-Máquinas virtuales
+-Infraestructura en nube
+¿Infraestructura? Máquinas, redes y almacenamiento
+
+
+Infraestructura tradicional
+-Adquisión de equipos
+-Montaje físico
+-Conexión a red
+-Instalación “manual” y config del SO
+-Almacenamiento en SAN o NAS
+-nfraestructura estática
+-Mismas configuraciones por años
+-El usuario NO gestiona la infraestructura
+
+
+Máquinas virtuales
+-Varias MVs por cada nodo físico
+-MVs gestionadas por el hipervisor
+-MVs conectadas a través de redes virtuales
+-Sin cambios en almacenamiento
+-Gestión similar a servidores físicos
+
+
+Infraestructura en nube
+-Máquinas virtuales
+-Virtualización de redes
+-Virtualización del almacenamiento
+-Agrupamiento de recursos
+-Infraestructura dinámica (elasticidad)
+-Configuración automática
+-El usuario SÍ gestiona su infraestructura
+
+
+La nube pública de infraestructura
+-Amazon Web Services - AWS
+-Microsoft Azure
+-Google Compute Engine - GCE
+-Hay sitio para alguien más?
+
+
+NUBE PRIVADA
+-Eucalyptus
+-CloudStack
+-OpenNebula
+-OpenStack
+
+------------------
+
+RECURSOS IaaS
+1.Conceptos
+-Instancia/Máquina virtual
+-Imagen
+-IP fija
+-IP pública/IP flotante/IP elástica
+-Red privada, subred
+-Grupos de seguridad
+-Tipo de máquina/sabor
+-Clave pública
+-Zona, región
+
+2.LANZAR INSTANCIA
+3.ALMACENAMIENTO
+Almacenamiento de bloques
+-SAN en nube
+-Volúmenes
+-Dispositivo de bloques asociado
+-Almacenamiento permanente
+-Se puede utilizar o no para el raíz
+
+Almacenamiento de objetos
+-Sustituye NAS en la nube
+-Almacenamiento masivo
+-Muy sencillo
+-Se puede relacionar con CDN
+-Muy utilizado hoy en día
+
+4.REDES PRIVADAS
+
+---------------------------------------------------
+FUNCIONALIDAD ADICIONAL EN IaaS
+	1.INSTANCIAS “VITAMINADAS”
+		Modelo Bitnami
+		-Instancias con aplicaciones configuradas
+
+	2. as a Service
+		-DNS as a Service
+		-Load Balancer as a Service
+		-Firewall as a Service
+		-Database as a Service (relacional o no)
+		-Shared File System as a Service
+		-Big Data as a Service
+		-Function as a Service (Serverless
+		
+		
+		
+--------------------------------------------------------------------------------		
+CONTENEDORES
+		
+
+CONTENEDORES EN LINUX
+-Virtualización ligera o de SO
+-Todos los sistemas comparten núcleo
+-Usados desde hace mucho en Solaris (Containers y Zones) y FreeBSD (Jails)
+-Limitado en Linux: vservers, OpenVZ, chroot, …
+-Homogeneización del centro de datos
+-Linux cgroups (control groups)
+-Linux namespaces
+-LXC
+
+LXC
+-Integrado en el kérnel Linux
+-Se apoya en cgroups y namespaces
+-Los sistemas se instalan desde plantillas
+-Orientado al uso en sistemas
+
+Docker
+-Muy similar a LXC “por abajo”
+-Orientado al despliegue en microservicios
+-Proporciona versionado
+-Proporciona capas (aufs o overlayfs)
+-Proporciona imágenes preconfiguradas
+-Muy … “Infrastructure as Code”
+-Muy … “devops”
+-¿De verdad usas bien docker?
+
+rkt
+-Alternativa a docker
+-Desarrollado por CoreOS
+
+LXD
+-Hipervisor de contenedores
+-Muy relacionado con LXC
+-¿LXC 2.0?
+-Basado en el uso de imágenes
+-Bien integrado sólo en Ubuntu
+
+
+SISTEMAS LIGEROS
+-Container linux (CoreOS)
+-Project Atomic (Red Hat)
+-Ubuntu Core (Canonical)
+-RancherOS
+-Photon (Vmware)
+-DCOS (Mesosphere)
+-Para desplegar aplicaciones “contenerizadas”
+-Sin paquetes de aplicaciones
+-Aplicaciones sobre contenedores (snaps en Ubuntu)
+-Suelen utilizarse para clusters
+-Actualizaciones automáticas
+-RancherOS: El propio sistema “contenerizado”
+
+
+Orquestadores de contenedores
+ Gestionan clusters de equipos
+▸ Aplicaciones “contenerizadas”
+▸ Aportan funcionalidades adicionales:
+– Alta disponibilidad
+– Balanceo de carga
+– Comunicación con el exterior
+– Despliegues en producción
+
+Kubernetes
+▸ Desarrollo inicial deGoogle
+▸ Liberado con licenciaApache
+▸ Donado a la CNCF
+▸ Kubelet, pods
+▸ Docker, rkt, ...
+
+Docker swarm
+▸ Integrado en docker desde la v 1.12
+▸ Aplicaciones definidas en docker compose
+▸ Se gestiona con comandos docker
+
+Mesos/Marathon
+▸ Soporte para docker y rkt
+▸ Otras cargas de trabajo: big data
+▸ Utilizado en producción por twitter o airbnb
+▸ Mesosphere proporciona soporte comercial
+
+
+CONTENEDORES EN IaaS
+
+Contenedores, clusters o “as a Service”
+▸ Despliegue desde templates: heat, cfn, …
+▸ ¿Bare-metal?
+▸ Contenedores sobre MVs
+▸ Containers as a Service
+▸ Facilidad para desplegar contenedores
+▸ Imágenes o SO preconfigurados
+▸ Registros propios para imágenes de contenedores
+
+
+Contenedores en AWS
+▸ Amazon EC2 Container Service
+▸ Contenedores docker sobre instancias EC2
+▸ Clúster de instancias EC2
+
+
+Contenedores en Google
+▸ Google Containers Engine
+▸ Integración completa con kubernetes
+▸ También docker, LXD o rkt directamente
+
+Contenedores en Azure
+▸ Azure Container Service
+▸ Swarm, kubernetes o DC/OS
+
+Contenedores en OpenStack
+▸ Contenedores sobre instancias
+▸ Despliegues de kubernetes, swarm, etc. con
+OpenStack heat
+▸ OpenStack Magnum: Containers as a Service
+
+
+
+
+CONTENEDORES EN PaaS
+
+Contenedores en PaaS
+▸ Contenedores como aplicación nativa cloud
+▸ Están sustituyendo a muchos PaaS
+▸ Nuevo enfoque: Una capa más sobre orquestador
+▸ Aportan funcionalidad y facilidad de uso
+▸ Se centran en el desarrollo, no en la herramienta
+de orquestación
+
+
+Un ejemplo: OpenShift v3
+▸ Desarrollo de Red Hat
+▸ Como servicio o en privado
+▸ Funciona sobre kubernetes
+▸ Añade funcionalidad:
+– Espacios de nombres
+– RBAC
+– Plantillas
+– Integración con herramientas de desarrollo
