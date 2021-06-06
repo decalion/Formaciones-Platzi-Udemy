@@ -1,0 +1,262 @@
+¿Qué es un microservicio?
+Los microservicios son tanto un estilo de arquitectura como un modo de programar software. Con los microservicios, las aplicaciones se dividen en sus elementos más pequeños e independientes entre sí. A diferencia del enfoque tradicional y monolítico de las aplicaciones, en el que todo se compila en una sola pieza, los microservicios son elementos independientes que funcionan en conjunto para llevar a cabo las mismas tareas
+
+¿Para qué sirven los microservicios?
+El objetivo es distribuir sistemas de software de calidad con mayor rapidez, lo cual es posible gracias a los microservicios, pero también se deben considerar otros aspectos.
+
+Ventajas de usar microservicios
+Aplicaciones listas para comercializarse más rápidamente
+
+Debido a la reducción de los ciclos de desarrollo, los microservicios permiten que la implementación y las actualizaciones se realicen más rápidamente
+
+Gran capacidad de escalabilidad
+
+A medida que crece la demanda de ciertos servicios, es posible realizar implementaciones en distintos servidores e infraestructuras para satisfacer sus necesidades.
+
+Resiliencia:
+
+Si estos servicios independientes están bien diseñados, no pueden afectar a los demás. Esto significa que si una parte falla, no afecta a toda la aplicación, a diferencia del modelo de aplicaciones monolíticas.
+
+Facilidad de implementación:
+
+Debido a que las aplicaciones basadas en microservicios son más modulares y más pequeñas que las aplicaciones monolíticas tradicionales, ya no es necesario preocuparse por su implementación. Se requiere más coordinación, pero las ventajas son enormes.
+
+Accesibilidad:
+
+Dado que las aplicaciones más grandes se desglosan en partes más pequeñas, los desarrolladores pueden comprender, actualizar y mejorar más fácilmente estas partes; de esta manera, se obtienen ciclos de desarrollo más rápidos, especialmente cuando se combinan con metodologías de desarrollo ágiles.
+
+Aplicaciones más abiertas:
+
+Debido al uso de API políglotas, los desarrolladores tienen la libertad de elegir los mejores lenguajes y tecnologías para la función que se necesita.
+
+Inconvenientes de usar microservicios
+Diseño: debe invertir tiempo en identificar las dependencias entre los servicios. Y debe estar atento, porque cuando se termina un diseño, puede surgir la necesidad de muchos otros debido a esas dependencias.
+Pruebas: las pruebas de integración, así como las pruebas finales, pueden tornarse más complejas e importantes que nunca. Tenga en cuenta que una falla en una parte de la arquitectura puede producir un verdadero error, y esto depende de la manera en que haya diseñado la arquitectura de sus servicios para que sean compatibles entre sí.
+Despliegue: cuando actualice sus sistemas a las nuevas versiones, tenga en cuenta que corre el riesgo de anular la compatibilidad con las versiones anteriores.
+Implementación: efectivamente también es un desafío, al menos durante la configuración inicial. Para simplificarla, primero debe invertir mucho en la automatización, ya que la complejidad de los microservicios resulta agobiante para la implementación humana. Tenga en cuenta la manera y el orden en que implementará los servicios.
+Registro: con los sistemas distribuidos, se necesitan registros centralizados para integrar todos los elementos. De lo contrario, es imposible controlar la expansión.
+Monitorización: es indispensable tener una vista centralizada del sistema para identificar las causas de los problemas.
+
+---------------------------------------------------------------------
+¿Qué es la arquitectura del software?
+La arquitectura de un sistema software es la definición de qué componentes constituyen ese sistema, 
+sus responsabilidades y las relaciones de uso y dependencia entre ellos. Es, por tanto, 
+completamente independiente de la tecnología que se utilice y no debería representar en ningún momento el framework, 
+la base de datos o la forma de interactuar con el usuario.
+
+Arquitectura multitier
+Una arquitectura multitier (o n-tier) hace referencia a una arquitectura en la que se expone la separación de sistema en varias 
+capas físicas. Es decir, los distintos componentes están en máquinas separadas. En este tipo de arquitectura tenemos por ejemplo la de 
+[cliente – servidor] o la de [presentación – negocio – datos]. Sin embargo, al referirse más a la distribución física del código 
+ejecutable que a la relación lógica de sus componentes se aleja de lo que estamos tratando en aquí.
+
+Arquitectura multilayer
+Por su parte una arquitectura multilayer (o n-layer) refleja la separación lógica en capas de un sistema software. En este contexto una capa es simplemente un conjunto de clases, paquetes o subsistemas que tienen unas responsabilidades relacionadas dentro del funcionamiento del sistema. Estas capas están organizadas de forma jerárquica unas encima de otras y las dependencias siempre van hacia abajo. Es decir, que una capa concreta dependerá solamente de las capas inferiores, pero nunca de las superiores. En backend lo más común suele ser tener [servicio – negocio – acceso a datos], aunque a veces podríamos también encontrarnos una capa superior de presentación si esta se está manejando también a nivel de backend o una capa con controladores REST.
+
+Arquitectura onion
+La arquitectura onion, o cebolla en español, es a grandes rasgos una arquitectura multicapa construida en torno a un modelo de dominio 
+independiente de todo lo demás. 
+Las dependencias van hacia el centro, por lo que todo depende de ese modelo de dominio. 
+A su alrededor se organizan varias capas, estando en las más cercanas las interfaces de repositorio, es decir, 
+las que definen el comportamiento del almacenamiento de los datos pero no lo implementan. En las capas siguientes 
+está la lógica de negocio que usa estas interfaces y que en tiempo de ejecución tendrá las implementaciones apropiadas. 
+Alrededor del núcleo de modelo puede haber un número variable de capas, pero siempre debe cumplirse que las interfaces 
+estén más cerca que las clases que las utilizan. Con esto ya tenemos creado el core lógico de nuestra aplicación, que no tiene absolutamente ningún detalle de infraestructura.
+
+Por último, en la capa más exterior es donde estarán todos los detalles de comunicación con el exterior 
+(tanto de interfaz con el usuario como el almacenamiento) y los tests de integración. Las clases que se presentan aquí implementarán 
+las interfaces que se definen en las capas inferiores, pudiendo cambiar por tanto las implementaciones dependientes de la tecnología 
+sin que las capas inferiores se enteren. Lo que conseguimos de esta manera es una arquitectura que habla de cómo está montado el 
+sistema y no de los terceros que se comunican con él.
+
+
+
+------------------------------------------------------------------------
+
+¿Qué es la arquitectura hexagonal?
+Unos años antes de que Jeffrey Palermo acuñase la arquitectura onion, Alistair Cockburn (uno de los firmantes del manifiesto ágil) definió la arquitectura de Ports and Adapters o arquitectura hexagonal.
+
+El objetivo de la arquitectura hexagonal es poner, una vez más, en el centro del sistema toda la lógica propia del dominio y definir unas fronteras muy claras y unos mecanismos de transformación con el exterior. Así se consigue que el core lógico no se contamine ni dependa en ningún momento de los detalles concretos del acceso a los datos, la comunicación con terceros o la interacción del usuario. Más o menos es lo mismo que busca onion, como habréis observado en la sección anterior.
+
+
+
+Adaptadores primarios y secundarios
+Los adaptadores que se dividen en primarios y secundarios, los adaptadores son la forma de conectar el exterior con los puertos, 
+implementando la comunicación y la conversión de datos entre el dominio y lo que se necesite fuera. 
+Los adaptadores no pertenecen al core como tal y podrían implementarse cada uno completamente por separado si quisiésemos mientras 
+dependan del puerto que usan/implementan.
+
+Se dividen en primarios y secundarios.
+
+Primarios Los primarios se comunican con el cliente, con el exterior y son los que implementan a los puertos primarios.
+Secundarios Y los secundarios se comunican con servicios internos, con otros microservicios o con BBDD, y son los que implementan a 
+los puertos secundarios.
+Puertos primarios y secundarios
+los puertos son las interfaces que definen la interacción con el exterior y exponen únicamente datos de nuestro dominio, dejando que toda la lógica de transformación esté de puertas afuera y no se contamine el interior.
+
+Existen los primarios que son las interfaces que se comunican con el cliente o el exterior, y los secundarios que se comunican con otros servicios, o BBDD.
+
+Una cosa importante a tener en cuenta (tal y como se ve en la imagen de arriba) es que un único puerto puede tener más de un adaptador asociado. 
+Pongamos el ejemplo de un puerto de entrada que expone una funcionalidad que hace nuestro sistema. El puerto sería la interfaz de dicha funcionalidad: la entrada y salida del método expresada en objetos del dominio. Y ese servicio podría exponerse, por decir dos, como un servicio REST o con una interfaz por terminal; en cuyo caso tendríamos un puerto y dos adaptadores. Y esto también es aplicable al acceso a datos, que podría ser desde una caché, una base de datos, un servicio de un tercero o cualquier otro sistema.
+
+Como vemos, gracias a la definición de estas fronteras nuestro core queda completamente desvinculado del exterior. Es más, se abstrae incluso de si estamos estamos haciendo un backend para una aplicación web, de escritorio o un web service que se expondrá en un bus; pues al final no dejan de ser formas de comunicarnos con el usuario y no deberían afectar a la lógica. Simplemente se añadirá un nuevo adaptador para la funcionalidad que se quiera exponer por una vía concreta y ya está.
+
+Y muchas veces surge una pregunta, especialmente en este caso por la terminología que se usa. ¿Cuántos puertos debemos definir? ¿Hay que limitarse a 6? La respuesta es que no. Como todo en esta vida depende del caso concreto. Los extremos están en tener un único puerto para todo el sistema o tener uno por cada funcionalidad concreta, y por lo general el término medio suele ser lo óptimo.
+
+
+
+
+--------------------------------------------------------
+Estructura de directorios
+Una estructura de directorios en cualquier arquitectura o proyecto es importante para ordenar las cosas,
+ y colocar cada archivo en su sitio. En la arquitectura hexagonal puedes usar un sistema de archivos parecido a este, 
+ luego puedes adaptarlo a tus necesidades.
+
+ports
+	primary
+	secondary
+
+adapters
+	primary
+	secondary
+	
+converters
+
+operations
+
+domain
+
+
+-----------------------------------------------------------------
+
+Capa de controlador (Adaptadores)
+La capa de controlador sería la parte de la arquitectura que se encarga de recibir y enviar peticiones, estos serán los 
+denominados adaptadores dentro de la arquitectura hexagonal, los primarios recibirán peticiones del cliente y devolverán la respuesta, 
+mientras que los secundarios harán lo propio con otros servicios. Los objetos que pasen del adaptador primario al puerto primario, 
+deberán ser previamente convertidos en objetos de dominio, esto se hará en el adaptador primario, y cuando salimos del puerto 
+secundario al adaptador secundario lo mismo, convertiremos un objeto de dominio en un objeto que entienda el servicio al que se invoca.
+
+Los adaptadores se encuentran por tanto, "por fuera" del core de la aplicación.
+-------------------------------------------------------------------------------------------------------
+
+Capa de servicios e infraestructura (Puertos)
+Esta capa ya es interna del core de la aplicación, y es en la que se encuentran los puertos, 
+tanto primarios como secundarios, una vez llegados a aquí, vamos a profundizar en la explicación 
+de la relación entre puertos y adaptadores. Concretamente entre los puertos primarios y adaptadores primarios y
+ lo mismo con los secundarios:
+
+Los puertos primarios son interfaces de funcionalidad del sistema, por lo que estarán implementadas por la capa de servicios dentro 
+del hexágono. 
+Los adaptadores primarios usan, y no implementan, dichos puertos para comunicarse como necesiten con el interior.
+
+Los puertos secundarios, por su parte, sirven de interfaz de salida para que el interior se comunique con sistemas externos. 
+En este sentido el core utilizará los puertos secundarios, que esta vez serán implementados por los adaptadores secundarios.
+
+En esta capa, se harán las comprobaciones necesarias, y la implementación de lógica de negocio antes de acceder a la última de las capas, la de persistencia, que correspondería con el puerto y adaptador secundario.
+
+
+----------------------------------------------------------------------------------
+
+Capa de repositorio
+La capa de repositorio o de persistencia, es la que accede a las BBDD para almacenar o extraer datos, esta capa estará compuesta por el conjunto del puerto secundario y el adaptador secundario, en este caso hemos dicho que el puerto secundario sería la interfaz de salida y el adaptador secundario su implementación, de esta forma podemos tener un puerto secundario y luego varios adaptadores con diferentes tipos de BBDD MySql, MongoDB, Postgre etc.
+
+De la misma forma que nos referimos a BBDD, podemos hacer referencia a otros servicios o APIs.
+
+
+------------------------------------------------------------------
+
+Revisión de proyecto
+ Viendo el esquema de arquitectura hexagonal del principio y nuestro proyecto, vamos a ver cada parte y hacer un repaso. 
+ En primer lugar los adaptadores primarios vendrían a ser los controladores,
+ por donde vienen las peticiones de GET, POST, PUT y DELETE desde el cliente, 
+ aquí también hacemos la conversión de los datos a objetos de dominio. Por su parte los puertos primarios 
+ vendrían a ser los servicios, donde aplicamos la lógica de negocio, donde decidimos borrar un curso si cumple ciertas condiciones o 
+ obtener solo los cursos visibles por ejemplo. Después tenemos carpetas como domain, en las que esta nuestros objetos de dominio, de 
+ la capa de servicios o puertos primarios, pasamos a los puertos secundarios, que vendrían a ser las interfaces de salida con otros
+ servicios, en este caso BBDD, y el adaptador secundario su implementación.
+
+
+
+CQRS
+
+
+El patrón CQRS, que lo que viene a contarnos es que podemos separar nuestros servicios en Querys y Commands, 
+por ejemplo el servicio del puerto primario, podría estar separado en 2, uno con el sufijo Query, 
+que sería para el GET, porque solo hace consultas y no modifica nada, y otro con el sufijo Command, 
+porque realiza cambios en la BBDD con POST o PUT, de esta forma podemos tener mejor organizado y más 
+eficiente nuestro código, en proyectos tan pequeños puede que no se vea tan necesario, pero en proyectos más grandes 
+es muy útil y un concepto sencillo de aplicar.
+
+
+
+---------------------------------------------------------------------------------------------
+
+MapStruct
+MapStruct es una herramienta que nos permite, 
+mediante anotaciones crear mapeos entre objetos en tiempo de compilación. 
+Evitando tener que escribir todo el código de mapeo a mano, está pensado para funcionar con
+ Java 1.6 o posterior. De esta forma nos ahorraremos nuestros conversores manuales, esto es un plus del 
+ curso, no es necesario para la arquitectura hexagonal, con esta librería conseguiremos código mas limpio y 
+ hacer conversiones a objetos de dominio de forma más sencilla.
+
+Para añadir MapStruct a nuestro proyecto basta con añadir la dependencia de Maven en nuestro proyecto.
+
+
+
+---------------------------------------------------------------------------------
+Arquitectura limpia
+Ya hemos visto que ha habido más de un tipo de arquitectura que busca exactamente lo mismo: 
+abstraer la lógica esencial y la propia arquitectura de los detalles de comunicación con el usuario u otros sistemas. 
+En algún momento Uncle Bob decidió crear una que las unificara todas (incluida la screaming architecture que él mismo propuso) y la llamó, 
+en un alarde de originalidad, clean architecture.
+
+El objetivo es el mismo que hemos estado comentando hasta ahora, y la implementación es a grandes rasgos una hexagonal aunque cambiando 
+algunos nombres y definiendo mínimamente la estructura interna. Como ya hemos visto los conceptos no me pararé a explicarla demasiado.
+ En este caso utilizaré la imagen que él mismo tiene en su entrada de Clean Coder, que es bastante explicativa:
+
+
+
+A partir de este esquema se ve que hay 4 capas, aunque internamente cada una podría dividirse en todas las que puede ser necesario.
+ En la capa interna tenemos las entidades, que vendría a ser el modelo de negocio, 
+ las funciones básicas o lo que sea que represente la lógica del negocio (el dominio, vaya). En la capa inmediatamente superior 
+ están los casos de uso, que no es otra cosa que la lógica propia de la aplicación. Aquí también están lo que serían los puertos en
+ una arquitectura hexagonal, que en este caso se llaman Use Case Input Port (si son primarios) y Use Case Output Port (si son secundarios), 
+ y la implementación de los de entrada está en lo que se denomina Use Case Interactor. Por encima de esto tenemos la capa de lo que serían
+ los adaptadores: controladores, presentadores, acceso a terceros… Y por encima está una última capa que ya no forma parte del sistema backend como tal y que son los dispositivos con los que nos comunicamos, la base de datos, la interfaz de usuario que nos llama, etc.
+
+Como vemos, nada nuevo. Simplemente es una arquitectura hexagonal con otros nombres y en la que se ha definido un poco más la separación interna en, al menos, dos capas. Sin embargo, aunque no se haga de manera explícita este mismo planteamiento de separar el dominio y construir sobre él emana de forma natural de Ports and Adapters si queremos implementarlo como hemos comentado en las clases anteriores.
+
+
+
+-----------------------------------------------------------
+
+Los adaptadores primarios se comunican con el exterior, con el cliente, y utilizan los puertos primarios para conectarse con la parte interna de la aplicación.
+Los puertos primarios son servicios donde se implementa la lógica de negocio, y se trabaja con objetos del dominio de la aplicación.
+Los puertos secundarios son interfaces para comunicarse con otros servicios.
+Los adaptadores secundarios son la implementación de estas interfaces.
+La arquitectura puede tener tantos puertos y adaptadores como se desee y requiera el proyecto, el dibujo es solo una orientación.
+
+Para convertir los objetos externos a objetos de dominio usamos conversores, recuerda que la librería de MapStruct te facilita mucho la vida.
+
+Espero que te haya gustado el curso, recuerda que debes practicar mucho para convertirte en un maestro y que esto es solo el comienzo, que cada proyecto tiene sus particularidades y que en base a una arquitectura hexagonal se puede pivotar bastante, creando una estructura de directorios más acorde con el proyecto, o nombrando diferente, etc, etc. El ejemplo que hemos creado ha sido muy sencillo, ahora te toca a ti ponerlo en práctica en tus proyectos, para cualquier duda podeis contactarme sin ningún problema, hasta pronto.
+
+
+
+-----------------------------------------------------------
+
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>
+
+<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+<dependency>
+    <groupId>org.mapstruct</groupId>
+    <artifactId>mapstruct</artifactId>
+    <version>1.3.1.Final</version>
+</dependency>
+
