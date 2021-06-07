@@ -1,0 +1,396 @@
+Networking
+
+1.VPC
+VPC (Virtual Private Cloud)
+▸ Segmento de red completamente aislado
+▸ Utiliza direccionamiento privado.
+▸ Permite segmentar la arquitectura en redes distintas y gestionar las visibilidades según os convenga
+▸ Pueden tener acceso directo a Internet o no
+▸ Permite comunicar recursos de AWS sin necesidad de utilizar direcciones IP públicas
+▸ Es de alcance regional
+
+2.Subnets
+Pequeños segmentos de red dentro de nuestra VPC
+▸ Se pueden crear todas las subnets que necesitemos siempre y cuando os queden bloques CIDR disponibles dentro de la VPC
+▸ Pueden estar comunicadas entre ellas o no.
+▸ Son de alcance zonal (AZ)
+▸ No son modificables luego de creadas
+
+
+3.ROUTING TABLE
+▸ Son utilizadas para enrutar el tráfico dentro de las VPCs
+▸ Se crea una default en el momento de creación de VPC
+▸ Se pueden crear varias y asociar subnets de manera independiente
+▸ Deberíamos tener al menos una tabla de rutas para subnets públicas y otra para subnets privadas
+
+
+
+5.INTERNET GATEWAY (IGW)
+Es el punto de conexión de la VPC con Internet
+Se referencia en la tabla de rutas
+Solo pueden llegar a Internet los recursos que tenga IP pública
+Es gestionado y escalado por AWS
+No requiere configuración
+
+
+6.NAT GATEWAY
+Es el Gateway de acceso a Internet para las subnets privadas
+▸ Tiene que estar creado en una subnet pública con una tabla de rutas que tenga como ruta por defecto el IGW
+▸ Tiene una IP pública y estática
+▸ Es muy útil para consultar APIs o servicios de terceros que requieren que las peticiones vengan de IP fija
+▸ Es escalado y gestionado por AWS
+
+
+7.NETWORK ACCESS CONTROL LIST (NACL)
+Son listas de control de acceso a nivel de red y transporte que aplican a las subnets de VPC
+La configuración por defecto es de tipo ALLOW ALL
+Es muy útil cuando detectamos que de una IP o un bloque en particular estamos recibiendo un ataque
+Podemos crear varias NACL y asociarlas de manera independiente a las subnets de la VPC
+
+
+-------------------------------------------------------------------------------------------
+ROUTE53 (Servicio de DNS)
+
+Servicio de DNS gestionado por AWS
+▸ Podemos tener creadas varias zonas de DNS
+▸ Podemos registrar nuevos de dominios directamente en Route53 o registrarlos en otro proveedor como GoDaddy 
+y administrar la zona desde Route53
+▸ Tiene integración nativa como algunos recursos
+de AWS y permite asociar el apex de nuestro
+dominio a un recurso de AWS como ELB, S3 y
+distribuciones de Cloudfront mediante el
+registro especial ALIAS. Otros proveedores no
+tienen esta funcionalidad
+
+
+---------------------------------------------------------------------------------------------
+EC2
+
+EC2 (Elastic Compute Cloud)
+▸ Las máquinas virtuales en AWS son llamadas instancias EC2
+▸ El costo de las instancias es por hora encendida
+▸ Hay de distintas gamas y tamaños
+▸ Siempre se utiliza una AMI (Amazon Machine Image) como base
+▸ Para levantar una instancia como mínimo
+necesitamos una AMI, una VPC, un Security
+Group, un disco EBS y una key de acceso SSH o
+RDP
+
+
+
+Modos de uso de las instancias EC2
+▸ On-Demand: Se pagan por horas levantadas, las podemos apagar en cualquier momento
+▸ Reserved: Se reservan a 1 o 3 años. Suelen ser entre un 50~70 % más baratas que las
+On-Demand
+▸ Spot: Son las más baratas. Se pagan lo que se
+quiera por encima de un mínimo. AWS las puede
+apagar en cualquier momento.
+
+
+Tipos de instancias EC2
+▸ Existen diferentes gamas de instancias EC2 que se diferencian en la relación CPU, RAM, GPU, Red
+y Almacenamiento
+▸ Se define en el momento de creación de la instancia (m4, c4, t2,...)
+▸ Puede ser cambiado luego, aunque requiere un Stop/Start de la instancia
+
+
+
+Ahora vamos a ver Amazon Elastic Block Store (Amazon EBS) 
+que proporciona volúmenes de almacenamiento de bloques 
+persistentes para utilizar con las instancias de 
+Amazon EC2 en la nube de AWS. Cada volumen de Amazon EBS se replica 
+automáticamente dentro de una zona de disponibilidad para protegerle 
+frente a los errores de componentes, ofreciéndole una alta disponibilidad y durabilidad.
+
+
+-----------------------------------------------
+AutoScaling
+
+------------------------
+Elastic load balancing(ELB)
+
+-------------------------------
+CLOUDWATH
+
+Continuamos con Amazon CloudWatch, un servicio de monitorización de los recursos de la nube de AWS 
+y de las aplicaciones que se ejecutan en AWS. Puede utilizar Amazon CloudWatch para recopilar y realizar el seguimiento de métricas y 
+logs, establecer alarmas y reaccionar automáticamente a los cambios en sus recursos AWS
+
+
+------------------------------------------------------------------------
+DATABASES
+
+1.RDS
+Relational Databases Services (RDS)
+Motores soportados:
+▸ MySQL
+▸ MariaDB
+▸ PostgreSQL
+▸ SQL Server
+▸ Oracle
+▸ Aurora
+
+Relational Databases Services (RDS)
+▸ Snapshot automáticos
+▸ Creación de réplicas de lectura
+▸ Configuración de MultiAZ
+▸ Escalado manual o automático de disco, sin downtime
+▸ Escalado vertical sin downtime
+▸ Más de 50 métricas de monitorización
+▸ Sin gestión del SO
+▸ Upgrades del motor planificadas y automatizadas
+▸ Restore a un punto en el tiempo mínimo de 5 minutos atrás
+
+
+2.ELASTICACHE
+
+Motores soportados:
+▸ Redis
+▸ Memcached
+
+ElastiCache
+▸ Snapshot automáticos
+▸ Creación de réplicas de lectura con Auto-Failover
+▸ Configuración de HA con varios nodes distribuidos en diferentes AZ
+▸ Escalado vertical sin downtime
+▸ Métricas de monitorización de SO y de operaciones sobre el clúster
+▸ Sin gestión del SO
+▸ Upgrades del motor planificadas y automatizadas
+▸ Restore desde un backup
+
+----------------------------------------------------------------------------
+SIMPLE STORAGE SERVICE
+
+Simple Storage Service (S3)
+▸ Sistema de almacenamiento Key/Value agrupados en buckets
+▸ Almacenamiento ilimitado
+▸ Durabilidad de 99,999999999%
+▸ Permite varias clases de almacenamiento
+▸ Permite hostear sitios web estáticos
+▸ Versionado de objetos
+▸ Permite crear lifecycles
+▸ Réplica entre regiones
+
+Clases de Almacenamiento
+▸ Estándar
+▸ Estándar de Acceso poco Frecuente
+▸ Redundancia Reducida
+▸ Glacier
+
+
+
+-----------------------------------------------------------------------
+IAM
+
+1. IAM Users
+
+Identity and access management (IAM)
+Users:
+▸ Permite entrar a la consola de AWS e
+interactuar con los recursos de AWS
+▸ La asignación de permisos es granular
+▸ Access/Secret Key para interactuar con
+los recursos de AWS
+▸ El rotado del Access/Secret Key está en
+manos del administrador
+
+2.IAM Roles
+
+Identity and access management (IAM)
+Roles:
+▸ Permite interactuar con los recursos de
+AWS
+▸ La asignación de permisos es granular
+▸ No necesitamos crear Access/Secret Key
+▸ AWS se encarga del rotado de la Key
+▸ Recomendados para aplicaciones que
+usen algunos de SDK
+
+
+-------------------------------------------------------------------------------------------------------
+Creamos un ELB y lo asociamos a un Auto Scaling Group que tiene un Wordpress. El Auto Scaling tiene levantadas como 3 instancias. Al asociar el ELB ve todas las instancias aparecen en OutOfService.
+
+¿Cuál puede ser la causa?	Las IP del ELB no están como orígenes permitidos en el Security Group de las instancias del Auto Scaling, El check que realiza el ELB está apuntando al puerto 443 y la aplicación solo escucha en el 80, El Security Group de lo frontales no permite conexiones desde los recursos que tienen asociado el Security Group del ELB, Las instancias no tiene ip pública.
+Incorrecto
+
+Después de un sorteo online, la empresa X quiere publicar el resultado de los ganadores en una web compuesta de varios files html, css y javascript.
+¿Cuál sería la opción más costo-eficiente garantizando la alta disponibilidad?	Crear un bucket en S3 en modo website. Subir los files y crear en route53 un registro de tipo ALIAS
+Correcto
+
+¿Cuál de los siguientes lenguajes tiene un SDK disponible para AWS?	Python, Ruby, Go
+Correcto
+
+¿Puede modificar las instancias que levanta en un Auto Scaling luego de creado?	Si, creando otro Launch Configuration con la nueva AMI a utilizar
+Correcto
+
+Si queremos actualizar el SO de nuestras instancias en un Auto Scaling Group de Min 2 - Max 2 y que usan una AMI customizada.
+¿Cuál sería el procedimiento?	Lanzar una instancia fuera del Auto Scaling usando la AMI actual, hacer el upgrade, crear un AMI, actualizar el Launch Configuration y sustituirlo en el Auto Scaling. Luego hacer escalar el Auto Scaling para sustituir las instancias antiguas
+Correcto
+
+
+Creamos una VPC y una subnet privada. Lanzamos una instancia en la subnet sin IP pública y queremos que tenga acceso a Internet para actualizar el SO.
+¿Qué debemos hacer?	Crear una subnet pública con un IGW asociado como ruta por defecto, creamos un NAT Gateway en la subnet pública y modificamos la tabla de rutas de la subnet privada para que su ruta por defecto sea el NAT Gateway
+Correcto
+
+¿Puede crear una zona en Route53 para hostear un dominio o subdominio que haya comprado en otro proveedor?	Si puedo
+Correcto
+
+Cuáles de las siguientes son características de las VPC	
+Las VPC son de alcance global para garantizar la disponibilidad,
+ Las VPC son de alcance Regional sin importar la cantidad de AZ en la región, 
+ Luego de crear un VPC hay que crear la tabla de rutas por defecto de la VPC, 
+ El máximo bloque CIDR de un VPC es un máscara /16
+Incorrecto
+
+Necesitas sacar estadísticas del uso de CPU de las instancias que tiene en AWS.
+¿Cómo puede hacerlo?	Las puedo obtener directamente de CloudWatch, instancia por instancia
+Correcto
+
+Tenemos una aplicación corriendo en una instancia EC2 completamente stateless que ha ganado en mucho en número de visitas. Has notado que durante ciertos momentos del día y de manera periódica, el CPU sube mucho y la aplicación comienza a dar errores HTTP 5xx.
+
+¿Qué podemos hacer para garantizar la disponibilidad y mantener los costos reducidos?	Crear una AMI, un launch configuration con esa AMI y un Auto Scaling Group con métrica de escalado basada en CPU. Añadir un ELB adelante
+Correcto
+
+Tiene varias aplicaciones internas de su organización en instancias EC2 en una subnet privada de una VPC. Las instancias no tiene IP pública y necesita que cada noche se hagan tareas programadas como instalar/actualizar paquetes de SO, etc.
+
+¿Cómo puede garantizar que las instancias tengas acceso a repositorios externos en Internet?	Con NAT Gateway en una subnet pública que tenga un IGW asociado y modificando la tabla de rutas de la subnet privada
+Correcto
+
+
+¿Qué tipos de almacenamiento soporta S3?	Todos los anteriores
+Correcto
+
+¿Qué hace el comando aws s3 ls?	Lista los buckets creados en S3
+Correcto
+
+
+
+Acabamos de lanzar una instancia EC2 en una subnet con ruta por defecto apuntando al IGW y no podemos conectarnos a ella.
+¿Qué debemos hacer?	Verificar que security group debe permitir conexiones desde nuestra IP al puerto 22 (SSH)
+Correcto
+
+
+Necesita darle acceso a la consola de AWS a un auditor.
+¿Cómo puede hacerlo?	Crear un usuario IAM con acceso a la consola de AWS. Entregar al auditor el user::pass creado para que pueda acceder a la consola. El usuario debe tener acceso ReadOnly
+Correct
+
+
+
+Cómo puede una aplicación que corre en una instancia de AWS, saber su instance-id?	Consultando los metadatos de la instancia
+Correcto
+
+Creamos una VPC y una subnet privada. Lanzamos una instancia en la subnet sin IP pública y queremos que tenga acceso a Internet para actualizar el SO.
+
+¿Qué debemos hacer?	Crear una subnet pública con un IGW asociado como ruta por defecto, creamos un NAT Gateway en la subnet pública y modificamos la tabla de rutas de la subnet privada para que su ruta por defecto sea el NAT Gateway
+Correcto
+
+
+
+Después de un sorteo online, la empresa X quiere publicar el resultado de los ganadores en una web compuesta de varios files html, css y javascript.
+
+¿Cuál sería la opción más costo-eficiente garantizando la alta disponibilidad?	Crear un bucket en S3 en modo website. Subir los files y crear en route53 un registro de tipo ALIAS
+Correcto
+
+¿Cuáles de las siguientes son características generales del servicio RDS?	Snapshots automáticos, Escalado vertical sin downtime, Configuración de MultiAZ
+Correcto
+
+Necesita darle acceso a la consola de AWS a un auditor.
+
+¿Cómo puede hacerlo?	Crear un usuario IAM con acceso a la consola de AWS. Entregar al auditor el user::pass creado para que pueda acceder a la consola. El usuario debe tener acceso ReadOnly
+Correcto
+
+¿Qué tipo de registros especiales soporta Route53?	ALIAS
+Correcto
+
+Cuáles de las siguientes son características de las VPC Subnets.	Por defecto, todas las subnets en una VPC pueden comunicarse unas con otras sin importar si son públicas o privadas, Cada subnet es de alcance de 1 AZ
+Correcto
+
+¿Puede modificar las instancias que levanta en un Auto Scaling luego de creado?	Si, creando otro Launch Configuration con la nueva AMI a utilizar
+Correcto
+
+
+
+¿Puede crear una zona en Route53 para hostear un dominio o subdominio que haya comprado en otro proveedor?	Si puedo
+Correcto
+
+¿Cuáles motores de base de datos en memoria están integrados en ElastiCache?	Redis, Memcached
+Correcto
+
+
+
+¿Qué tipos de almacenamiento soporta S3?	Todos los anteriores
+Correcto
+
+
+¿Cómo puede automatizar la instalación de paquetes o hacer bootstrapping al lanzar una instancia en AWS?	Usar el userdata al lanzar la instancia para automatizar cualquier tarea, instalación de paquetes o bootstrapping
+Correcto
+
+Necesita darle acceso a la consola de AWS a un auditor.
+
+¿Cómo puede hacerlo?	Crear un usuario IAM con acceso a la consola de AWS. Entregar al auditor el user::pass creado para que pueda acceder a la consola. El usuario debe tener acceso ReadOnly
+Correcto
+
+¿Qué es una AMI?	Es la imagen de un SO que se utiliza para lanzar instancias EC2
+Correcto
+
+
+Tiene varias aplicaciones internas de su organización en instancias EC2 en una subnet privada de una VPC. Las instancias no tiene IP pública y necesita que cada noche se hagan tareas programadas como instalar/actualizar paquetes de SO, etc.
+
+¿Cómo puede garantizar que las instancias tengas acceso a repositorios externos en Internet?	Con NAT Gateway en una subnet pública que tenga un IGW asociado y modificando la tabla de rutas de la subnet privada
+Correcto
+
+¿Qué hace el comando aws s3 ls?	Lista los buckets creados en S3
+Correcto
+
+¿Puede modificar las instancias que levanta en un Auto Scaling luego de creado?	Si, creando otro Launch Configuration con la nueva AMI a utilizar
+Correcto
+
+
+Creamos una VPC y una subnet privada. Lanzamos una instancia en la subnet sin IP pública y queremos que tenga acceso a Internet para actualizar el SO.
+
+¿Qué debemos hacer?	Crear una subnet pública con un IGW asociado como ruta por defecto, creamos un NAT Gateway en la subnet pública y modificamos la tabla de rutas de la subnet privada para que su ruta por defecto sea el NAT Gateway
+Correcto
+
+Si queremos actualizar el SO de nuestras instancias en un Auto Scaling Group de Min 2 - Max 2 y que usan una AMI customizada.
+
+¿Cuál sería el procedimiento?	Lanzar una instancia fuera del Auto Scaling usando la AMI actual, hacer el upgrade, crear un AMI, actualizar el Launch Configuration y sustituirlo en el Auto Scaling. Luego hacer escalar el Auto Scaling para sustituir las instancias antiguas
+Correcto
+
+Cómo puede una aplicación que corre en una instancia de AWS, saber su instance-id?	Consultando los metadatos de la instancia
+Correcto
+
+¿Qué tipo de registros especiales soporta Route53?	ALIAS
+Correcto
+
+¿Qué necesita para lanzar una instancia?	AMI, EBS, VPC
+Correcto
+
+Necesita balancear la carga de la instancias de un Auto Scaling.
+
+¿Cómo lo puede hacer?	Crear un ELB y asociarlo al Auto Scaling
+Correcto
+
+¿Puede una instancia acceder a los metadatos del resto de instancias de la VPC?	No
+Correcto
+
+
+Tenemos una aplicación corriendo en una instancia EC2 completamente stateless que ha ganado en mucho en número de visitas. Has notado que durante ciertos momentos del día y de manera periódica, el CPU sube mucho y la aplicación comienza a dar errores HTTP 5xx.
+
+¿Qué podemos hacer para garantizar la disponibilidad y mantener los costos reducidos?	Crear una AMI, un launch configuration con esa AMI y un Auto Scaling Group con métrica de escalado basada en CPU. Añadir un ELB adelante
+Correcto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
