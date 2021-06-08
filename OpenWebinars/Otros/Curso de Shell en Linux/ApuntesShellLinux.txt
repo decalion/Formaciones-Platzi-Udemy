@@ -1,0 +1,505 @@
+¿Que es la Shell?
+
+La shell es un programa que sirve
+como interfaz para acceder a los
+recursos y servicios del sistema
+operativo. Y es la parte que envuelve
+el kernel. 
+
+----------------------------------------------------------------------
+Comando para instalar mwsl con powershell: Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+
+Ubicación al disco local c: /mnt/c
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+Uso de man: man comando
+
+Pequeña descripción: man -f comando
+
+Buscar una palabra en todas las páginas man: man -k palabra1
+
+Hacer una búsqueda or de palabras: man -k palabra1 palabra2 ....
+
+Hacer una búsqueda and de palabras: man -k palabra1 | grep palabra2 | ....
+
+Búsqueda hacia adelante dentro de una página man: /palabra
+
+Búsqueda hacia atrás dentro de una página man: ?palabra
+
+Búsqueda de información de un parámetro: man comando | grep "parámetro"
+
+Búsqueda de información de un parámetro abriendo less: man comando | less +/parámetro
+
+Ubicación de la página más de un comando: man -w comando
+
+
+
+----------------------------------------------------------------------------------------------------
+
+Instalacion de las bropages:
+
+sudo apt-get install gem
+gem install bropages
+gem install bropages
+
+Uso de las bropages: bro comando
+
+Instalación de Manly: pip install --user manly
+Ejemplo de uso: manly dpkg -i -R
+
+
+---------------------------------------------------------------------------
+
+Comando para saber quien eres: whoami
+
+Iniciar sesión como root: su
+
+Iniciar sesión como otro usuario: su usuario
+
+Ejecutar un comando como root: sudo comando
+
+Ejecutar un comando otro usuario: sudo -u usuario comando
+
+Iniciar sesión como root si no esta “habilitado”: sudo su
+
+
+------------------------------------------------------------------------------
+
+Listar contenido de un diretorio: ls
+
+Mostrar informacion de los ficheros: -l
+
+Mostrar ficheros ocultos: -a
+
+Ordenar por tamaño: -S
+
+Mostrar ficheros ocultos y ocultar el directorio actual y el directorio padre: -A
+
+Cambiar el tipo de tamaño que se muestra uno mas estandar por los usuarios: -h
+
+Todo junto: ls -lAhS
+
+Directorio actual .
+
+Directorio padre ..
+
+-----------------------------------------------------------------------------------------
+
+Conocer mi directorio actual: pwd
+
+Cambiar a otro directorio: cd directorio
+
+Directorio home del usuario: ~
+
+--------------------------------------------------------------------------------------
+
+Agregar directorio actual a la pila y cambiar a otro directorio: pushd directorio
+
+Sacar el último directorio agregado a la pila e ir a el: popd
+
+Ver la pila de directorios: dirs -v
+
+Navegar a una posicion concreta de la pila
+
+Lo podemos hacer con -n para seleccionar el mismo numero que en la pila pushd -n
+Lo podemos hacer con +n para seleccionar el inverso que en la pila pushd +n
+
+------------------------------------------------------------------------------------
+
+Crear un directorio: mkdir directorio
+
+Crear varios directorios: mkdir directorio1 directorio2
+
+Crear directorios en directorios no existentes: mkdir -p directorio1/directorio2
+
+Crear una estructura de directorios: mkdir -p dir1/{dira,dirb/dirc}
+
+--------------------------------------------------------------------------------------------------
+
+Borrar un fichero: rm fichero
+
+Borrar varios ficheros: rm fichero1 fichero2
+
+Borrar ficheros según patrón: rm patron
+
+Pedir confirmación para cada fichero borrado: -i
+
+Borrar un directorio: rm -r directorio
+
+Borrar solo losdirectorios vacíos y ficheros: rm -d directorio
+
+-------------------------------------------------------------------------------------------------------------
+
+mover un fichero: mv origen destino
+
+renombrar: mv vierjoNombre nuevoNombre
+
+------------------------------------------------------------------------------------
+
+Instalar tree: sudo apt-get install -y tree
+
+Uso: tree
+
+----------------------------------------------------------------------------
+
+Ejercicio de carpetas
+
+
+mkdir -p {a/{b,c},d/e/f/{a,b,c}}
+
+----------------------------
+
+Crear un archivo vacío: touch archivo
+
+--------------------------------------------
+
+Abrir archivo: nano archivo
+
+Para que genere un archivo de backup: -B
+
+Para que podáis usar el ratón: -m
+
+^ significa control
+M significa alt
+
+
+---------------------------------------------------
+Ver todo el contenido de un fichero: cat fichero
+
+Ver todo el contenido de varios ficheros: cat ficheroa ficherob
+
+Unir varios ficheros en uno solo cat ficheroa ficherob > ficheroc
+
+-----------------------------------------------------------------
+Abrir un fichero con less: less fichero
+
+Salir de less: :q
+
+Ver guía de navegación: h
+
+Salir de la guía de navegación: q
+
+Búsqueda hacia adelante /patrón
+
+Búsqueda hacia atrás / patrón
+
+--------------------------------------------------------------------------
+
+Líneas por defecto que muestran tail y head: 10
+
+Ver las primeras 10 líneas de un fichero: head fichero
+
+Ver las primeras x líneas de un fichero: head -n x fichero donde x es el número de líneas
+
+Ver las últimas 10 líneas de un fichero: tail fichero
+
+Ver las últimas x líneas de un fichero: tail -n x fichero donde x es el número de líneas
+
+Ver las últimas x líneas de un fichero en tiempo real: tail -f -n x fichero donde x es el número de líneas
+
+Salir de la visualización en tiempo real: control + c
+
+Mover un directorio: mv origen/ destino/
+
+Renombrar un directorio: mv vierjoNombre/ nuevoNombre/
+
+Copiar directorio y su contenido: cp -r origen/ destino/
+
+
+---------------------------------------------------------------------------------------
+Contar las palabras de un fichero: wc fichero -w
+
+Conocer la cantidad total de ficheros y carpeta de el directorio actual: ls | wc -w
+
+
+----------------------------------------------------------------------------
+
+Cualquier carácter o conjunto de ellos incluyendo la cadena vacía: *
+
+Cualquier carácter: ?
+
+Un conjunto concreto te caracteres: []
+[19] -> 1, 9
+[1-3] -> 1, 2, 3
+[A-z] -> Todo el alfabeto en mayúsculas y minúsculas
+
+Un conjunto concreto te caracteres salvo los de dentro: [!]
+
+
+-------------------------------------------------------------------------------
+Buscar palabras o frases en un fichero grep "palabra a buscar" fichero
+
+Buscar palabras o frases en todos los ficheros del directorio actual grep "palabra a buscar" *
+
+Buscar palabras o frases en todos los directorios desde al actual de forma recursiva grep -r "palabra a buscar"
+
+Conocer la línea exacta donde está: -n
+
+Usar una expresión regular: -E
+
+Ejemplo buscar todos los documentos que tengan una ip:
+grep -rE '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}\b'
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Conocer la ruta del ejecutable: which comando
+
+
+-----------------------------------------------------------
+
+Actualizar la base de datos de ficheros: sudo updatedb
+
+Localizar un fichero a través de la base de datos: locate fichero
+
+
+-------------------------------------------------------------------------
+Buscar solo ficheros: find -type f
+
+Buscar solo directorios: find -type d
+
+Buscar con case sensitive: find -name palabra
+
+Buscar sin case sensitive: find -iname openwebinars
+
+Buscar ficheros de más de x MegaBytes: find -size +XM donde x es el numero en MegaBytes
+
+Buscar ficheros de menos de x MegaBytes: find -size -XM donde x es el numero en MegaBytes
+
+Otras cantidades:
+
+k para KiloBytes
+M para MegaBytes
+G para GigaBytes
+Ficheros que han sido modificados hace menos de X minutos: find . -cmin -x donde x son los minutos
+
+Ficheros que han sido modificados hace más de X minutos: find . -cmin +x donde x son los minutos
+
+Buscar solo en el directorio actual: find . -maxdepth 1 -cmin +5
+
+
+find -type d -name "src"
+
+-------------------------------------------------------------------------
+Buscar todos los ficheros avi mayores a 10mb
+
+find . -iname "*.iva" -size +10M
+
+
+-------------------------------------------------
+Entras y salidas existentes
+stdin - Entrada estándar - 0
+stdout - Salida estándar - 1
+stderr - Salida de error estándar - 2
+Redireccionamientos
+comando < fichero: Toma la entrada de un fichero
+comando > fichero: Envía la salida del comando al fichero sobreescribiendo este
+comando 2> fichero: Envía la salida de error del comando al fichero
+comando >> fichero: Añade al final del archivo
+comando 2>&1: Envía la salida de error a la salida estándar
+comando &> fichero: Envía la salida estándar y error al fichero
+comando 2> errorfile 1>stdout: Enviar las salidas en archivos separados
+
+.-------------------------------------------------------------------------------
+
+La tuberia se representa con el carácter |
+
+Uso: comando | comando | comando | ...
+
+Ejemplo: la salida estandard de aquí | entra aquí
+
+Ejemplo: cat filename | less
+
+
+------------------------------------------------------------------------------------------
+tee sirve para leer desde la entrada estándar y escribe en la salida estándar y ficheros.
+
+Ejemplo: ls | tee fichero1 fichero2
+
+Y si queremos agregar al final en vez de sobrescribir: -a
+
+-----------------------------------------------------------------------------
+
+xargs sirve para pasar argumentos de la salida estándar de otro comando por ejemplo
+
+Uso: comando | xargs comando
+
+Ejemplo: ls fichero[12] | xargs rm
+
+RETO: Cuenta el número de ficheros y de directorios que tienes en una carpeta
+ls -A | wc -w
+
+----------------------------------------------------------------------------------------------------
+
+Instalar zip: sudo apt install zip unzip
+
+Comprimir ficheros: zip nombreArchivo.zip [fichero | carpeta | patrón | ficheros]
+
+Comprimir ficheros de forma recursiva: zip -r nombreArchivo.zip [fichero | carpeta | patrón | ficheros]
+
+Ver el contenido de un fichero zip: unzip -vl archivo.zip
+
+Borrar un fichero dentro de un zip : zip -d fichero.zip fichero_a_borrar
+
+Descomprimir en la carpeta actual: unzip archivo.zip
+
+Descomprimir en otra ruta: unzip archivo.zip -d ruta
+
+RETO: Comprimé todos tus ficheros de *.avi
+Solución: find . -iname '*avi' | xargs zip videos.zip
+
+-----------------------------------------------------------------------------------------------------
+Crear un contenedor: tar vcf archivo.tar archivos
+
+Crear un contenedor y comprimirlo: tar cfz archivo.tar.gz archivos
+
+Descomprimir todo y sacar del contenedor: tar xcf archivo.tar.gz
+
+---------------------------------------------------------------------------------------
+
+Significado de las letras en los permisos: (r)ead, (w)rite, e(x)cution y - sin permisos
+
+---:---:---: Lo podemos dividir en tres ---:
+
+El de mas a la izquierda los permisos del dueño
+El del centro los permisos del grupo
+El de mas a la derecha los permisos de anónimo
+
+Para cada grupo los permisos tienen el siguiente valor:
+
+rwx
+421
+
+Ejemplos:
+
+r-- = 4
+rw- = 6
+r-x = 5
+-wx = 3
+rwx = 7
+
+Ejemplo una vez dado algún permisos a los usuarios, grupo y anónimos
+
+777 = rwx:rwx:rwx
+
+---------------------------------------------------------------------------------
+Ejemplo de cambios de permisos con sistema octal: chmod 721 fichero
+
+Ejemplo de cambios de permisos de modo carácter: chmod chmod ugo=rx fichero
+
+O si quieres quitar permisos: chmod ugo=rx- fichero
+
+Varios permisos diferentes a la vez: chmod u=rw, go= fichero
+
+----------------------------------------------------------------------------------------
+Los alias se guardan en el fichero: ~/.bashrc
+
+Los alias empiezan por la palabra alias seguido de un espacio el nombre del alias un igual y entre comillas el comando, no debe poner espacios a ambos lados del igual.
+
+Una forma rápida de crearlo es: echo alias ls='ls -lah' >> ~/.bashrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
